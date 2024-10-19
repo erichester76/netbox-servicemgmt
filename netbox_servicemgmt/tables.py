@@ -7,7 +7,7 @@ class SLOTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = SLO
-        fields = ('name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response')
+        fields = ('name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_reponse')
 
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)

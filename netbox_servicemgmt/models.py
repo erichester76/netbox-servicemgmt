@@ -19,7 +19,7 @@ class SLO(NetBoxModel):
     sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes")
 
     def __str__(self):
-        return f"SLO for {self.service_template.name}"
+        return f"SLO: {self.name}"
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:slo', kwargs={'pk': self.pk})

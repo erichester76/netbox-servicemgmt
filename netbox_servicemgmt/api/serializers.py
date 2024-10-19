@@ -4,7 +4,7 @@ from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, Ser
 class SLOSerializer(serializers.ModelSerializer):
     class Meta:
         model = SLO
-        fields = ['id', 'name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response']
+        fields = ['id', 'name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response']
 
 class SolutionTemplateSerializer(serializers.ModelSerializer):
     class Meta:

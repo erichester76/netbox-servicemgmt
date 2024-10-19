@@ -4,7 +4,7 @@ from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, Serv
 class SLOForm(forms.ModelForm):
     class Meta:
         model = SLO
-        fields = ['name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response']
+        fields = ['name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response']
 
 class SolutionTemplateForm(forms.ModelForm):
     class Meta:
