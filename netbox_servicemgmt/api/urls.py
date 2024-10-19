@@ -19,7 +19,7 @@ router.register(r'service-components', ServiceComponentViewSet)
 
 # Combine router URLs with additional custom API paths
 urlpatterns = router.urls + [
-    path('api/object-fields/<int:object_type_id>/', get_object_fields, name='get_object_fields'),
-    path('api/slo-details/<int:slo_id>/', get_slo_fields, name='get_slo_fields'),
+    path('object-fields/<int:object_type_id>/', get_object_fields, name='get_object_fields'),
+    path('slo-fields/<int:slo_id>/', get_slo_fields, name='get_slo_fields'),
 
 ]

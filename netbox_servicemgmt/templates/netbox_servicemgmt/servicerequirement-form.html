@@ -111,7 +111,7 @@
           document.getElementById('id_service_slo').addEventListener('change', function () {
             const sloId = this.value;
             if (sloId) {
-                fetch(`/plugins/netbox_servicemgmt/api/slo-details/${sloId}/`)
+                fetch(`/plugins/netbox_servicemgmt/api/slo-fields/${sloId}/`)
                     .then(response => response.json())
                     .then(data => {
                         // Update form fields with the SLO override values
