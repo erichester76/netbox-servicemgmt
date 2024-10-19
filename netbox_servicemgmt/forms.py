@@ -1,28 +1,28 @@
-from django import forms
+from netbox.forms import NetBoxModelForm
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 
-class SLOForm(forms.ModelForm):
+class SLOForm(NetBoxModelForm):
     class Meta:
         model = SLO
         fields = ['name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response']
 
-class SolutionTemplateForm(forms.ModelForm):
+class SolutionTemplateForm(NetBoxModelForm):
     class Meta:
         model = SolutionTemplate
         fields = ['name', 'description', 'design_contact', 'requirements']
 
-class FaultToleranceForm(forms.ModelForm):
+class FaultToleranceForm(NetBoxModelForm):
     class Meta:
         model = FaultTolerance
         fields = ['name', 'description', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule']
 
-class ServiceTemplateForm(forms.ModelForm):
+class ServiceTemplateForm(NetBoxModelForm):
     class Meta:
         model = ServiceTemplate
         fields = ['name', 'description', 'solution_template', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
 
 
-class ServiceRequirementForm(forms.ModelForm):
+class ServiceRequirementForm(NetBoxModelForm):
     
     class Meta:
         model = ServiceRequirement
@@ -90,17 +90,17 @@ class ServiceRequirementForm(forms.ModelForm):
                 self.fields[form_field_name].initial = getattr(slo, form_field_name)
 
 
-class SolutionDeploymentForm(forms.ModelForm):
+class SolutionDeploymentForm(NetBoxModelForm):
     class Meta:
         model = SolutionDeployment
         fields = ['name', 'description', 'solution_template', 'deployment_type', 'deployment_date']
 
-class ServiceDeploymentForm(forms.ModelForm):
+class ServiceDeploymentForm(NetBoxModelForm):
     class Meta:
         model = ServiceDeployment
         fields = ['name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
-class ServiceComponentForm(forms.ModelForm):
+class ServiceComponentForm(NetBoxModelForm):
     class Meta:
         model = ServiceComponent
         fields = ['name', 'description', 'service_deployment', 'service_requirement', 'object_type', 'object_id']

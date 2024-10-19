@@ -1,4 +1,4 @@
-from rest_framework.routers import DefaultRouter
+from netbox.api.routers import NetBoxRouter
 from django.urls import path
 from .views import (
     SLOViewSet, SolutionTemplateViewSet, FaultToleranceViewSet,
@@ -9,7 +9,7 @@ from .views import (
 
 app_name = 'netbox_servicemgmt'
 
-router = DefaultRouter()
+router = NetBoxRouter()
 router.register(r'slo', SLOViewSet)
 router.register(r'solution-templates', SolutionTemplateViewSet)
 router.register(r'fault-tolerances', FaultToleranceViewSet)

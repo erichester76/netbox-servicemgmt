@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ModelViewSet
+from netbox.api.viewsets import NetBoxModelViewSet
 from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultToleranceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
 from django.http import JsonResponse
@@ -28,34 +28,34 @@ def get_object_fields(request, object_type_id):
     
     return JsonResponse({'fields': fields})
 
-class SLOViewSet(ModelViewSet):
+class SLOViewSet(NetBoxModelViewSet):
     queryset = SLO.objects.all()
     serializer_class = SLOSerializer
 
-class SolutionTemplateViewSet(ModelViewSet):
+class SolutionTemplateViewSet(NetBoxModelViewSet):
     queryset = SolutionTemplate.objects.all()
     serializer_class = SolutionTemplateSerializer
 
-class FaultToleranceViewSet(ModelViewSet):
+class FaultToleranceViewSet(NetBoxModelViewSet):
     queryset = FaultTolerance.objects.all()
     serializer_class = FaultToleranceSerializer
 
-class ServiceTemplateViewSet(ModelViewSet):
+class ServiceTemplateViewSet(NetBoxModelViewSet):
     queryset = ServiceTemplate.objects.all()
     serializer_class = ServiceTemplateSerializer
 
-class ServiceRequirementViewSet(ModelViewSet):
+class ServiceRequirementViewSet(NetBoxModelViewSet):
     queryset = ServiceRequirement.objects.all()
     serializer_class = ServiceRequirementSerializer
 
-class SolutionDeploymentViewSet(ModelViewSet):
+class SolutionDeploymentViewSet(NetBoxModelViewSet):
     queryset = SolutionDeployment.objects.all()
     serializer_class = SolutionDeploymentSerializer
 
-class ServiceDeploymentViewSet(ModelViewSet):
+class ServiceDeploymentViewSet(NetBoxModelViewSet):
     queryset = ServiceDeployment.objects.all()
     serializer_class = ServiceDeploymentSerializer
 
-class ServiceComponentViewSet(ModelViewSet):
+class ServiceComponentViewSet(NetBoxModelViewSet):
     queryset = ServiceComponent.objects.all()
     serializer_class = ServiceComponentSerializer
