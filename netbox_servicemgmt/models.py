@@ -23,6 +23,9 @@ class SLO(NetBoxModel):
         verbose_name = ('Service Level Object')
         verbose_name_plural = ('Service Level Objects')    
 
+    def __str__(self):
+        return f'{self.name}'
+    
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:slo', kwargs={'pk': self.pk})
     
@@ -33,6 +36,9 @@ class SolutionTemplate(NetBoxModel):
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers', verbose_name='Architect')
     requirements = models.TextField()
 
+    def __str__(self):
+        return f'{self.name}'
+    
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:solutiontemplate', kwargs={'pk': self.pk})
 
@@ -59,6 +65,9 @@ class FaultTolerance(NetBoxModel):
         verbose_name = ('Fault Tolerence Model')
         verbose_name_plural = ('Fault Tolerence Models')    
     
+    def __str__(self):
+        return f'{self.name}'
+    
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:faulttolerance', kwargs={'pk': self.pk})
 
@@ -81,6 +90,9 @@ class ServiceTemplate(NetBoxModel):
 
     #to fix conflict with ipam service templates
     tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
+
+    def __str__(self):
+        return f'{self.name}'
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
@@ -156,6 +168,10 @@ class ServiceRequirement(NetBoxModel):
     requirement20_field = models.CharField(max_length=255, null=True, blank=True)
     requirement20_value = models.CharField(max_length=255, null=True, blank=True)
     
+    
+    def __str__(self):
+        return f'{self.name}'
+        
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicerequirement', kwargs={'pk': self.pk})    
 
@@ -167,7 +183,10 @@ class SolutionDeployment(NetBoxModel):
     solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, related_name='solution_deployments', verbose_name='Solution Template')
     deployment_type = models.CharField(max_length=255, null=True, blank=True)
     deployment_date = models.DateTimeField()
-    
+
+    def __str__(self):
+        return f'{self.name}'
+        
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:solutiondeployment', kwargs={'pk': self.pk})
 
@@ -192,6 +211,9 @@ class ServiceDeployment(NetBoxModel):
     maintenance_window = models.CharField(max_length=255, verbose_name='Maintenance Window Timeframes')
     deployment_rfc = models.CharField(max_length=255, verbose_name='Associated RFC for Deployment')
     
+    def __str__(self):
+        return f'{self.name}'   
+    
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
 
@@ -212,6 +234,9 @@ class ServiceComponent(NetBoxModel):
         ordering = ['name']
         verbose_name = ('Deployment Component')
         verbose_name_plural = ('Deployment Components')
+    
+    def __str__(self):
+        return f'{self.name}'    
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicecomponent', kwargs={'pk': self.pk})
