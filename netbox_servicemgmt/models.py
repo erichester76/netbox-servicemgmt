@@ -98,9 +98,9 @@ class ServiceRequirement(NetBoxModel):
     backup_schedule = models.CharField(max_length=255)
     offsite_backup = models.BooleanField(default=False)
     airgap_backup = models.BooleanField(default=False)
-    # Object Type field to link to any NetBox object type
-    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     
+    # Object Type field to link to any NetBox object type
+    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)    
 
     # Enumerated requirement fields (these will be fields from the referenced object to set defaults for deployment)
     requirement1_field = models.CharField(max_length=255, null=True, blank=True)

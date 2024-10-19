@@ -1,4 +1,5 @@
 from netbox.views import generic
+from .base_view import BaseObjectView
 from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .forms import SLOForm, SolutionTemplateForm, FaultTolerenceForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
 from .tables import SLOTable, SolutionTemplateTable, FaultTolerenceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
@@ -8,7 +9,7 @@ class SLOListView(generic.ObjectListView):
     queryset = SLO.objects.all()
     table = SLOTable
 
-class SLODetailView(generic.ObjectDetailView):
+class SLODetailView(generic.BaseObjectView):
     queryset = SLO.objects.all()
 
 class SLOEditView(generic.ObjectEditView):
@@ -30,7 +31,7 @@ class SolutionTemplateListView(generic.ObjectListView):
     queryset = SolutionTemplate.objects.all()
     table = SolutionTemplateTable
 
-class SolutionTemplateDetailView(generic.ObjectDetailView):
+class SolutionTemplateDetailView(generic.BaseObjectView):
     queryset = SolutionTemplate.objects.all()
 
 class SolutionTemplateEditView(generic.ObjectEditView):
@@ -52,7 +53,7 @@ class FaultTolerenceListView(generic.ObjectListView):
     queryset = FaultTolerence.objects.all()
     table = FaultTolerenceTable
 
-class FaultTolerenceDetailView(generic.ObjectDetailView):
+class FaultTolerenceDetailView(generic.BaseObjectView):
     queryset = FaultTolerence.objects.all()
 
 class FaultTolerenceEditView(generic.ObjectEditView):
@@ -74,7 +75,7 @@ class ServiceTemplateListView(generic.ObjectListView):
     queryset = ServiceTemplate.objects.all()
     table = ServiceTemplateTable
 
-class ServiceTemplateDetailView(generic.ObjectDetailView):
+class ServiceTemplateDetailView(generic.BaseObjectView):
     queryset = ServiceTemplate.objects.all()
 
 class ServiceTemplateEditView(generic.ObjectEditView):
@@ -96,7 +97,7 @@ class ServiceRequirementListView(generic.ObjectListView):
     queryset = ServiceRequirement.objects.all()
     table = ServiceRequirementTable
 
-class ServiceRequirementDetailView(generic.ObjectDetailView):
+class ServiceRequirementDetailView(generic.BaseObjectView):
     queryset = ServiceRequirement.objects.all()
 
 class ServiceRequirementEditView(generic.ObjectEditView):
@@ -118,7 +119,7 @@ class SolutionDeploymentListView(generic.ObjectListView):
     queryset = SolutionDeployment.objects.all()
     table = SolutionDeploymentTable
 
-class SolutionDeploymentDetailView(generic.ObjectDetailView):
+class SolutionDeploymentDetailView(generic.BaseObjectView):
     queryset = SolutionDeployment.objects.all()
 
 class SolutionDeploymentEditView(generic.ObjectEditView):
@@ -140,7 +141,7 @@ class ServiceDeploymentListView(generic.ObjectListView):
     queryset = ServiceDeployment.objects.all()
     table = ServiceDeploymentTable
 
-class ServiceDeploymentDetailView(generic.ObjectDetailView):
+class ServiceDeploymentDetailView(generic.BaseObjectView):
     queryset = ServiceDeployment.objects.all()
 
 class ServiceDeploymentEditView(generic.ObjectEditView):
@@ -162,7 +163,7 @@ class ServiceComponentListView(generic.ObjectListView):
     queryset = ServiceComponent.objects.all()
     table = ServiceComponentTable
 
-class ServiceComponentDetailView(generic.ObjectDetailView):
+class ServiceComponentDetailView(generic.BaseObjectView):
     queryset = ServiceComponent.objects.all()
 
 class ServiceComponentEditView(generic.ObjectEditView):
