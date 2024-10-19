@@ -1,9 +1,7 @@
 from netbox.views import generic
 from .models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
-from .forms import SolutionTemplateForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, HAModelForm, SLOForm
+from .forms import SolutionTemplateForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm, HAModelForm, SLOForm
 from .tables import SolutionTemplateTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable, HAModelTable, SLOTable
-
-from utilities.views import BulkImportView, ObjectChangeLogView
 
 # SolutionTemplate Views
 class SolutionTemplateListView(generic.ObjectListView):
@@ -20,11 +18,11 @@ class SolutionTemplateEditView(generic.ObjectEditView):
 class SolutionTemplateDeleteView(generic.ObjectDeleteView):
     queryset = SolutionTemplate.objects.all()
 
-class SolutionTemplateBulkImportView(BulkImportView):
+class SolutionTemplateBulkImportView(generic.BulkImportView):
     queryset = SolutionTemplate.objects.all()
     model_form = SolutionTemplateForm
 
-class SolutionTemplateChangeLogView(ObjectChangeLogView):
+class SolutionTemplateChangeLogView(generic.ObjectChangeLogView):
     queryset = SolutionTemplate.objects.all()
 
 # ServiceTemplate Views
@@ -42,11 +40,11 @@ class ServiceTemplateEditView(generic.ObjectEditView):
 class ServiceTemplateDeleteView(generic.ObjectDeleteView):
     queryset = ServiceTemplate.objects.all()
 
-class ServiceTemplateBulkImportView(BulkImportView):
+class ServiceTemplateBulkImportView(generic.BulkImportView):
     queryset = ServiceTemplate.objects.all()
     model_form = ServiceTemplateForm
 
-class ServiceTemplateChangeLogView(ObjectChangeLogView):
+class ServiceTemplateChangeLogView(generic.ObjectChangeLogView):
     queryset = ServiceTemplate.objects.all()
 
 # ServiceRequirement Views
@@ -64,11 +62,11 @@ class ServiceRequirementEditView(generic.ObjectEditView):
 class ServiceRequirementDeleteView(generic.ObjectDeleteView):
     queryset = ServiceRequirement.objects.all()
 
-class ServiceRequirementBulkImportView(BulkImportView):
+class ServiceRequirementBulkImportView(generic.BulkImportView):
     queryset = ServiceRequirement.objects.all()
     model_form = ServiceRequirementForm
 
-class ServiceRequirementChangeLogView(ObjectChangeLogView):
+class ServiceRequirementChangeLogView(generic.ObjectChangeLogView):
     queryset = ServiceRequirement.objects.all()
 
 # SolutionDeployment Views
@@ -86,11 +84,11 @@ class SolutionDeploymentEditView(generic.ObjectEditView):
 class SolutionDeploymentDeleteView(generic.ObjectDeleteView):
     queryset = SolutionDeployment.objects.all()
 
-class SolutionDeploymentBulkImportView(BulkImportView):
+class SolutionDeploymentBulkImportView(generic.BulkImportView):
     queryset = SolutionDeployment.objects.all()
     model_form = SolutionDeploymentForm
 
-class SolutionDeploymentChangeLogView(ObjectChangeLogView):
+class SolutionDeploymentChangeLogView(generic.ObjectChangeLogView):
     queryset = SolutionDeployment.objects.all()
 
 # ServiceDeployment Views
@@ -108,11 +106,11 @@ class ServiceDeploymentEditView(generic.ObjectEditView):
 class ServiceDeploymentDeleteView(generic.ObjectDeleteView):
     queryset = ServiceDeployment.objects.all()
 
-class ServiceDeploymentBulkImportView(BulkImportView):
+class ServiceDeploymentBulkImportView(generic.BulkImportView):
     queryset = ServiceDeployment.objects.all()
     model_form = ServiceDeploymentForm
 
-class ServiceDeploymentChangeLogView(ObjectChangeLogView):
+class ServiceDeploymentChangeLogView(generic.ObjectChangeLogView):
     queryset = ServiceDeployment.objects.all()
 
 # ServiceComponent Views
@@ -129,11 +127,11 @@ class ServiceComponentEditView(generic.ObjectEditView):
 class ServiceComponentDeleteView(generic.ObjectDeleteView):
     queryset = ServiceComponent.objects.all()
 
-class ServiceComponentBulkImportView(BulkImportView):
+class ServiceComponentBulkImportView(generic.BulkImportView):
     queryset = ServiceComponent.objects.all()
     model_form = ServiceComponentForm
 
-class ServiceComponentChangeLogView(ObjectChangeLogView):
+class ServiceComponentChangeLogView(generic.bjectChangeLogView):
     queryset = ServiceComponent.objects.all()
 
 # HAModel Views
@@ -151,11 +149,11 @@ class HAModelEditView(generic.ObjectEditView):
 class HAModelDeleteView(generic.ObjectDeleteView):
     queryset = HAModel.objects.all()
 
-class HAModelBulkImportView(BulkImportView):
+class HAModelBulkImportView(generic.BulkImportView):
     queryset = HAModel.objects.all()
     model_form = HAModelForm
 
-class HAModelChangeLogView(ObjectChangeLogView):
+class HAModelChangeLogView(generic.ObjectChangeLogView):
     queryset = HAModel.objects.all()
 
 # SLO Views
@@ -173,9 +171,9 @@ class SLOEditView(generic.ObjectEditView):
 class SLODeleteView(generic.ObjectDeleteView):
     queryset = SLO.objects.all()
 
-class SLOBulkImportView(BulkImportView):
+class SLOBulkImportView(generic.BulkImportView):
     queryset = SLO.objects.all()
     model_form = SLOForm
 
-class SLOChangeLogView(ObjectChangeLogView):
+class SLOChangeLogView(generic.ObjectChangeLogView):
     queryset = SLO.objects.all()
