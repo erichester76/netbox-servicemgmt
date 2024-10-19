@@ -56,7 +56,7 @@ class FaultTolerance(NetBoxModel):
     airgap_backup = models.BooleanField(default=False)
     
     def __str__(self):
-        return f"Fault Tolerance Plan for {self.service_template.name}"
+        return f"Fault Tolerance Plan {self.name}"
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:faulttolerance', kwargs={'pk': self.pk})
@@ -81,7 +81,7 @@ class ServiceTemplate(NetBoxModel):
     tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
 
     def __str__(self):
-        return self.name
+        return f"Service Template self.name"
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
