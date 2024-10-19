@@ -35,9 +35,9 @@ class FaultTolerence(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     vip_required = models.BooleanField(default=False)
-    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='primary_sites')
-    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='secondary_sites')
-    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='tertiary_sites')  
+    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='ft_primary_sites')
+    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='ft_secondary_sites')
+    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='ft_tertiary_sites')  
     instances_per_site = models.IntegerField()
     offsite_replication = models.BooleanField(default=False)
     clustered = models.BooleanField(default=False)
@@ -86,9 +86,9 @@ class ServiceRequirement(NetBoxModel):
     
     #overrides for fault tolerence at service level
     vip_required = models.BooleanField(default=False)
-    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='primary_site_overrides')
-    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='secondary_site_overrides')
-    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='tertiary_site_overrrides')  
+    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='sr_primary_site_overrides')
+    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='sr_secondary_site_overrides')
+    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='sr_tertiary_site_overrrides')  
     instances_per_site = models.IntegerField()
     offsite_replication = models.BooleanField(default=False)
     clustered = models.BooleanField(default=False)
@@ -168,17 +168,16 @@ class ServiceDeployment(NetBoxModel):
     service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_deployments')
     solution_deployment = models.ForeignKey(SolutionDeployment, on_delete=models.CASCADE, related_name='service_deployments')
     production_readiness_checklist = models.CharField(max_length=255, null=True, blank=True)   
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
-    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True)
-    service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
-    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True)
-    service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_business_owners')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_business_owners')
+    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_service_owners')
+    service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_service_owners')
     major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True)
     functional_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
     functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
-    engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='responsible_deployment')
-    operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='responsible_operations')
-    monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='responsible_monitoring')
+    engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_ responsible_deployment')
+    operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_operations')
+    monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring')
 
     def __str__(self):
         return f"Service deployment for {self.service_template.name}"
@@ -188,8 +187,8 @@ class ServiceDeployment(NetBoxModel):
 class ServiceComponent(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='components')
-    service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='components')
+    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='sc_components')
+    service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='sc_components')
 
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
