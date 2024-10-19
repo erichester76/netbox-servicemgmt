@@ -4,8 +4,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from tenancy.models import Tenant
 from users.models import User
-from dcim.models import Device, Site
-from virtualization.models import VirtualMachine
+from dcim.models import Site
+from taggit.managers import TaggableManager
 
 # Solution Template Model
 class SolutionTemplate(NetBoxModel):
@@ -28,6 +28,9 @@ class ServiceTemplate(NetBoxModel):
     responsible_deployment = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='responsible_deployment')
     responsible_operations = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='responsible_operations')
     responsible_monitoring = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='responsible_monitoring')
+
+    tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
+
 
     def __str__(self):
         return self.name
