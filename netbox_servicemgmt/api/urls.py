@@ -4,7 +4,7 @@ from .views import (
     SLOViewSet, SolutionTemplateViewSet, FaultToleranceViewSet,
     ServiceTemplateViewSet, ServiceRequirementViewSet,
     SolutionDeploymentViewSet, ServiceDeploymentViewSet, ServiceComponentViewSet,
-    get_object_fields, get_slo_fields
+    get_object_fields, get_ft_fields
 )
 
 app_name = 'netbox_servicemgmt'
@@ -22,6 +22,6 @@ router.register(r'service-components', ServiceComponentViewSet)
 # Combine router URLs with additional custom API paths
 urlpatterns = router.urls + [
     path('object-fields/<int:object_type_id>/', get_object_fields, name='get_object_fields'),
-    path('slo-fields/<int:slo_id>/', get_slo_fields, name='get_slo_fields'),
+    path('ft-fields/<int:ft_id>/', get_ft_fields, name='get_ft_fields'),
 
 ]

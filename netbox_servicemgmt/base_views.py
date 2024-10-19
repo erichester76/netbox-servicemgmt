@@ -34,7 +34,7 @@ class BaseObjectView(generic.ObjectView):
         field_data = []
         for field in instance._meta.get_fields():      
             # Skip excluded fields
-            if field.name in excluded_extras or field.is_relation: 
+            if field.name in excluded_extras: 
                 continue      
             value = None
             url = None
