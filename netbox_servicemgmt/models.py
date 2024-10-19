@@ -24,7 +24,7 @@ class SLO(NetBoxModel):
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='st_designers')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers')
     requirements = models.TextField()
     def __str__(self):
         return self.name
@@ -57,7 +57,7 @@ class ServiceTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='st_solutions')
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='st_designers')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers')
     service_type = models.CharField(max_length=255)
     vendor_management_assessment = models.CharField(max_length=255)
     vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor')
@@ -95,7 +95,7 @@ class ServiceRequirement(NetBoxModel):
     multi_site = models.BooleanField(null=True, blank=True)
     multi_region = models.BooleanField(null=True, blank=True)
     snapshots = models.BooleanField(null=True, blank=True)
-    backup_schedule = models.CharField(max_length=255,null=True, blank=True)
+    backup_schedule = models.CharField(max_length=255, null=True, blank=True)
     offsite_backup = models.BooleanField(null=True, blank=True)
     airgap_backup = models.BooleanField(null=True, blank=True)
     
