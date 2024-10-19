@@ -24,7 +24,7 @@ class SLO(NetBoxModel):
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designer')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers')
     requirements = models.TextField()
     def __str__(self):
         return self.name
@@ -35,9 +35,9 @@ class FaultTolerence(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     vip_required = models.BooleanField(default=False)
-    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='primary_site')
-    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='secondary_site')
-    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='tertiary_site')  
+    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='primary_sites')
+    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='secondary_sites')
+    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='tertiary_sites')  
     instances_per_site = models.IntegerField()
     offsite_replication = models.BooleanField(default=False)
     clustered = models.BooleanField(default=False)
@@ -57,13 +57,13 @@ class ServiceTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='service_templates')
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='responsible_design')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers')
     service_type = models.CharField(max_length=255)
     vendor_management_assessment = models.CharField(max_length=255)
     vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='service_templates')
 
     #fault tolerence defaults, can be overridden at servicerequirement level
-    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.CASCADE, related_name='service_requirements')
+    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.CASCADE, related_name='service_templates')
     #slo defaults, can be overridden at servicerequirement level
     service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='service_templates')
 
@@ -79,16 +79,16 @@ class ServiceRequirement(NetBoxModel):
     description = models.TextField()
     
     service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_requirements')
-    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='responsible_design')
+    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_requriements_designers')
 
     #slo can be overriden at component level
     service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='service_requirements')
     
     #overrides for fault tolerence at service level
     vip_required = models.BooleanField(default=False)
-    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='primary_site')
-    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='secondary_site')
-    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='tertiary_site')  
+    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='primary_site_overrides')
+    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='secondary_site_overrides')
+    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='tertiary_site_overrrides')  
     instances_per_site = models.IntegerField()
     offsite_replication = models.BooleanField(default=False)
     clustered = models.BooleanField(default=False)
@@ -153,7 +153,7 @@ class ServiceRequirement(NetBoxModel):
 class SolutionDeployment(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, related_name='deployments')
+    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, related_name='solution_deployments')
     deployment_type = models.CharField(max_length=255, null=True, blank=True)
     deployment_date = models.DateTimeField()
     
