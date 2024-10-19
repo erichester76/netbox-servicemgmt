@@ -9,7 +9,7 @@ class SLOListView(generic.ObjectListView):
     queryset = SLO.objects.all()
     table = SLOTable
 
-class SLODetailView(generic.BaseObjectView):
+class SLODetailView(BaseObjectView):
     queryset = SLO.objects.all()
 
 class SLOEditView(generic.ObjectEditView):
@@ -31,7 +31,7 @@ class SolutionTemplateListView(generic.ObjectListView):
     queryset = SolutionTemplate.objects.all()
     table = SolutionTemplateTable
 
-class SolutionTemplateDetailView(generic.BaseObjectView):
+class SolutionTemplateDetailView(BaseObjectView):
     queryset = SolutionTemplate.objects.all()
 
 class SolutionTemplateEditView(generic.ObjectEditView):
@@ -53,7 +53,7 @@ class FaultTolerenceListView(generic.ObjectListView):
     queryset = FaultTolerence.objects.all()
     table = FaultTolerenceTable
 
-class FaultTolerenceDetailView(generic.BaseObjectView):
+class FaultTolerenceDetailView(BaseObjectView):
     queryset = FaultTolerence.objects.all()
 
 class FaultTolerenceEditView(generic.ObjectEditView):
@@ -75,7 +75,7 @@ class ServiceTemplateListView(generic.ObjectListView):
     queryset = ServiceTemplate.objects.all()
     table = ServiceTemplateTable
 
-class ServiceTemplateDetailView(generic.BaseObjectView):
+class ServiceTemplateDetailView(BaseObjectView):
     queryset = ServiceTemplate.objects.all()
 
 class ServiceTemplateEditView(generic.ObjectEditView):
@@ -97,7 +97,7 @@ class ServiceRequirementListView(generic.ObjectListView):
     queryset = ServiceRequirement.objects.all()
     table = ServiceRequirementTable
 
-class ServiceRequirementDetailView(generic.BaseObjectView):
+class ServiceRequirementDetailView(BaseObjectView):
     queryset = ServiceRequirement.objects.all()
 
 class ServiceRequirementEditView(generic.ObjectEditView):
@@ -119,7 +119,7 @@ class SolutionDeploymentListView(generic.ObjectListView):
     queryset = SolutionDeployment.objects.all()
     table = SolutionDeploymentTable
 
-class SolutionDeploymentDetailView(generic.BaseObjectView):
+class SolutionDeploymentDetailView(BaseObjectView):
     queryset = SolutionDeployment.objects.all()
 
 class SolutionDeploymentEditView(generic.ObjectEditView):
@@ -141,7 +141,7 @@ class ServiceDeploymentListView(generic.ObjectListView):
     queryset = ServiceDeployment.objects.all()
     table = ServiceDeploymentTable
 
-class ServiceDeploymentDetailView(generic.BaseObjectView):
+class ServiceDeploymentDetailView(BaseObjectView):
     queryset = ServiceDeployment.objects.all()
 
 class ServiceDeploymentEditView(generic.ObjectEditView):
@@ -163,7 +163,7 @@ class ServiceComponentListView(generic.ObjectListView):
     queryset = ServiceComponent.objects.all()
     table = ServiceComponentTable
 
-class ServiceComponentDetailView(generic.BaseObjectView):
+class ServiceComponentDetailView(BaseObjectView):
     queryset = ServiceComponent.objects.all()
 
 class ServiceComponentEditView(generic.ObjectEditView):
