@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
+from ..models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
 from .serializers import SolutionTemplateSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer, HAModelSerializer, SLOSerializer
 
 class SolutionTemplateViewSet(ModelViewSet):

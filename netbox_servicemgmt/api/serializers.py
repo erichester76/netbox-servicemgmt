@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
+from ..models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
 
 class SolutionTemplateSerializer(serializers.ModelSerializer):
     class Meta:
