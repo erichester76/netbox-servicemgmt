@@ -109,9 +109,9 @@
 
           // SLO Selection Behavior
           document.getElementById('id_service_slo').addEventListener('change', function () {
-            const sloId = this.value;
-            if (sloId) {
-                fetch(`/api/plugins/netbox_servicemgmt/slo-fields/${sloId}/`)
+            const ftId = this.value;
+            if (ftId) {
+                fetch(`/api/plugins/netbox_servicemgmt/ft-fields/${ftId}/`)
                     .then(response => response.json())
                     .then(data => {
                         // Update form fields with the SLO override values

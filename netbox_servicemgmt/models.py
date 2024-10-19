@@ -105,10 +105,10 @@ class ServiceRequirement(NetBoxModel):
     service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_requirements', verbose_name='Service Template')
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers', verbose_name='Requirement Owner')
 
-    #slo can be overriden at component level
+    #overrides for service template slo
     service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     
-    #overrides for fault tolerence at service level
+    #overrides for fault tolerence at service template level
     primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='sr_primary_site_overrides')
     secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='sr_secondary_site_overrides')
     tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='sr_tertiary_site_overrrides')  
