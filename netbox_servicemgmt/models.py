@@ -34,7 +34,6 @@ class SolutionTemplate(NetBoxModel):
 class FaultTolerence(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='fault_tolerence')
     vip_required = models.BooleanField(default=False)
     primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='primary_site')
     secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='secondary_site')
