@@ -1,71 +1,74 @@
 import django_filters
-from .models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
 from netbox.filtersets import NetBoxModelFilterSet
-from tenancy.models import Tenant
+from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from dcim.models import Site
-
-
-# SolutionTemplate FilterSet
-class SolutionTemplateFilterSet(NetBoxModelFilterSet):
-    class Meta:
-        model = SolutionTemplate
-        fields = ['name', 'architect_contact', 'budget']
-
-
-# ServiceTemplate FilterSet
-class ServiceTemplateFilterSet(NetBoxModelFilterSet):
-    class Meta:
-        model = ServiceTemplate
-        fields = ['name', 'responsible_design', 'responsible_deployment', 'responsible_operations', 'responsible_monitoring']
-
-
-# ServiceRequirement FilterSet
-class ServiceRequirementFilterSet(NetBoxModelFilterSet):
-    object_type = django_filters.ModelChoiceFilter(queryset=Site.objects.all())  # Example for filtering by object type
-
-    class Meta:
-        model = ServiceRequirement
-        fields = ['service_template', 'requirement1', 'requirement2', 'requirement3', 'requirement20']
-
-
-# SolutionDeployment FilterSet
-class SolutionDeploymentFilterSet(NetBoxModelFilterSet):
-    tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
-
-    class Meta:
-        model = SolutionDeployment
-        fields = ['solution_template', 'tenant', 'deployment_date']
-
-
-# ServiceDeployment FilterSet
-class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
-    class Meta:
-        model = ServiceDeployment
-        fields = ['service_template', 'solution_deployment']
-
-
-# ServiceComponent FilterSet
-class ServiceComponentFilterSet(NetBoxModelFilterSet):
-    object_type = django_filters.ModelChoiceFilter(queryset=Site.objects.all())  # Example for filtering by object type
-
-    class Meta:
-        model = ServiceComponent
-        fields = ['service_deployment', 'object_type']
-
-
-# HAModel FilterSet
-class HAModelFilterSet(NetBoxModelFilterSet):
-    primary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-    secondary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-    tertiary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-
-    class Meta:
-        model = HAModel
-        fields = ['service_template', 'primary_site', 'secondary_site', 'tertiary_site', 'replication', 'cluster', 'multi_site']
-
+from tenancy.models import Tenant, Contact
+from taggit.models import Tag
 
 # SLO FilterSet
 class SLOFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = SLO
-        fields = ['service_template', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'replicas_per_site']
+        fields = ['name', 'rpo', 'rto', 'sev1_response', 'sev2_response']
+
+# SolutionTemplate FilterSet
+class SolutionTemplateFilterSet(NetBoxModelFilterSet):
+    design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
+
+    class Meta:
+        model = SolutionTemplate
+        fields = ['name', 'design_contact', 'requirements']
+
+# FaultTolerence FilterSet
+class FaultTolerenceFilterSet(NetBoxModelFilterSet):
+    primary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
+    secondary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
+    tertiary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
+
+    class Meta:
+        model = FaultTolerence
+        fields = ['name', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site']
+
+# ServiceTemplate FilterSet
+class ServiceTemplateFilterSet(NetBoxModelFilterSet):
+    design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
+    vendor = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
+    tags = django_filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all())
+
+    class Meta:
+        model = ServiceTemplate
+        fields = ['name', 'solution_template', 'design_contact', 'service_type', 'vendor', 'tags']
+
+# ServiceRequirement FilterSet
+class ServiceRequirementFilterSet(NetBoxModelFilterSet):
+    primary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
+    secondary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
+    tertiary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
+
+    class Meta:
+        model = ServiceRequirement
+        fields = ['name', 'service_template', 'requirement_owner', 'service_slo', 'primary_site', 'secondary_site']
+
+# SolutionDeployment FilterSet
+class SolutionDeploymentFilterSet(NetBoxModelFilterSet):
+    class Meta:
+        model = SolutionDeployment
+        fields = ['name', 'solution_template', 'deployment_type', 'deployment_date']
+
+# ServiceDeployment FilterSet
+class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
+    business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
+    service_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
+
+    class Meta:
+        model = ServiceDeployment
+        fields = ['name', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant']
+
+# ServiceComponent FilterSet
+class ServiceComponentFilterSet(NetBoxModelFilterSet):
+    service_deployment = django_filters.ModelChoiceFilter(queryset=ServiceDeployment.objects.all())
+    service_requirement = django_filters.ModelChoiceFilter(queryset=ServiceRequirement.objects.all())
+
+    class Meta:
+        model = ServiceComponent
+        fields = ['name', 'service_deployment', 'service_requirement', 'content_object']

@@ -103,18 +103,18 @@ items = (
             ),
         ]
     ),
-    # HA Model Menu Item
+    # Fault Tolerence Menu Item
     PluginMenuItem(
-        link="plugins:netbox_servicemgmt:hamodel_list",
-        link_text="HA Models",
+        link="plugins:netbox_servicemgmt:faulttolerence_list",
+        link_text="Fault Tolerance",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_servicemgmt:hamodel_add",
+                link="plugins:netbox_servicemgmt:faulttolerance_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_servicemgmt:hamodel_bulk_import",
+                link="plugins:netbox_servicemgmt:faulttolerance_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),

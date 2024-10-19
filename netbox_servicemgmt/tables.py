@@ -1,59 +1,59 @@
 import django_tables2 as tables
 from netbox.tables import NetBoxTable
-from .models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
+from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+
+class SLOTable(NetBoxTable):
+    name = tables.Column(linkify=True)
+
+    class Meta(NetBoxTable.Meta):
+        model = SLO
+        fields = ('name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response')
 
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = SolutionTemplate
-        fields = ('name', 'description', 'architect_contact', 'problem_statement', 'budget')
+        fields = ('name', 'description', 'design_contact')
+
+class FaultTolerenceTable(NetBoxTable):
+    name = tables.Column(linkify=True)
+
+    class Meta(NetBoxTable.Meta):
+        model = FaultTolerence
+        fields = ('name', 'description', 'service_template', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site')
 
 class ServiceTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceTemplate
-        fields = ('name', 'solution_template', 'responsible_design', 'responsible_deployment', 'responsible_operations', 'responsible_monitoring')
+        fields = ('name', 'description', 'solution_template', 'design_contact', 'service_type', 'vendor')
 
 class ServiceRequirementTable(NetBoxTable):
-    service_template = tables.Column(linkify=True)
+    name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceRequirement
-        fields = ('service_template', 'requirement1', 'requirement2', 'requirement3', 'requirement20')
+        fields = ('name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'primary_site', 'secondary_site')
 
 class SolutionDeploymentTable(NetBoxTable):
-    solution_template = tables.Column(linkify=True)
+    name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = SolutionDeployment
-        fields = ('solution_template', 'tenant', 'deployment_date')
+        fields = ('name', 'description', 'solution_template', 'deployment_type', 'deployment_date')
 
 class ServiceDeploymentTable(NetBoxTable):
-    service_template = tables.Column(linkify=True)
+    name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceDeployment
-        fields = ('service_template', 'solution_deployment')
+        fields = ('name', 'description', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant')
 
 class ServiceComponentTable(NetBoxTable):
-    service_deployment = tables.Column(linkify=True)
+    name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceComponent
-        fields = ('service_deployment', 'content_object')
-
-class HAModelTable(NetBoxTable):
-    service_template = tables.Column(linkify=True)
-
-    class Meta(NetBoxTable.Meta):
-        model = HAModel
-        fields = ('service_template', 'primary_site', 'secondary_site', 'tertiary_site', 'replication', 'cluster', 'multi_site', 'snapshots')
-
-class SLOTable(NetBoxTable):
-    service_template = tables.Column(linkify=True)
-
-    class Meta(NetBoxTable.Meta):
-        model = SLO
-        fields = ('service_template', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'replicas_per_site')
+        fields = ('name', 'description', 'service_deployment', 'service_requirement', 'content_object')

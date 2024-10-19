@@ -1,42 +1,42 @@
 from django import forms
-from .models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
-
-class SolutionTemplateForm(forms.ModelForm):
-    class Meta:
-        model = SolutionTemplate
-        fields = ['name', 'description', 'architect_contact', 'problem_statement', 'business_requirements', 'budget']
-
-class ServiceTemplateForm(forms.ModelForm):
-    class Meta:
-        model = ServiceTemplate
-        fields = ['name', 'solution_template', 'responsible_design', 'responsible_deployment', 'responsible_operations', 'responsible_monitoring']
-
-class ServiceRequirementForm(forms.ModelForm):
-    class Meta:
-        model = ServiceRequirement
-        fields = ['service_template', 'requirement1', 'requirement2', 'requirement3', 'requirement20', 'object_type']
-
-class SolutionDeploymentForm(forms.ModelForm):
-    class Meta:
-        model = SolutionDeployment
-        fields = ['solution_template', 'tenant', 'deployment_date']
-
-class ServiceDeploymentForm(forms.ModelForm):
-    class Meta:
-        model = ServiceDeployment
-        fields = ['service_template', 'solution_deployment']
-
-class ServiceComponentForm(forms.ModelForm):
-    class Meta:
-        model = ServiceComponent
-        fields = ['service_deployment', 'object_type', 'object_id']
-
-class HAModelForm(forms.ModelForm):
-    class Meta:
-        model = HAModel
-        fields = ['service_template', 'vip_required', 'primary_site', 'secondary_site', 'tertiary_site', 'replication', 'cluster', 'multi_site', 'snapshots']
+from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 
 class SLOForm(forms.ModelForm):
     class Meta:
         model = SLO
-        fields = ['service_template', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'replicas_per_site']
+        fields = ['name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response']
+
+class SolutionTemplateForm(forms.ModelForm):
+    class Meta:
+        model = SolutionTemplate
+        fields = ['name', 'description', 'design_contact', 'requirements']
+
+class FaultTolerenceForm(forms.ModelForm):
+    class Meta:
+        model = FaultTolerence
+        fields = ['name', 'description', 'service_template', 'vip_required', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule', 'offsite_backup', 'airgap_backup']
+
+class ServiceTemplateForm(forms.ModelForm):
+    class Meta:
+        model = ServiceTemplate
+        fields = ['name', 'description', 'solution_template', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
+
+class ServiceRequirementForm(forms.ModelForm):
+    class Meta:
+        model = ServiceRequirement
+        fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'vip_required', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule', 'offsite_backup', 'airgap_backup', 'requirement1_field', 'requirement1_value', 'requirement2_field', 'requirement2_value', 'requirement3_field', 'requirement3_value', 'requirement4_field', 'requirement4_value', 'requirement5_field', 'requirement5_value', 'requirement6_field', 'requirement6_value', 'requirement7_field', 'requirement7_value', 'requirement8_field', 'requirement8_value', 'requirement9_field', 'requirement9_value', 'requirement10_field', 'requirement10_value', 'requirement11_field', 'requirement11_value', 'requirement12_field', 'requirement12_value', 'requirement13_field', 'requirement13_value', 'requirement14_field', 'requirement14_value', 'requirement15_field', 'requirement15_value', 'requirement16_field', 'requirement16_value', 'requirement17_field', 'requirement17_value', 'requirement18_field', 'requirement18_value', 'requirement19_field', 'requirement19_value', 'requirement20_field', 'requirement20_value']
+
+class SolutionDeploymentForm(forms.ModelForm):
+    class Meta:
+        model = SolutionDeployment
+        fields = ['name', 'description', 'solution_template', 'deployment_type', 'deployment_date']
+
+class ServiceDeploymentForm(forms.ModelForm):
+    class Meta:
+        model = ServiceDeployment
+        fields = ['name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
+
+class ServiceComponentForm(forms.ModelForm):
+    class Meta:
+        model = ServiceComponent
+        fields = ['name', 'description', 'service_deployment', 'service_requirement', 'object_type', 'object_id']

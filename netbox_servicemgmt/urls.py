@@ -57,13 +57,13 @@ urlpatterns = [
     path('service-components/<int:pk>/changelog/', views.ServiceComponentChangeLogView.as_view(), name='servicecomponent_changelog'),
 
     # High Availability (HA) Model URLs
-    path('ha-models/', views.HAModelListView.as_view(), name='hamodel_list'),
-    path('ha-models/<int:pk>/', views.HAModelDetailView.as_view(), name='hamodel_detail'),
-    path('ha-models/add/', views.HAModelEditView.as_view(), name='hamodel_add'),
-    path('ha-models/<int:pk>/edit/', views.HAModelEditView.as_view(), name='hamodel_edit'),
-    path('ha-models/<int:pk>/delete/', views.HAModelDeleteView.as_view(), name='hamodel_delete'),
-    path('ha-models/bulk-import/', views.HAModelBulkImportView.as_view(), name='hamodel_bulk_import'),
-    path('ha-models/<int:pk>/changelog/', views.HAModelChangeLogView.as_view(), name='hamodel_changelog'),
+    path('fault-tolerence/', views.FaultTolerenceListView.as_view(), name='faulttolerence_list'),
+    path('fault-tolerence/<int:pk>/', views.FaultTolerenceDetailView.as_view(), name='faulttolerence_detail'),
+    path('fault-tolerence/add/', views.FaultTolerenceEditView.as_view(), name='faulttolerence_add'),
+    path('fault-tolerence/<int:pk>/edit/', views.FaultTolerenceEditView.as_view(), name='faulttolerence_edit'),
+    path('fault-tolerence/<int:pk>/delete/', views.FaultTolerenceDeleteView.as_view(), name='faulttolerence_delete'),
+    path('fault-tolerence/bulk-import/', views.FaultTolerenceBulkImportView.as_view(), name='faulttolerence_bulk_import'),
+    path('fault-tolerence/<int:pk>/changelog/', views.FaultTolerenceChangeLogView.as_view(), name='faulttolerence_changelog'),
 
     # Service Level Objective (SLO) URLs
     path('slos/', views.SLOListView.as_view(), name='slo_list'),

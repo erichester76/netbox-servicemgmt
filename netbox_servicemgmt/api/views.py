@@ -1,10 +1,18 @@
 from rest_framework.viewsets import ModelViewSet
-from ..models import SolutionTemplate, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent, HAModel, SLO
-from .serializers import SolutionTemplateSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer, HAModelSerializer, SLOSerializer
+from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultTolerenceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
+
+class SLOViewSet(ModelViewSet):
+    queryset = SLO.objects.all()
+    serializer_class = SLOSerializer
 
 class SolutionTemplateViewSet(ModelViewSet):
     queryset = SolutionTemplate.objects.all()
     serializer_class = SolutionTemplateSerializer
+
+class FaultTolerenceViewSet(ModelViewSet):
+    queryset = FaultTolerence.objects.all()
+    serializer_class = FaultTolerenceSerializer
 
 class ServiceTemplateViewSet(ModelViewSet):
     queryset = ServiceTemplate.objects.all()
@@ -25,11 +33,3 @@ class ServiceDeploymentViewSet(ModelViewSet):
 class ServiceComponentViewSet(ModelViewSet):
     queryset = ServiceComponent.objects.all()
     serializer_class = ServiceComponentSerializer
-
-class HAModelViewSet(ModelViewSet):
-    queryset = HAModel.objects.all()
-    serializer_class = HAModelSerializer
-
-class SLOViewSet(ModelViewSet):
-    queryset = SLO.objects.all()
-    serializer_class = SLOSerializer
