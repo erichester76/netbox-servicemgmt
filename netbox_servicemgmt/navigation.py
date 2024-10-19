@@ -89,7 +89,7 @@ items = (
     # Service Component Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:servicecomponent_list",
-        link_text="Service Components",
+        link_text="Deployment Components",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_servicemgmt:servicecomponent_add",
@@ -106,7 +106,7 @@ items = (
     # Fault Tolerence Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:faulttolerance_list",
-        link_text="Fault Tolerance",
+        link_text="Fault Tolerance Models",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_servicemgmt:faulttolerance_add",
@@ -123,7 +123,7 @@ items = (
     # SLO Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:slo_list",
-        link_text="SLOs",
+        link_text="Service Level Objectives",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_servicemgmt:slo_add",

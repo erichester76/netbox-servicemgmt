@@ -18,6 +18,11 @@ class SLO(NetBoxModel):
     sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes",null=True, blank=True)
     sev3_response = models.IntegerField(help_text="Severity 3 Response Time in minutes",null=True, blank=True)
 
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Service Level Object')
+        verbose_name_plural = ('Service Level Objects')    
+
     def __str__(self):
         return f"SLO: {self.name}"
     
@@ -40,7 +45,7 @@ class SolutionTemplate(NetBoxModel):
 # High Availability (HA) Model
 class FaultTolerance(NetBoxModel):
     name = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True)
     primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='ft_primary_sites')
     secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_secondary_sites')
     tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_tertiary_sites')  
@@ -54,6 +59,12 @@ class FaultTolerance(NetBoxModel):
     backup_schedule = models.CharField(max_length=255, null=True)
     offsite_backup = models.BooleanField(null=True)
     airgap_backup = models.BooleanField(null=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Fault Tolerence Model')
+        verbose_name_plural = ('Fault Tolerence Models')    
+    
     
     def __str__(self):
         return f"Fault Tolerance Plan {self.name}"
@@ -64,6 +75,7 @@ class FaultTolerance(NetBoxModel):
 
 # Service Template Model
 class ServiceTemplate(NetBoxModel):
+    
     name = models.CharField(max_length=255)
     description = models.TextField()
     solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='st_solutions')
@@ -218,6 +230,11 @@ class ServiceComponent(NetBoxModel):
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Deployment Component')
+        verbose_name_plural = ('Deployment Components')
 
     def __str__(self):
         return f"Component: {self.content_object} for {self.service_deployment} {self.service_requirement}"
