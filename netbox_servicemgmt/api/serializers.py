@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 
 class SLOSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,9 +11,9 @@ class SolutionTemplateSerializer(serializers.ModelSerializer):
         model = SolutionTemplate
         fields = ['id', 'name', 'description', 'design_contact', 'requirements']
 
-class FaultTolerenceSerializer(serializers.ModelSerializer):
+class FaultToleranceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FaultTolerence
+        model = FaultTolerance
         fields = ['id', 'name', 'description', 'vip_required', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site']
 
 class ServiceTemplateSerializer(serializers.ModelSerializer):

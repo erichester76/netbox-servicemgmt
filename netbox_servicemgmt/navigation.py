@@ -105,7 +105,7 @@ items = (
     ),
     # Fault Tolerence Menu Item
     PluginMenuItem(
-        link="plugins:netbox_servicemgmt:faulttolerence_list",
+        link="plugins:netbox_servicemgmt:faulttolerance_list",
         link_text="Fault Tolerance",
         buttons=[
             PluginMenuButton(

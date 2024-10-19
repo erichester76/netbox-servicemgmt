@@ -1,5 +1,5 @@
 from django import forms
-from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 
 class SLOForm(forms.ModelForm):
     class Meta:
@@ -11,9 +11,9 @@ class SolutionTemplateForm(forms.ModelForm):
         model = SolutionTemplate
         fields = ['name', 'description', 'design_contact', 'requirements']
 
-class FaultTolerenceForm(forms.ModelForm):
+class FaultToleranceForm(forms.ModelForm):
     class Meta:
-        model = FaultTolerence
+        model = FaultTolerance
         fields = ['name', 'description', 'vip_required', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule', 'offsite_backup', 'airgap_backup']
 
 class ServiceTemplateForm(forms.ModelForm):

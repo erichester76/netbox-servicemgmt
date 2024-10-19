@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
-from ..models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
-from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultTolerenceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
+from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultToleranceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
 
 class SLOViewSet(ModelViewSet):
     queryset = SLO.objects.all()
@@ -10,9 +10,9 @@ class SolutionTemplateViewSet(ModelViewSet):
     queryset = SolutionTemplate.objects.all()
     serializer_class = SolutionTemplateSerializer
 
-class FaultTolerenceViewSet(ModelViewSet):
-    queryset = FaultTolerence.objects.all()
-    serializer_class = FaultTolerenceSerializer
+class FaultToleranceViewSet(ModelViewSet):
+    queryset = FaultTolerance.objects.all()
+    serializer_class = FaultToleranceSerializer
 
 class ServiceTemplateViewSet(ModelViewSet):
     queryset = ServiceTemplate.objects.all()

@@ -31,7 +31,7 @@ class SolutionTemplate(NetBoxModel):
 
 
 # High Availability (HA) Model
-class FaultTolerence(NetBoxModel):
+class FaultTolerance(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     vip_required = models.BooleanField(default=False)
@@ -49,7 +49,7 @@ class FaultTolerence(NetBoxModel):
     airgap_backup = models.BooleanField(default=False)
     
     def __str__(self):
-        return f"Fault Tolerence Plan for {self.service_template.name}"
+        return f"Fault Tolerance Plan for {self.service_template.name}"
 
 
 # Service Template Model
@@ -63,7 +63,7 @@ class ServiceTemplate(NetBoxModel):
     vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor')
 
     #fault tolerence defaults, can be overridden at servicerequirement level
-    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.CASCADE, related_name='st_ft')
+    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, related_name='st_ft')
     #slo defaults, can be overridden at servicerequirement level
     service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='st_slo')
 
@@ -178,7 +178,9 @@ class ServiceDeployment(NetBoxModel):
     engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_deployment')
     operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_operations')
     monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring')
-
+    maintenance_window = models.CharField(max_length=255)
+    deployment_rfc = models.CharField(max_length=255)
+    
     def __str__(self):
         return f"Service deployment for {self.service_template.name}"
 

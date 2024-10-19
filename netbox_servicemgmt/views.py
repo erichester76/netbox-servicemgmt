@@ -1,8 +1,8 @@
 from netbox.views import generic
 from .base_views import BaseObjectView
-from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
-from .forms import SLOForm, SolutionTemplateForm, FaultTolerenceForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
-from .tables import SLOTable, SolutionTemplateTable, FaultTolerenceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
+from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .forms import SLOForm, SolutionTemplateForm, FaultToleranceForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
+from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
 
 # SLO Views
 class SLOListView(generic.ObjectListView):
@@ -49,26 +49,26 @@ class SolutionTemplateChangeLogView(generic.ObjectChangeLogView):
     base_model = SolutionTemplate
 
 # Fault Tolerence Views
-class FaultTolerenceListView(generic.ObjectListView):
-    queryset = FaultTolerence.objects.all()
-    table = FaultTolerenceTable
+class FaultToleranceListView(generic.ObjectListView):
+    queryset = FaultTolerance.objects.all()
+    table = FaultToleranceTable
 
-class FaultTolerenceDetailView(BaseObjectView):
-    queryset = FaultTolerence.objects.all()
+class FaultToleranceDetailView(BaseObjectView):
+    queryset = FaultTolerance.objects.all()
 
-class FaultTolerenceEditView(generic.ObjectEditView):
-    queryset = FaultTolerence.objects.all()
-    form = FaultTolerenceForm
+class FaultToleranceEditView(generic.ObjectEditView):
+    queryset = FaultTolerance.objects.all()
+    form = FaultToleranceForm
 
-class FaultTolerenceDeleteView(generic.ObjectDeleteView):
-    queryset = FaultTolerence.objects.all()
+class FaultToleranceDeleteView(generic.ObjectDeleteView):
+    queryset = FaultTolerance.objects.all()
 
-class FaultTolerenceBulkImportView(generic.BulkImportView):
-    queryset = FaultTolerence.objects.all()
-    model_form = FaultTolerenceForm
+class FaultToleranceBulkImportView(generic.BulkImportView):
+    queryset = FaultTolerance.objects.all()
+    model_form = FaultToleranceForm
 
-class FaultTolerenceChangeLogView(generic.ObjectChangeLogView):
-    base_model = FaultTolerence
+class FaultToleranceChangeLogView(generic.ObjectChangeLogView):
+    base_model = FaultTolerance
 
 # Service Template Views
 class ServiceTemplateListView(generic.ObjectListView):

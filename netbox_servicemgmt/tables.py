@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from netbox.tables import NetBoxTable
-from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 
 class SLOTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -16,11 +16,11 @@ class SolutionTemplateTable(NetBoxTable):
         model = SolutionTemplate
         fields = ('name', 'description', 'design_contact')
 
-class FaultTolerenceTable(NetBoxTable):
+class FaultToleranceTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
-        model = FaultTolerence
+        model = FaultTolerance
         fields = ('name', 'description', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site')
 
 class ServiceTemplateTable(NetBoxTable):

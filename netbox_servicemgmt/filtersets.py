@@ -1,6 +1,6 @@
 """ import django_filters
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from dcim.models import Site
 from tenancy.models import Tenant, Contact
 from taggit.models import Tag
@@ -19,14 +19,14 @@ class SolutionTemplateFilterSet(NetBoxModelFilterSet):
         model = SolutionTemplate
         fields = ['name', 'design_contact', 'requirements']
 
-# FaultTolerence FilterSet
-class FaultTolerenceFilterSet(NetBoxModelFilterSet):
+# FaultTolerance FilterSet
+class FaultToleranceFilterSet(NetBoxModelFilterSet):
     primary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
     secondary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
     tertiary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
 
     class Meta:
-        model = FaultTolerence
+        model = FaultTolerance
         fields = ['name', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site']
 
 # ServiceTemplate FilterSet
