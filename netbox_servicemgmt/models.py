@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from tenancy.models import Tenant, Contact
 from dcim.models import Site, Manufacturer
 from taggit.managers import TaggableManager
+from django.urls import reverse  # Import reverse
 
 
 # Service Level Objective (SLO) Model
@@ -20,15 +21,21 @@ class SLO(NetBoxModel):
     def __str__(self):
         return f"SLO for {self.service_template.name}"
     
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:slo', kwargs={'pk': self.pk})
+    
 # Solution Template Model
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers')
     requirements = models.TextField()
+    
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:solutiontemplate', kwargs={'pk': self.pk})
 
 # High Availability (HA) Model
 class FaultTolerance(NetBoxModel):
@@ -51,6 +58,9 @@ class FaultTolerance(NetBoxModel):
     def __str__(self):
         return f"Fault Tolerance Plan for {self.service_template.name}"
 
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:faulttolerance', kwargs={'pk': self.pk})
+
 
 # Service Template Model
 class ServiceTemplate(NetBoxModel):
@@ -72,6 +82,9 @@ class ServiceTemplate(NetBoxModel):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
 
 # Service Requirement Model
 class ServiceRequirement(NetBoxModel):
@@ -147,6 +160,9 @@ class ServiceRequirement(NetBoxModel):
 
     def __str__(self):
         return f"{self.name} requirements for {self.service_template.name}"
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:servicerequirement', kwargs={'pk': self.pk})    
 
 
 # Solution Deployment Model
@@ -159,6 +175,9 @@ class SolutionDeployment(NetBoxModel):
     
     def __str__(self):
         return f"{self.deployment_type} deployment of {self.solution_template.name}"
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:solutiondeployment', kwargs={'pk': self.pk})
 
 
 # Service Deployment Model
@@ -183,6 +202,9 @@ class ServiceDeployment(NetBoxModel):
     
     def __str__(self):
         return f"Service deployment for {self.service_template.name}"
+    
+     def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
 
 
 # Service Component Model
@@ -199,3 +221,6 @@ class ServiceComponent(NetBoxModel):
 
     def __str__(self):
         return f"Component: {self.content_object} for {self.service_deployment} {self.service_requirement}"
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:servicecomponent', kwargs={'pk': self.pk})
