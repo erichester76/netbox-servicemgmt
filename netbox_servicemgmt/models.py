@@ -14,9 +14,9 @@ class SLO(NetBoxModel):
     description = models.TextField()
     rpo = models.IntegerField(help_text="Recovery Point Objective in hours")
     rto = models.IntegerField(help_text="Recovery Time Objective in hours")
-    sev1_response = models.IntegerField(help_text="Severity 1 Response Time in minutes")
-    sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes")
-    sev3_response = models.IntegerField(help_text="Severity 3 Response Time in minutes")
+    sev1_response = models.IntegerField(help_text="Severity 1 Response Time in minutes",null=True, blank=True)
+    sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes",null=True, blank=True)
+    sev3_response = models.IntegerField(help_text="Severity 3 Response Time in minutes",null=True, blank=True)
 
     def __str__(self):
         return f"SLO: {self.name}"
