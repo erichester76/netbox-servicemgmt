@@ -131,7 +131,7 @@ class ServiceComponentBulkImportView(generic.BulkImportView):
     queryset = ServiceComponent.objects.all()
     model_form = ServiceComponentForm
 
-class ServiceComponentChangeLogView(generic.bjectChangeLogView):
+class ServiceComponentChangeLogView(generic.ObjectChangeLogView):
     queryset = ServiceComponent.objects.all()
 
 # HAModel Views
