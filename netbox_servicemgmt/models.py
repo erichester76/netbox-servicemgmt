@@ -40,7 +40,7 @@ class SolutionTemplate(NetBoxModel):
 # High Availability (HA) Model
 class FaultTolerance(NetBoxModel):
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_primary_sites')
     secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_secondary_sites')
     tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_tertiary_sites')  
@@ -51,7 +51,7 @@ class FaultTolerance(NetBoxModel):
     multi_site = models.BooleanField(null=True, blank=True)
     multi_region = models.BooleanField(null=True, blank=True)
     snapshots = models.BooleanField(null=True, blank=True)
-    backup_schedule = models.CharField(max_length=255)
+    backup_schedule = models.CharField(max_length=255, null=True, blank=True)
     offsite_backup = models.BooleanField(null=True, blank=True)
     airgap_backup = models.BooleanField(null=True, blank=True)
     
@@ -108,7 +108,7 @@ class ServiceRequirement(NetBoxModel):
     multi_site = models.BooleanField(null=True, blank=True)
     multi_region = models.BooleanField(null=True, blank=True)
     snapshots = models.BooleanField(null=True, blank=True)
-    backup_schedule = models.CharField(max_length=255)
+    backup_schedule = models.CharField(max_length=255, null=True, blank=True)
     offsite_backup = models.BooleanField(null=True, blank=True)
     airgap_backup = models.BooleanField(null=True, blank=True)
     
