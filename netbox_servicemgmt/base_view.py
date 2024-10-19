@@ -2,6 +2,7 @@ import re
 from netbox.views import generic
 from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 from django.urls import reverse
+
 from . import (
     filtersets, 
     forms, 

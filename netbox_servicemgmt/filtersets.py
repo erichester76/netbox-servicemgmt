@@ -1,4 +1,4 @@
-import django_filters
+""" import django_filters
 from netbox.filtersets import NetBoxModelFilterSet
 from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from dcim.models import Site
@@ -72,3 +72,4 @@ class ServiceComponentFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = ServiceComponent
         fields = ['name', 'service_deployment', 'service_requirement', 'content_object']
+ """
