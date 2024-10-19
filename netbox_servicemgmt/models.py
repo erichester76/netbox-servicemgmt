@@ -77,16 +77,16 @@ class ServiceTemplate(NetBoxModel):
     
     name = models.CharField(max_length=255)
     description = models.TextField()
-    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='st_solutions')
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers')
+    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='st_solutions', verbose_name='Solution Template')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
     service_type = models.CharField(max_length=255)
     vendor_management_assessment = models.CharField(max_length=255)
-    vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor')
+    vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor', verbose_name='Vendor')
 
     #fault tolerence defaults, can be overridden at servicerequirement level
-    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, related_name='st_ft', verbose_name='Assigned FT Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
     #slo defaults, can be overridden at servicerequirement level
-    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='st_slo', verbose_name='Assigned SLO Profile')
+    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='st_slo', verbose_name='Assigned Service Level Object Profile')
 
     #to fix conflict with ipam service templates
     tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
@@ -102,8 +102,8 @@ class ServiceRequirement(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     
-    service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_requirements')
-    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers')
+    service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_requirements', verbose_name='Service Template')
+    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers', verbose_name='Requirement Owner')
 
     #slo can be overriden at component level
     service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
