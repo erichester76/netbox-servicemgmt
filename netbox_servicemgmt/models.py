@@ -24,7 +24,7 @@ class SLO(NetBoxModel):
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='st_designers')
     requirements = models.TextField()
     def __str__(self):
         return self.name
@@ -56,16 +56,16 @@ class FaultTolerence(NetBoxModel):
 class ServiceTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='service_templates')
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers')
+    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='st_solutions')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='st_designers')
     service_type = models.CharField(max_length=255)
     vendor_management_assessment = models.CharField(max_length=255)
-    vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='service_templates')
+    vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor')
 
     #fault tolerence defaults, can be overridden at servicerequirement level
-    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.CASCADE, related_name='service_templates')
+    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.CASCADE, related_name='st_ft')
     #slo defaults, can be overridden at servicerequirement level
-    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='service_templates')
+    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='st_slo')
 
     #to fix conflict with ipam service templates
     tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
@@ -79,10 +79,10 @@ class ServiceRequirement(NetBoxModel):
     description = models.TextField()
     
     service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_requirements')
-    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_requriements_designers')
+    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers')
 
     #slo can be overriden at component level
-    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='service_requirements')
+    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo')
     
     #overrides for fault tolerence at service level
     vip_required = models.BooleanField(null=True, blank=True)
