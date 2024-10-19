@@ -193,7 +193,7 @@ class ServiceComponent(NetBoxModel):
     service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='sc_components')
 
     # Object type (GenericForeignKey) - allows dynamic references to any object type
-    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
 
