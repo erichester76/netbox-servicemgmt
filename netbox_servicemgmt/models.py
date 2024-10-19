@@ -239,10 +239,7 @@ class ServiceComponent(NetBoxModel):
     def content_object_verbose_name(self):
         """ Returns a human-readable name for the related content object based on its type """
         if self.object_type:
-            model_class = self.object_type.model_class()
-            if model_class:
-                # Get the verbose name of the model class
-                return model_class._meta.verbose_name
+            return self.object_type
         return None
     
     def __str__(self):
