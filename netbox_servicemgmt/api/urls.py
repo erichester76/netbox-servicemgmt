@@ -11,7 +11,7 @@ router.register(r'service-templates', ServiceTemplateViewSet)
 router.register(r'service-requirements', ServiceRequirementViewSet)
 router.register(r'solution-deployments', SolutionDeploymentViewSet)
 router.register(r'service-deployments', ServiceDeploymentViewSet)
-router.register(r'service-components', ServiceComponentViewSet)ath('api/object-fields/<int:object_type_id>/', get_object_fields, name='get_object_fields'),
+router.register(r'service-components', ServiceComponentViewSet)
 
 urlpatterns = [
     router.urls,

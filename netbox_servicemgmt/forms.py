@@ -36,8 +36,25 @@ class ServiceRequirementForm(forms.ModelForm):
 
     # Dynamically add requirement fields
     requirement_fields = [
-        ('requirement1_field', 'requirement1_value'), ('requirement2_field', 'requirement2_value'),
-        # ... continue for all requirement fields
+        ('requirement1_field', 'requirement1_value'),
+        ('requirement2_field', 'requirement2_value'),
+        ('requirement3_field', 'requirement3_value'),
+        ('requirement4_field', 'requirement4_value'),
+        ('requirement5_field', 'requirement5_value'),
+        ('requirement6_field', 'requirement6_value'),
+        ('requirement7_field', 'requirement7_value'),
+        ('requirement8_field', 'requirement8_value'),
+        ('requirement9_field', 'requirement9_value'),
+        ('requirement10_field', 'requirement10_value'),
+        ('requirement11_field', 'requirement11_value'),
+        ('requirement12_field', 'requirement12_value'),
+        ('requirement13_field', 'requirement13_value'),
+        ('requirement14_field', 'requirement14_value'),
+        ('requirement15_field', 'requirement15_value'),
+        ('requirement16_field', 'requirement16_value'),
+        ('requirement17_field', 'requirement17_value'),
+        ('requirement18_field', 'requirement18_value'),
+        ('requirement19_field', 'requirement19_value'),
         ('requirement20_field', 'requirement20_value'),
     ]
 
