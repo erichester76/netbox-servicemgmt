@@ -82,7 +82,7 @@ class ServiceRequirement(NetBoxModel):
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='responsible_design')
 
     #slo can be overriden at component level
-    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='service_templates')
+    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='service_requirements')
     
     #overrides for fault tolerence at service level
     vip_required = models.BooleanField(default=False)
