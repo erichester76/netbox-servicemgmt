@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from ..models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultTolerenceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
 
 class SLOViewSet(ModelViewSet):

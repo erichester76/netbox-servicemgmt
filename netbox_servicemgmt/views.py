@@ -1,5 +1,5 @@
 from netbox.views import generic
-from .base_view import BaseObjectView
+from .base_views import BaseObjectView
 from .models import SLO, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .forms import SLOForm, SolutionTemplateForm, FaultTolerenceForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
 from .tables import SLOTable, SolutionTemplateTable, FaultTolerenceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable

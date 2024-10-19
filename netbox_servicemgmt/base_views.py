@@ -30,7 +30,6 @@ class BaseObjectView(generic.ObjectView):
             'last_updated',
         }
 
-
         # Extract fields and their values for the object, including relationships
         field_data = []
         for field in instance._meta.get_fields():      
