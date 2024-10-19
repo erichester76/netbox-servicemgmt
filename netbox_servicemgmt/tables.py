@@ -21,7 +21,7 @@ class FaultTolerenceTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = FaultTolerence
-        fields = ('name', 'description', 'service_template', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site')
+        fields = ('name', 'description', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site')
 
 class ServiceTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
