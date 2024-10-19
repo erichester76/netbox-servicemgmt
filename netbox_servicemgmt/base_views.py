@@ -28,6 +28,7 @@ class BaseObjectView(generic.ObjectView):
             'tagged_items', 
             'created',
             'last_updated',
+            'object_id'
         }
 
         # Extract fields and their values for the object, including relationships

@@ -235,6 +235,16 @@ class ServiceComponent(NetBoxModel):
         verbose_name = ('Deployment Component')
         verbose_name_plural = ('Deployment Components')
     
+    @property
+    def content_object_verbose_name(self):
+        """ Returns a human-readable name for the related content object based on its type """
+        if self.object_type:
+            model_class = self.object_type.model_class()
+            if model_class:
+                # Get the verbose name of the model class
+                return model_class._meta.verbose_name
+        return None
+    
     def __str__(self):
         return f'{self.name}'    
     
