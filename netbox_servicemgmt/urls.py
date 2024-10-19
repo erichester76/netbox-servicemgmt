@@ -63,7 +63,7 @@ urlpatterns = [
     path('fault-tolerance/<int:pk>/edit/', views.FaultToleranceEditView.as_view(), name='faulttolerance_edit'),
     path('fault-tolerance/<int:pk>/delete/', views.FaultToleranceDeleteView.as_view(), name='faulttolerance_delete'),
     path('fault-tolerance/bulk-import/', views.FaultToleranceBulkImportView.as_view(), name='faulttolerance_bulk_import'),
-    path('fault-tolerance/<int:pk>/changelog/', views.FaultToleranceChangeLogView.as_view(), name='faulttolerance_changelog', kwargs={'model': models.FaultTolerence}),
+    path('fault-tolerance/<int:pk>/changelog/', views.FaultToleranceChangeLogView.as_view(), name='faulttolerance_changelog', kwargs={'model': models.FaultTolerance}),
 
     # Service Level Objective (SLO) URLs
     path('slos/', views.SLOListView.as_view(), name='slo_list'),
