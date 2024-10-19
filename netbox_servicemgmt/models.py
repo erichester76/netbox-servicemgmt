@@ -12,20 +12,17 @@ from django.urls import reverse  # Import reverse
 class SLO(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    rpo = models.IntegerField(help_text="Recovery Point Objective in hours")
-    rto = models.IntegerField(help_text="Recovery Time Objective in hours")
-    sev1_response = models.IntegerField(help_text="Severity 1 Response Time in minutes",null=True, blank=True)
-    sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes",null=True, blank=True)
-    sev3_response = models.IntegerField(help_text="Severity 3 Response Time in minutes",null=True, blank=True)
+    rpo = models.IntegerField(help_text="Recovery Point Objective in hours", verbose_name='RPO (hours)')
+    rto = models.IntegerField(help_text="Recovery Time Objective in hours", verbose_name='RTO (hours)')
+    sev1_response = models.IntegerField(help_text="Severity 1 Response Time in minutes",null=True, blank=True, verbose_name='Severity 1 Respone Time (minutes)')
+    sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes",null=True, blank=True, verbose_name='Severity 2 Respone Time (minutes)')
+    sev3_response = models.IntegerField(help_text="Severity 3 Response Time in minutes",null=True, blank=True, verbose_name='Severity 3 Respone Time (minutes)')
 
     class Meta:
         ordering = ['name']
         verbose_name = ('Service Level Object')
         verbose_name_plural = ('Service Level Objects')    
 
-    def __str__(self):
-        return f"SLO: {self.name}"
-    
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:slo', kwargs={'pk': self.pk})
     
@@ -33,11 +30,8 @@ class SLO(NetBoxModel):
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers', verbose_name='Architect')
     requirements = models.TextField()
-    
-    def __str__(self):
-        return self.name
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:solutiontemplate', kwargs={'pk': self.pk})
@@ -65,10 +59,6 @@ class FaultTolerance(NetBoxModel):
         verbose_name = ('Fault Tolerence Model')
         verbose_name_plural = ('Fault Tolerence Models')    
     
-    
-    def __str__(self):
-        return f"Fault Tolerance Plan {self.name}"
-
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:faulttolerance', kwargs={'pk': self.pk})
 
@@ -85,16 +75,13 @@ class ServiceTemplate(NetBoxModel):
     vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor')
 
     #fault tolerence defaults, can be overridden at servicerequirement level
-    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, related_name='st_ft')
+    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, related_name='st_ft', verbose_name='Assigned FT Profile')
     #slo defaults, can be overridden at servicerequirement level
-    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='st_slo')
+    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='st_slo', verbose_name='Assigned SLO Profile')
 
     #to fix conflict with ipam service templates
     tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
 
-    def __str__(self):
-        return f"Service Template self.name"
-    
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
 
@@ -107,7 +94,7 @@ class ServiceRequirement(NetBoxModel):
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers')
 
     #slo can be overriden at component level
-    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo')
+    service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     
     #overrides for fault tolerence at service level
     primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='sr_primary_site_overrides')
@@ -169,10 +156,6 @@ class ServiceRequirement(NetBoxModel):
     requirement20_field = models.CharField(max_length=255, null=True, blank=True)
     requirement20_value = models.CharField(max_length=255, null=True, blank=True)
     
-
-    def __str__(self):
-        return f"{self.name} requirements for {self.service_template.name}"
-    
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicerequirement', kwargs={'pk': self.pk})    
 
@@ -181,12 +164,9 @@ class ServiceRequirement(NetBoxModel):
 class SolutionDeployment(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, related_name='solution_deployments')
+    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, related_name='solution_deployments', verbose_name='Solution Template')
     deployment_type = models.CharField(max_length=255, null=True, blank=True)
     deployment_date = models.DateTimeField()
-    
-    def __str__(self):
-        return f"{self.deployment_type} deployment of {self.solution_template.name}"
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:solutiondeployment', kwargs={'pk': self.pk})
@@ -196,24 +176,21 @@ class SolutionDeployment(NetBoxModel):
 class ServiceDeployment(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_deployments')
-    solution_deployment = models.ForeignKey(SolutionDeployment, on_delete=models.CASCADE, related_name='service_deployments')
-    production_readiness_checklist = models.CharField(max_length=255, null=True, blank=True)   
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_business_owners')
-    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_business_owners')
-    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_service_owners')
-    service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_service_owners')
-    major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_mi_owners')
-    functional_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_fa_owners')
-    functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_sfa_owners')
-    engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_deployment')
-    operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_operations')
-    monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring')
-    maintenance_window = models.CharField(max_length=255)
-    deployment_rfc = models.CharField(max_length=255)
-    
-    def __str__(self):
-        return f"Service deployment for {self.service_template.name}"
+    service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_deployments',  verbose_name='Service Template')
+    solution_deployment = models.ForeignKey(SolutionDeployment, on_delete=models.CASCADE, related_name='service_deployments', verbose_name='Solution Deployment')
+    production_readiness_checklist = models.CharField(max_length=255, null=True, blank=True, verbose_name='Production Readiness Checklist')   
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_business_owners', verbose_name='Business Owner Contact')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_business_owners', verbose_name='Business Owner Department')
+    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_service_owners', verbose_name='Service Owner Contact')
+    service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_service_owners', verbose_name='Service Owner Department')
+    major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_mi_owners', verbose_name='Major Incident Contact')
+    functional_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_fa_owners', verbose_name='Functional Area Sponsor')
+    functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_sfa_owners', verbose_name='Functional Sub-Area Sponsor')
+    engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_deployment', verbose_name='Deployment Contact')
+    operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_operations', verbose_name='Operations Contact')
+    monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring', verbose_name='Monitoring Contact')
+    maintenance_window = models.CharField(max_length=255, verbose_name='Maintenance Window Timeframes')
+    deployment_rfc = models.CharField(max_length=255, verbose_name='Associated RFC for Deployment')
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
@@ -223,8 +200,8 @@ class ServiceDeployment(NetBoxModel):
 class ServiceComponent(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='sc_components')
-    service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='sc_components')
+    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Deployment')
+    service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Requirement')
 
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
@@ -235,9 +212,6 @@ class ServiceComponent(NetBoxModel):
         ordering = ['name']
         verbose_name = ('Deployment Component')
         verbose_name_plural = ('Deployment Components')
-
-    def __str__(self):
-        return f"Component: {self.content_object} for {self.service_deployment} {self.service_requirement}"
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicecomponent', kwargs={'pk': self.pk})
