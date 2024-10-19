@@ -7,6 +7,8 @@ from .views import (
     get_object_fields, get_slo_fields
 )
 
+app_name = 'netbox_servicemgmt'
+
 router = DefaultRouter()
 router.register(r'slo', SLOViewSet)
 router.register(r'solution-templates', SolutionTemplateViewSet)
