@@ -1,5 +1,4 @@
 import re
-from django.contrib.contenttypes.fields import GenericForeignKey
 from netbox.views import generic
 from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 from django.urls import reverse
@@ -96,9 +95,6 @@ class BaseObjectView(generic.ObjectView):
                         'add_url': add_url,
                     })
                     
-        # Generate Mermaid diagram for the object and its related objects
-        mermaid_diagram, mermaid_legend = self.generate_mermaid_diagram(instance, max_depth=15)
-
         return {
             'object_name': object_name,
             'field_data': field_data,
