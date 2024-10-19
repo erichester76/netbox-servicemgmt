@@ -88,7 +88,7 @@ class BaseObjectView(generic.ObjectView):
                     else:
                         related_table = None
                     
-                    field_data.pop(rel.name, None)
+                    field_data.pop(rel.name)
 
                     related_tables.append({
                         'name': related_model._meta.verbose_name_plural,
