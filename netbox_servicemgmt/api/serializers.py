@@ -14,7 +14,7 @@ class SolutionTemplateSerializer(serializers.ModelSerializer):
 class FaultTolerenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = FaultTolerence
-        fields = ['id', 'name', 'description', 'service_template', 'vip_required', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site']
+        fields = ['id', 'name', 'description', 'vip_required', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site']
 
 class ServiceTemplateSerializer(serializers.ModelSerializer):
     class Meta:
