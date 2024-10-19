@@ -215,7 +215,7 @@ class ServiceDeployment(NetBoxModel):
         return f'{self.name}'   
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_servicemgmt:servicedeployment', kwargs={'pk': self.pk})
 
 
 # Service Component Model
