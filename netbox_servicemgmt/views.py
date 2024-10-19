@@ -1,5 +1,5 @@
 from netbox.views import generic
-from .base_views import BaseObjectView
+from .base_views import BaseObjectView, BaseChangeLogView
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .forms import SLOForm, SolutionTemplateForm, FaultToleranceForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
 from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
@@ -23,7 +23,7 @@ class SLOBulkImportView(generic.BulkImportView):
     queryset = SLO.objects.all()
     model_form = SLOForm
 
-class SLOChangeLogView(generic.ObjectChangeLogView):
+class SLOChangeLogView(BaseChangeLogView):
     base_model = SLO
 
 # Solution Template Views
@@ -45,7 +45,7 @@ class SolutionTemplateBulkImportView(generic.BulkImportView):
     queryset = SolutionTemplate.objects.all()
     model_form = SolutionTemplateForm
 
-class SolutionTemplateChangeLogView(generic.ObjectChangeLogView):
+class SolutionTemplateChangeLogView(BaseChangeLogView):
     base_model = SolutionTemplate
 
 # Fault Tolerence Views
@@ -67,7 +67,7 @@ class FaultToleranceBulkImportView(generic.BulkImportView):
     queryset = FaultTolerance.objects.all()
     model_form = FaultToleranceForm
 
-class FaultToleranceChangeLogView(generic.ObjectChangeLogView):
+class FaultToleranceChangeLogView(BaseChangeLogView):
     base_model = FaultTolerance
 
 # Service Template Views
@@ -89,7 +89,7 @@ class ServiceTemplateBulkImportView(generic.BulkImportView):
     queryset = ServiceTemplate.objects.all()
     model_form = ServiceTemplateForm
 
-class ServiceTemplateChangeLogView(generic.ObjectChangeLogView):
+class ServiceTemplateChangeLogView(BaseChangeLogView):
     base_model = ServiceTemplate
 
 # Service Requirement Views
@@ -112,7 +112,7 @@ class ServiceRequirementBulkImportView(generic.BulkImportView):
     queryset = ServiceRequirement.objects.all()
     model_form = ServiceRequirementForm
 
-class ServiceRequirementChangeLogView(generic.ObjectChangeLogView):
+class ServiceRequirementChangeLogView(BaseChangeLogView):
     base_model = ServiceRequirement
 
 # Solution Deployment Views
@@ -134,7 +134,7 @@ class SolutionDeploymentBulkImportView(generic.BulkImportView):
     queryset = SolutionDeployment.objects.all()
     model_form = SolutionDeploymentForm
 
-class SolutionDeploymentChangeLogView(generic.ObjectChangeLogView):
+class SolutionDeploymentChangeLogView(BaseChangeLogView):
     base_model = SolutionDeployment
 
 # Service Deployment Views
@@ -156,7 +156,7 @@ class ServiceDeploymentBulkImportView(generic.BulkImportView):
     queryset = ServiceDeployment.objects.all()
     model_form = ServiceDeploymentForm
 
-class ServiceDeploymentChangeLogView(generic.ObjectChangeLogView):
+class ServiceDeploymentChangeLogView(BaseChangeLogView):
     base_model = ServiceDeployment
 
 # Service Component Views
@@ -178,5 +178,5 @@ class ServiceComponentBulkImportView(generic.BulkImportView):
     queryset = ServiceComponent.objects.all()
     model_form = ServiceComponentForm
 
-class ServiceComponentChangeLogView(generic.ObjectChangeLogView):
+class ServiceComponentChangeLogView(BaseChangeLogView):
     base_model = ServiceComponent
