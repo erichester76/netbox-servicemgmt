@@ -203,7 +203,7 @@ class ServiceDeployment(NetBoxModel):
     def __str__(self):
         return f"Service deployment for {self.service_template.name}"
     
-     def get_absolute_url(self):
+    def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:servicetemplate', kwargs={'pk': self.pk})
 
 
