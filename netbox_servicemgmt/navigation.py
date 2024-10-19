@@ -3,16 +3,16 @@ from netbox.plugins import PluginMenuButton, PluginMenuItem, PluginMenu
 items = (
     # Solution Template Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:solutiontemplate_list",
+        link="plugins:netbox_servicemgmt:solutiontemplate_list",
         link_text="Solution Templates",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:solutiontemplate_add",
+                link="plugins:netbox_servicemgmt:solutiontemplate_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:solutiontemplate_bulk_import",
+                link="plugins:netbox_servicemgmt:solutiontemplate_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
@@ -20,16 +20,16 @@ items = (
     ),
     # Service Template Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:servicetemplate_list",
+        link="plugins:netbox_servicemgmt:servicetemplate_list",
         link_text="Service Templates",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicetemplate_add",
+                link="plugins:netbox_servicemgmt:servicetemplate_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicetemplate_bulk_import",
+                link="plugins:netbox_servicemgmt:servicetemplate_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
@@ -37,16 +37,16 @@ items = (
     ),
     # Service Requirement Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:servicerequirement_list",
+        link="plugins:netbox_servicemgmt:servicerequirement_list",
         link_text="Service Requirements",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicerequirement_add",
+                link="plugins:netbox_servicemgmt:servicerequirement_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicerequirement_bulk_import",
+                link="plugins:netbox_servicemgmt:servicerequirement_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
@@ -54,16 +54,16 @@ items = (
     ),
     # Solution Deployment Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:solutiondeployment_list",
+        link="plugins:netbox_servicemgmt:solutiondeployment_list",
         link_text="Solution Deployments",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:solutiondeployment_add",
+                link="plugins:netbox_servicemgmt:solutiondeployment_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:solutiondeployment_bulk_import",
+                link="plugins:netbox_servicemgmt:solutiondeployment_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
@@ -71,16 +71,16 @@ items = (
     ),
     # Service Deployment Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:servicedeployment_list",
+        link="plugins:netbox_servicemgmt:servicedeployment_list",
         link_text="Service Deployments",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicedeployment_add",
+                link="plugins:netbox_servicemgmt:servicedeployment_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicedeployment_bulk_import",
+                link="plugins:netbox_servicemgmt:servicedeployment_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
@@ -88,16 +88,16 @@ items = (
     ),
     # Service Component Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:servicecomponent_list",
+        link="plugins:netbox_servicemgmt:servicecomponent_list",
         link_text="Service Components",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicecomponent_add",
+                link="plugins:netbox_servicemgmt:servicecomponent_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:servicecomponent_bulk_import",
+                link="plugins:netbox_servicemgmt:servicecomponent_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
@@ -105,16 +105,16 @@ items = (
     ),
     # HA Model Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:hamodel_list",
+        link="plugins:netbox_servicemgmt:hamodel_list",
         link_text="HA Models",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:hamodel_add",
+                link="plugins:netbox_servicemgmt:hamodel_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:hamodel_bulk_import",
+                link="plugins:netbox_servicemgmt:hamodel_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
@@ -122,16 +122,16 @@ items = (
     ),
     # SLO Menu Item
     PluginMenuItem(
-        link="plugins:netbox_service_plugin:slo_list",
+        link="plugins:netbox_servicemgmt:slo_list",
         link_text="SLOs",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:slo_add",
+                link="plugins:netbox_servicemgmt:slo_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_service_plugin:slo_bulk_import",
+                link="plugins:netbox_servicemgmt:slo_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),
