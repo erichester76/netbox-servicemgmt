@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <form method="post" class="form-vertical">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button id="add-requirement-button" class="btn btn-secondary">Add Requirement</button>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{{ cancel_url }}" class="btn btn-default">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let currentRequirement = 1;
+
+    function hideUnusedRequirements() {
+        for (let i = currentRequirement + 1; i <= 20; i++) {
+            let field = document.getElementById(`id_requirement${i}_field`);
+            let value = document.getElementById(`id_requirement${i}_value`);
+            if (field && value) {
+                field.parentElement.style.display = 'none';
+                value.parentElement.style.display = 'none';
+            }
+        }
+    }
+
+    function showNextRequirement() {
+        currentRequirement += 1;
+        if (currentRequirement <= 20) {
+            let field = document.getElementById(`id_requirement${currentRequirement}_field`);
+            let value = document.getElementById(`id_requirement${currentRequirement}_value`);
+            if (field && value) {
+                field.parentElement.style.display = 'block';
+                value.parentElement.style.display = 'block';
+            }
+        }
+    }
+
+    // Hide unused requirement fields initially
+    hideUnusedRequirements();
+
+    // Event listener for "Add Requirement" button
+    document.getElementById('add-requirement-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        showNextRequirement();
+    });
+
+    // Load field options dynamically based on selected object_type
+    document.getElementById('id_object_type').addEventListener('change', function () {
+        const objectType = this.value;
+        if (objectType) {
+            fetch(`/api/object-fields/${objectType}/`)
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 1; i <= currentRequirement; i++) {
+                        const fieldSelect = document.getElementById(`id_requirement${i}_field`);
+                        fieldSelect.innerHTML = '';  // Clear current options
+                        data.fields.forEach(field => {
+                            const option = document.createElement('option');
+                            option.value = field.name;
+                            option.text = field.verbose_name;
+                            fieldSelect.add(option);
+                        });
+                    }
+                });
+        }
+    });
+});
+</script>
+
+{% endblock %}

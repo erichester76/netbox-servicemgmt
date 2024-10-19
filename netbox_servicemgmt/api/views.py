@@ -1,6 +1,17 @@
 from rest_framework.viewsets import ModelViewSet
 from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultToleranceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
+from django.http import JsonResponse
+from django.contrib.contenttypes.models import ContentType
+
+def get_object_fields(request, object_type_id):
+    """API endpoint to get fields for a given object type."""
+    content_type = ContentType.objects.get(id=object_type_id)
+    model_class = content_type.model_class()
+
+    fields = [{'name': field.name, 'verbose_name': field.verbose_name} for field in model_class._meta.fields]
+    
+    return JsonResponse({'fields': fields})
 
 class SLOViewSet(ModelViewSet):
     queryset = SLO.objects.all()
