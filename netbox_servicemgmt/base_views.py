@@ -34,23 +34,17 @@ class BaseObjectView(generic.ObjectView):
         field_data = []
         for field in instance._meta.get_fields():      
             # Skip excluded fields
-            if field.name in excluded_extras: 
+            if field.name in excluded_extras or isinstance(field, (ManyToManyField)):
                 continue      
             value = None
             url = None
             try:
-                # Handle many-to-many or one-to-many relationships
-                if field.many_to_many or field.one_to_many:
-                    related_objects = getattr(instance, field.name).all()
-                    value = ", ".join([str(obj) for obj in related_objects])
-
                 # Handle ForeignKey and OneToOne relationships
-                elif isinstance(field, (ForeignKey, OneToOneField)):
+                if isinstance(field, (ForeignKey, OneToOneField)):
                     related_object = getattr(instance, field.name)
                     value = str(related_object) if related_object else None
                     if hasattr(related_object, 'get_absolute_url'):
                         url = related_object.get_absolute_url()
-                        
                 # Handle regular fields
                 else:
                     value = getattr(instance, field.name)
@@ -88,7 +82,6 @@ class BaseObjectView(generic.ObjectView):
                     else:
                         related_table = None
                     
-                    field_data.pop(rel.name)
 
                     related_tables.append({
                         'name': related_model._meta.verbose_name_plural,
