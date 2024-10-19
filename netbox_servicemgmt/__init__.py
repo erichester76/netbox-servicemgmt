@@ -1,6 +1,6 @@
 """Top-level package for Netbox Service Management Plugin."""
 
-__author__ = """Eric Hester"""
+__author__ = "Eric Hester"
 __email__ = "hester1@clemson.edu"
 __version__ = "0.0.1"
 
@@ -12,7 +12,7 @@ class servicemgmtConfig(PluginConfig):
     name = "netbox_servicemgmt"
     verbose_name = "Netbox Service Management Plugin"
     description = "Netbox Plugin for Service Management"
-    version = "version"
+    version = "0.0.1"
     base_url = "netbox_servicemgmt"
 
 
