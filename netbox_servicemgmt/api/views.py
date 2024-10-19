@@ -4,6 +4,21 @@ from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultToleran
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 
+def get_slo_details(request, slo_id):
+    """API endpoint to get the details of a selected SLO."""
+    slo = SLO.objects.get(id=slo_id)
+
+    data = {
+        'vip_required': slo.vip_required,
+        'primary_site': slo.primary_site_id,
+        'secondary_site': slo.secondary_site_id,
+        'tertiary_site': slo.tertiary_site_id,
+        'instances_per_site': slo.instances_per_site,
+        # Add more fields as needed
+    }
+
+    return JsonResponse(data)
+
 def get_object_fields(request, object_type_id):
     """API endpoint to get fields for a given object type."""
     content_type = ContentType.objects.get(id=object_type_id)

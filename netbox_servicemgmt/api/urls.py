@@ -4,7 +4,7 @@ from .views import (
     SLOViewSet, SolutionTemplateViewSet, FaultToleranceViewSet,
     ServiceTemplateViewSet, ServiceRequirementViewSet,
     SolutionDeploymentViewSet, ServiceDeploymentViewSet, ServiceComponentViewSet,
-    get_object_fields
+    get_object_fields, get_slo_fields
 )
 
 router = DefaultRouter()
@@ -20,4 +20,6 @@ router.register(r'service-components', ServiceComponentViewSet)
 # Combine router URLs with additional custom API paths
 urlpatterns = router.urls + [
     path('api/object-fields/<int:object_type_id>/', get_object_fields, name='get_object_fields'),
+    path('api/slo-details/<int:slo_id>/', get_slo_details, name='get_slo_details'),
+
 ]

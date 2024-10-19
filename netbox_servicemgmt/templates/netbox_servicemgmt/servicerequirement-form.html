@@ -107,6 +107,24 @@
             showNextRequirement();
         });
 
+          // SLO Selection Behavior
+          document.getElementById('id_service_slo').addEventListener('change', function () {
+            const sloId = this.value;
+            if (sloId) {
+                fetch(`/api/slo-details/${sloId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update form fields with the SLO override values
+                        document.getElementById('id_vip_required').checked = data.vip_required;
+                        document.getElementById('id_primary_site').value = data.primary_site;
+                        document.getElementById('id_secondary_site').value = data.secondary_site;
+                        document.getElementById('id_tertiary_site').value = data.tertiary_site;
+                        document.getElementById('id_instances_per_site').value = data.instances_per_site;
+                        // Continue for other fields...
+                    });
+            }
+        });
+
         // Load field options dynamically based on selected object_type
         document.getElementById('id_object_type').addEventListener('change', function () {
             const objectType = this.value;
