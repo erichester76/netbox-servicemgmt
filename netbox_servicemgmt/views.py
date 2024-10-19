@@ -103,6 +103,7 @@ class ServiceRequirementDetailView(BaseObjectView):
 class ServiceRequirementEditView(generic.ObjectEditView):
     queryset = ServiceRequirement.objects.all()
     form = ServiceRequirementForm
+    template_name = 'netbox_servicemgmt/servicerequirement-form.html'
 
 class ServiceRequirementDeleteView(generic.ObjectDeleteView):
     queryset = ServiceRequirement.objects.all()

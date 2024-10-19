@@ -23,7 +23,6 @@ class ServiceTemplateForm(forms.ModelForm):
 
 
 class ServiceRequirementForm(forms.ModelForm):
-    template = 'netbox_servicemgmt/servicerequirement-form.html'
     
     class Meta:
         model = ServiceRequirement
