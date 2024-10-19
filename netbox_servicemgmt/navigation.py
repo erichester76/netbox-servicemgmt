@@ -36,8 +36,24 @@ solution_items = (
         ]
     )
 )
-    # Service Template Menu Item
 service_items = ( 
+    # Service Requirement Menu Item
+    PluginMenuItem(
+        link="plugins:netbox_servicemgmt:servicetemplate_list",
+        link_text="Service Templates",
+        buttons=[
+            PluginMenuButton(
+                link="plugins:netbox_servicemgmt:servicetemplate_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+            ),
+            PluginMenuButton(
+                link="plugins:netbox_servicemgmt:servicetemplate_bulk_import",
+                title="Import",
+                icon_class="mdi mdi-upload",
+            ),
+        ]
+    ),    # Service Requirement Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:servicerequirement_list",
         link_text="Service Requirements",
