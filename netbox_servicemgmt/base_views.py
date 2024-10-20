@@ -46,6 +46,7 @@ class BaseObjectView(generic.ObjectView):
             url = None
             
             try:
+                
                 # display only forward relations, not reverse. reverse should be tables below
                 if field.is_relation and not field.auto_created:
                     related_object = getattr(instance, field.name)
@@ -53,8 +54,9 @@ class BaseObjectView(generic.ObjectView):
                     if hasattr(related_object, 'get_absolute_url'):
                         url = related_object.get_absolute_url()
                 #handle normal fields
-                else:
+                elif not field.is_relation:
                     value = getattr(instance, field.name)
+                    
             except AttributeError:
                 value = None  
 
