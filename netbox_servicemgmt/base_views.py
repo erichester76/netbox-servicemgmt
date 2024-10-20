@@ -39,7 +39,7 @@ class BaseObjectView(generic.ObjectView):
         field_data = []
         for field in instance._meta.get_fields():      
             # Skip excluded fields
-            if field.name in excluded_extras or field.related_model:
+            if field.name in excluded_extras or field.related_model or ('requirement_' in field.name and field.value == None):
                 continue      
             value = None
             url = None
@@ -55,7 +55,7 @@ class BaseObjectView(generic.ObjectView):
                 else:
                     value = getattr(instance, field.name)
             except AttributeError:
-                value = None  # In case the relationship doesn't exist or is optional
+                value = None  
 
             field_data.append({
                 'name': field.verbose_name if hasattr(field, 'verbose_name') else field.name,
