@@ -13,7 +13,6 @@ from . import (
 class BaseChangeLogView(generic.ObjectChangeLogView):
     template_name = 'netbox_servicemgmt/default-detail.html'
     
-    
 class BaseObjectView(generic.ObjectView):
     template_name = 'netbox_servicemgmt/default-detail.html'
     
@@ -40,10 +39,11 @@ class BaseObjectView(generic.ObjectView):
         field_data = []
         for field in instance._meta.get_fields():      
             # Skip excluded fields
-            if field.name in excluded_extras or isinstance(field, (ManyToManyField)):
+            if field.name in excluded_extras or isinstance(field, (OneToOneField, ManyToManyField)):
                 continue      
             value = None
             url = None
+            
             try:
                 # Handle ForeignKey and OneToOne relationships
                 if isinstance(field, (ForeignKey, OneToOneField)):
@@ -87,7 +87,6 @@ class BaseObjectView(generic.ObjectView):
                         related_table = table_class(related_objects)
                     else:
                         related_table = None
-                    
 
                     related_tables.append({
                         'name': related_model._meta.verbose_name_plural,
