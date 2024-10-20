@@ -11,6 +11,7 @@ class SLOTable(NetBoxTable):
 
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
+    design_contact = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = SolutionTemplate
@@ -35,6 +36,9 @@ class ServiceTemplateTable(NetBoxTable):
 
 class ServiceRequirementTable(NetBoxTable):
     name = tables.Column(linkify=True)
+    solution_template = tables.Column(linkify=True)
+    requirement_owner = tables.Column(linkify=True)
+    service_slo = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceRequirement
@@ -42,6 +46,7 @@ class ServiceRequirementTable(NetBoxTable):
 
 class SolutionDeploymentTable(NetBoxTable):
     name = tables.Column(linkify=True)
+    solution_template = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = SolutionDeployment
@@ -49,13 +54,20 @@ class SolutionDeploymentTable(NetBoxTable):
 
 class ServiceDeploymentTable(NetBoxTable):
     name = tables.Column(linkify=True)
-
+    service_template = tables.Column(linkify=True)
+    solution_deployment = tables.Column(linkify=True)
+    business_owner_tenant = tables.Column(linkify=True)
+    service_owner_tenant = tables.Column(linkify=True)
+    
     class Meta(NetBoxTable.Meta):
         model = ServiceDeployment
         fields = ('name', 'description', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant')
 
 class ServiceComponentTable(NetBoxTable):
     name = tables.Column(linkify=True)
+    service_deployment = tables.Column(linkify=True)
+    content_object = tables.Column(linkify=True)
+    service_deployment = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceComponent
