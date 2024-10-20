@@ -1,7 +1,7 @@
 from netbox.views import generic
 from .base_views import BaseObjectView, BaseChangeLogView
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
-from .forms import SLOForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
+from .forms import SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm ,SolutionDeploymentForm, SolutionDeploymentImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
 from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
 
 # SLO Views
@@ -21,7 +21,7 @@ class SLODeleteView(generic.ObjectDeleteView):
 
 class SLOBulkImportView(generic.BulkImportView):
     queryset = SLO.objects.all()
-    model_form = SLOForm
+    model_form = SLOImportForm
 
 class SLOChangeLogView(BaseChangeLogView):
     base_model = SLO
@@ -65,7 +65,7 @@ class FaultToleranceDeleteView(generic.ObjectDeleteView):
 
 class FaultToleranceBulkImportView(generic.BulkImportView):
     queryset = FaultTolerance.objects.all()
-    model_form = FaultToleranceForm
+    model_form = FaultToleranceImportForm
 
 class FaultToleranceChangeLogView(BaseChangeLogView):
     base_model = FaultTolerance
@@ -110,7 +110,7 @@ class ServiceRequirementDeleteView(generic.ObjectDeleteView):
 
 class ServiceRequirementBulkImportView(generic.BulkImportView):
     queryset = ServiceRequirement.objects.all()
-    model_form = ServiceRequirementForm
+    model_form = ServiceRequirementImportForm
 
 class ServiceRequirementChangeLogView(BaseChangeLogView):
     base_model = ServiceRequirement
@@ -132,7 +132,7 @@ class SolutionDeploymentDeleteView(generic.ObjectDeleteView):
 
 class SolutionDeploymentBulkImportView(generic.BulkImportView):
     queryset = SolutionDeployment.objects.all()
-    model_form = SolutionDeploymentForm
+    model_form = SolutionDeploymentImportForm
 
 class SolutionDeploymentChangeLogView(BaseChangeLogView):
     base_model = SolutionDeployment
@@ -154,7 +154,7 @@ class ServiceDeploymentDeleteView(generic.ObjectDeleteView):
 
 class ServiceDeploymentBulkImportView(generic.BulkImportView):
     queryset = ServiceDeployment.objects.all()
-    model_form = ServiceDeploymentForm
+    model_form = ServiceDeploymentImportForm
 
 class ServiceDeploymentChangeLogView(BaseChangeLogView):
     base_model = ServiceDeployment
@@ -176,7 +176,7 @@ class ServiceComponentDeleteView(generic.ObjectDeleteView):
 
 class ServiceComponentBulkImportView(generic.BulkImportView):
     queryset = ServiceComponent.objects.all()
-    model_form = ServiceComponentForm
+    model_form = ServiceComponentImportForm
 
 class ServiceComponentChangeLogView(BaseChangeLogView):
     base_model = ServiceComponent

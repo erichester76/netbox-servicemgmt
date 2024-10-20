@@ -6,6 +6,11 @@ class SLOForm(NetBoxModelForm):
         model = SLO
         fields = ['name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response']
 
+class SLOImportForm(NetBoxModelImportForm):
+    class Meta:
+        model = SLO
+        fields = ['name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response']
+
 class SolutionTemplateForm(NetBoxModelForm):
     class Meta:
         model = SolutionTemplate
@@ -17,6 +22,11 @@ class SolutionTemplateImportForm(NetBoxModelImportForm):
         fields = ['name', 'description', 'design_contact', 'requirements']
         
 class FaultToleranceForm(NetBoxModelForm):
+    class Meta:
+        model = FaultTolerance
+        fields = ['name', 'description', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule']
+
+class FaultToleranceImportForm(NetBoxModelImportForm):
     class Meta:
         model = FaultTolerance
         fields = ['name', 'description', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule']
@@ -99,8 +109,23 @@ class ServiceRequirementForm(NetBoxModelForm):
                 # Set the initial value for the form field based on the SLO field value
                 self.fields[form_field_name].initial = getattr(slo, form_field_name)
 
+class ServiceRequirementImportForm(NetBoxModelImportForm):
+    
+    class Meta:
+        model = ServiceRequirement
+        fields = [
+            'name', 'description', 'service_template', 'requirement_owner', 'service_slo',
+            'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
+            'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
+            'offsite_backup', 'airgap_backup', 'object_type'
+        ]
 
 class SolutionDeploymentForm(NetBoxModelForm):
+    class Meta:
+        model = SolutionDeployment
+        fields = ['name', 'description', 'solution_template', 'deployment_type', 'deployment_date']
+
+class SolutionDeploymentImportForm(NetBoxModelImportForm):
     class Meta:
         model = SolutionDeployment
         fields = ['name', 'description', 'solution_template', 'deployment_type', 'deployment_date']
@@ -110,7 +135,17 @@ class ServiceDeploymentForm(NetBoxModelForm):
         model = ServiceDeployment
         fields = ['name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
+class ServiceDeploymentImportForm(NetBoxModeImportForm):
+    class Meta:
+        model = ServiceDeployment
+        fields = ['name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
+
 class ServiceComponentForm(NetBoxModelForm):
+    class Meta:
+        model = ServiceComponent
+        fields = ['name', 'description', 'service_deployment', 'service_requirement', 'object_type', 'object_id']
+
+class ServiceComponentImportForm(NetBoxModelImportForm):
     class Meta:
         model = ServiceComponent
         fields = ['name', 'description', 'service_deployment', 'service_requirement', 'object_type', 'object_id']
