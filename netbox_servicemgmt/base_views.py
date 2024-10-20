@@ -38,9 +38,11 @@ class BaseObjectView(generic.ObjectView):
         # Extract fields and their values for the object, including relationships
         field_data = []
         for field in instance._meta.get_fields():      
+            
             # Skip excluded fields
-            if field.name in excluded_extras or isinstance(field, (OneToOneField, ManyToManyField)):
+            if field.name in excluded_extras or field.is_relation:
                 continue      
+            
             value = None
             url = None
             
