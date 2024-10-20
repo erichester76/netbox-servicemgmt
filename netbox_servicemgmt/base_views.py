@@ -118,7 +118,7 @@ class BaseObjectDiagramView(BaseObjectView):
     
     tab = ViewTab(
         label='Diagram',
-        badge=lambda obj: 1,  # Customize if needed
+        badge=lambda obj: 1,
     )
 
     def get(self, request, pk):
