@@ -47,7 +47,7 @@ class BaseObjectView(generic.ObjectView):
             
             try:
                 # Handle ForeignKey and OneToOne relationships
-                if isinstance(field, (ForeignKey, OneToOneField)):
+                if isinstance(field, (ForeignKey)):
                     related_object = getattr(instance, field.name)
                     if related_object:
                         value = str(related_object)  
