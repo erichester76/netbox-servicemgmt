@@ -1,4 +1,4 @@
-from netbox.forms import NetBoxModelForm
+from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 
 class SLOForm(NetBoxModelForm):
@@ -10,10 +10,11 @@ class SolutionTemplateForm(NetBoxModelForm):
     class Meta:
         model = SolutionTemplate
         fields = ['name', 'description', 'design_contact', 'requirements']
-
-    def __init__(self, *args, **kwargs):
-        # Ensure we call the parent's __init__ method and don't pass unexpected arguments
-        super().__init__(*args, **kwargs)
+        
+class SolutionTemplateImportForm(NetBoxModelImportForm):
+    class Meta:
+        model = SolutionTemplate
+        fields = ['name', 'description', 'design_contact', 'requirements']
         
 class FaultToleranceForm(NetBoxModelForm):
     class Meta:
