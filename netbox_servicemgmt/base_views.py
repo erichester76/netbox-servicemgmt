@@ -49,7 +49,10 @@ class BaseObjectView(generic.ObjectView):
                 # Handle ForeignKey and OneToOne relationships
                 if isinstance(field, (ForeignKey, OneToOneField)):
                     related_object = getattr(instance, field.name)
-                    value = str(related_object) if related_object else None
+                    if related_object:
+                        value = str(related_object)  
+                    else:
+                        continue
                     if hasattr(related_object, 'get_absolute_url'):
                         url = related_object.get_absolute_url()
                 # Handle regular fields
