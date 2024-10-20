@@ -2,7 +2,7 @@ import re
 from netbox.views import generic
 from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 from django.urls import reverse
-from extras.plugins import ViewTab, ViewTabGroup
+from utilities.views import ViewTab, ViewTabGroup
 from django.shortcuts import render
 
 from . import (
