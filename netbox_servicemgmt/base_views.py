@@ -56,6 +56,8 @@ class BaseObjectView(generic.ObjectView):
                 #handle normal fields
                 elif not field.is_relation:
                     value = getattr(instance, field.name)
+                else:
+                    continue
                     
             except AttributeError:
                 value = None  
