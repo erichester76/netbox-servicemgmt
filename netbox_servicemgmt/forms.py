@@ -11,6 +11,10 @@ class SolutionTemplateForm(NetBoxModelForm):
         model = SolutionTemplate
         fields = ['name', 'description', 'design_contact', 'requirements']
 
+    def __init__(self, *args, **kwargs):
+        # Ensure we call the parent's __init__ method and don't pass unexpected arguments
+        super().__init__(*args, **kwargs)
+        
 class FaultToleranceForm(NetBoxModelForm):
     class Meta:
         model = FaultTolerance
