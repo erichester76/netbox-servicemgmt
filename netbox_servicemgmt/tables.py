@@ -21,21 +21,21 @@ class FaultToleranceTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = FaultTolerance
-        fields = ('name', 'description', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site')
+        fields = ('name', 'description', 'primary_site', 'secondary_site', 'tertiary_site')
 
 class ServiceTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceTemplate
-        fields = ('name', 'description', 'solution_template', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo')
+        fields = ('name', 'description', 'solution_template', 'service_type', 'fault_tolerence', 'service_slo')
 
 class ServiceRequirementTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceRequirement
-        fields = ('name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'primary_site', 'secondary_site')
+        fields = ('name', 'description', 'service_template', 'requirement_owner', 'service_slo')
 
 class SolutionDeploymentTable(NetBoxTable):
     name = tables.Column(linkify=True)
