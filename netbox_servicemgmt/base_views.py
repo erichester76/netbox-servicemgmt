@@ -123,11 +123,11 @@ class BaseObjectDiagramView(BaseObjectView):
     )
 
     # Diagram source should be provided or customized by subclasses
-    mermaid_source = """
-    graph TB
-        A[Start] --> B[Process]
-        B --> C[Finish]
-    """
+    mermaid_source = " \
+        graph TB \
+        A[Start] --> B[Process] \
+        B --> C[Finish] \
+    "
 
     def get(self, request, pk):
         obj = self.get_object()
