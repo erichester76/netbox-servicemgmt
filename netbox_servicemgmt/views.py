@@ -1,8 +1,9 @@
 from netbox.views import generic
-from .base_views import BaseObjectView, BaseChangeLogView, BaseObjectDiagramView
+from .base_views import BaseObjectView, BaseChangeLogView, BaseDiagramView
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .forms import SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm ,SolutionDeploymentForm, SolutionDeploymentImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
 from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
+from utilities.views import register_model_view
 
 # SLO Views
 class SLOListView(generic.ObjectListView):
@@ -31,8 +32,22 @@ class SolutionTemplateListView(generic.ObjectListView):
     queryset = SolutionTemplate.objects.all()
     table = SolutionTemplateTable
 
-class SolutionTemplateDetailView(BaseObjectDiagramView):
+class SolutionTemplateDetailView(BaseObjectView):
     queryset = SolutionTemplate.objects.all()
+
+@register_model_view(SolutionTemplate, name='diagram', path='diagram')
+class SolutionTemplateDiagramView(BaseDiagramView):
+    """
+    Diagram view for SolutionTemplate model.
+    """
+    # Customize the Mermaid source for SolutionTemplate
+    mermaid_source = " \
+    graph TD \
+        Solution[Solution Template] --> Service[Service Template] \
+        Service --> Requirement[Requirements] \
+        Requirement --> Deployment[Deployment] \
+    "
+
 
 class SolutionTemplateEditView(generic.ObjectEditView):
     queryset = SolutionTemplate.objects.all()
@@ -75,8 +90,21 @@ class ServiceTemplateListView(generic.ObjectListView):
     queryset = ServiceTemplate.objects.all()
     table = ServiceTemplateTable
 
-class ServiceTemplateDetailView(BaseObjectDiagramView):
+class ServiceTemplateDetailView(BaseObjectView):
     queryset = ServiceTemplate.objects.all()
+
+@register_model_view(ServiceTemplate, name='diagram', path='diagram')
+class ServiceTemplateDiagramView(BaseDiagramView):
+    """
+    Diagram view for ServiceTemplate model.
+    """
+    # Customize the Mermaid source for ServiceTemplate
+    mermaid_source = " \
+    graph TD \
+        Service[Service Template] \
+        Service --> Requirement[Requirements] \
+        Requirement --> Deployment[Deployment] \
+    "
 
 class ServiceTemplateEditView(generic.ObjectEditView):
     queryset = ServiceTemplate.objects.all()
