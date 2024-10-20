@@ -198,13 +198,13 @@ class ServiceDeployment(NetBoxModel):
     service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_deployments',  verbose_name='Service Template')
     solution_deployment = models.ForeignKey(SolutionDeployment, on_delete=models.CASCADE, related_name='service_deployments', verbose_name='Solution Deployment')
     production_readiness_checklist = models.CharField(max_length=255, null=True, blank=True, verbose_name='Production Readiness Checklist')   
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_business_owners', verbose_name='Business Owner Contact')
-    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_business_owners', verbose_name='Business Owner Department')
-    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_service_owners', verbose_name='Service Owner Contact')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_business_owners', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_business_owners', verbose_name='Business Owner Contact')
     service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_service_owners', verbose_name='Service Owner Department')
-    major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_mi_owners', verbose_name='Major Incident Contact')
+    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_service_owners', verbose_name='Service Owner Contact')
     functional_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_fa_owners', verbose_name='Functional Area Sponsor')
     functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_sfa_owners', verbose_name='Functional Sub-Area Sponsor')
+    major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_mi_owners', verbose_name='Major Incident Contact')
     engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_deployment', verbose_name='Deployment Contact')
     operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_operations', verbose_name='Operations Contact')
     monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring', verbose_name='Monitoring Contact')
@@ -222,8 +222,8 @@ class ServiceDeployment(NetBoxModel):
 class ServiceComponent(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Deployment')
     service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Requirement')
+    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Deployment')
 
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
@@ -239,7 +239,7 @@ class ServiceComponent(NetBoxModel):
     def content_object_verbose_name(self):
         """ Returns a human-readable name for the related content object based on its type """
         if self.object_type:
-            return self.object_type
+            return self.object_type._meta.object_name
         return None
     
     def __str__(self):
