@@ -36,6 +36,11 @@ class SolutionTemplate(NetBoxModel):
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers', verbose_name='Architect')
     requirements = models.TextField()
 
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Solution')
+        verbose_name_plural = ('Solutions') 
+
     def __str__(self):
         return f'{self.name}'
     
@@ -90,6 +95,11 @@ class ServiceTemplate(NetBoxModel):
 
     #to fix conflict with ipam service templates
     tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Service')
+        verbose_name_plural = ('Services') 
 
     def __str__(self):
         return f'{self.name}'
@@ -183,6 +193,11 @@ class SolutionDeployment(NetBoxModel):
     solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, related_name='solution_deployments', verbose_name='Solution Template')
     deployment_type = models.CharField(max_length=255, null=True, blank=True)
     deployment_date = models.DateTimeField()
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Deployment')
+        verbose_name_plural = ('Deployments') 
 
     def __str__(self):
         return f'{self.name}'

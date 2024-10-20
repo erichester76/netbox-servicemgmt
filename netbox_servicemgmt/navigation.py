@@ -4,7 +4,7 @@ solution_items = (
     # Solution Template Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:solutiontemplate_list",
-        link_text="Solution Templates",
+        link_text="Solutions",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_servicemgmt:solutiontemplate_add",
@@ -21,7 +21,7 @@ solution_items = (
     # Solution Deployment Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:solutiondeployment_list",
-        link_text="Solution Deployments",
+        link_text="Deployments",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_servicemgmt:solutiondeployment_add",
@@ -40,7 +40,7 @@ service_items = (
     # Service Requirement Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:servicetemplate_list",
-        link_text="Service Templates",
+        link_text="Services",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_servicemgmt:servicetemplate_add",
