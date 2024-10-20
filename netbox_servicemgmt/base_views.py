@@ -116,33 +116,27 @@ class BaseObjectDiagramView(BaseObjectView):
     Base class for object views that include a Mermaid diagram tab.
     """
     
-    # Define a tab group, which includes the diagram tab
     tab = ViewTab(
         label='Diagram',
-        badge=lambda obj: 1,
+        badge=lambda obj: 1,  # Customize if needed
     )
 
-    # Diagram source should be provided or customized by subclasses
-    mermaid_source = " \
-        graph TB \
-        A[Start] --> B[Process] \
-        B --> C[Finish] \
-    "
-
     def get(self, request, pk):
-        obj = self.get_object()
 
-        # Call the base class's get context if necessary
-        context = {
-            "tab": self.tab,
-            "object": obj,
-            "mermaid_source": self.mermaid_source,  # Use default or subclass-defined diagram
-        }
+        # Define Mermaid diagram for ServiceTemplate
+        mermaid_source = " \
+        graph TD \
+            X[Service Start] --> Y[Processing] \
+            Y --> Z[Complete] \
+        "
 
-        # Render the template, subclasses should define their own template
         return render(
             request,
-            "netbox_servicemgmt/default-diagram.html",  # Can be overridden by subclasses
-            context=context,
+            "netbox_servicemgmt/default-diagram.html",
+            context={
+                "tab": self.tab,
+                "object": self.get_object(),
+                "mermaid_source": mermaid_source,
+            },
         )
 
