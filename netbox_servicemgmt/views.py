@@ -1,7 +1,7 @@
 from netbox.views import generic
 from .base_views import BaseObjectView, BaseChangeLogView
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
-from .forms import SLOForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, ServiceTemplateForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
+from .forms import SLOForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, SolutionDeploymentForm, ServiceDeploymentForm, ServiceComponentForm
 from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
 
 # SLO Views
@@ -87,7 +87,7 @@ class ServiceTemplateDeleteView(generic.ObjectDeleteView):
 
 class ServiceTemplateBulkImportView(generic.BulkImportView):
     queryset = ServiceTemplate.objects.all()
-    model_form = ServiceTemplateForm
+    model_form = ServiceTemplateImportForm
 
 class ServiceTemplateChangeLogView(BaseChangeLogView):
     base_model = ServiceTemplate
