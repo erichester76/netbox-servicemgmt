@@ -101,7 +101,7 @@ class ServiceTemplateDetailView(BaseObjectView):
     queryset = ServiceTemplate.objects.all()
 
 @register_model_view(ServiceTemplate, name='diagram', path='diagram')
-class ServiceTemplateDiagramView(BaseDiagramView):
+class ServiceTemplateDiagramView(generic.ObjectView):
     """
     Diagram tab for ServceTemplate model.
     """
