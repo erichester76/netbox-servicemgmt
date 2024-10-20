@@ -2,7 +2,7 @@ import re
 from netbox.views import generic
 from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 from django.urls import reverse
-from utilities.views import ViewTab, ViewTabGroup
+from utilities.views import ViewTab
 from django.shortcuts import render
 
 from . import (
@@ -76,7 +76,7 @@ class BaseObjectView(generic.ObjectView):
             if rel.is_relation and rel.auto_created and not rel.concrete:
                 related_model = rel.related_model
                 related_objects = getattr(instance, rel.get_accessor_name()).all()
-
+         
                 # Create the URL for adding a new related object
                 add_url = None
                 if hasattr(related_model, 'get_absolute_url'):
@@ -117,9 +117,9 @@ class BaseObjectDiagramView(BaseObjectView):
     """
     
     # Define a tab group, which includes the diagram tab
-    tabs = ViewTabGroup(
-        ViewTab(label="Details", permission="netbox_servicemgmt.view_object"),
-        ViewTab(label="Diagram", permission="netbox_servicemgmt.view_object", badge=lambda obj: 1),
+    tab = ViewTab(
+        label='Diagram',
+        badge=lambda obj: 1,
     )
 
     # Diagram source should be provided or customized by subclasses
@@ -134,7 +134,7 @@ class BaseObjectDiagramView(BaseObjectView):
 
         # Call the base class's get context if necessary
         context = {
-            "tabs": self.tabs,
+            "tab": self.tab,
             "object": obj,
             "mermaid_source": self.mermaid_source,  # Use default or subclass-defined diagram
         }
