@@ -46,16 +46,11 @@ class BaseObjectView(generic.ObjectView):
             url = None
             
             try:
-                # Handle ForeignKey and OneToOne relationships
-                if isinstance(field, (ForeignKey)):
+                if field.is_relation and not field.auto_created:
                     related_object = getattr(instance, field.name)
-                    if related_object:
-                        value = str(related_object)  
-                    else:
-                        continue
+                    value = str(related_object)  
                     if hasattr(related_object, 'get_absolute_url'):
                         url = related_object.get_absolute_url()
-                # Handle regular fields
                 else:
                     value = getattr(instance, field.name)
             except AttributeError:
