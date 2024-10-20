@@ -3,7 +3,7 @@ from .base_views import BaseObjectView, BaseChangeLogView, BaseDiagramView
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .forms import SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm ,SolutionDeploymentForm, SolutionDeploymentImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
 from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
-from utilities.views import register_model_view
+from utilities.views import register_model_view, ViewTab
 
 # SLO Views
 class SLOListView(generic.ObjectListView):
@@ -36,17 +36,24 @@ class SolutionTemplateDetailView(BaseObjectView):
     queryset = SolutionTemplate.objects.all()
 
 @register_model_view(SolutionTemplate, name='diagram', path='diagram')
-class SolutionTemplateDiagramView(BaseDiagramView):
+class SolutionTemplateDiagramView(generic.ObjectView):
     """
-    Diagram view for SolutionTemplate model.
+    Diagram tab for SolutionTemplate model.
     """
-    # Customize the Mermaid source for SolutionTemplate
+    queryset = SolutionTemplate.objects.all()
     mermaid_source = " \
-    graph TD \
-        Solution[Solution Template] --> Service[Service Template] \
-        Service --> Requirement[Requirements] \
-        Requirement --> Deployment[Deployment] \
+    graph TB \
+        A[Start] --> B[Process] \
+        B --> C[Finish] \
     "
+    template_name = "netbox_servicemgmt/default-diagram.html"  # Shared template
+    
+    tab = ViewTab(
+        label='Diagram',
+        badge=lambda obj: 1,  
+        permission=None  
+    )
+
 
 
 class SolutionTemplateEditView(generic.ObjectEditView):
@@ -96,15 +103,22 @@ class ServiceTemplateDetailView(BaseObjectView):
 @register_model_view(ServiceTemplate, name='diagram', path='diagram')
 class ServiceTemplateDiagramView(BaseDiagramView):
     """
-    Diagram view for ServiceTemplate model.
+    Diagram tab for ServceTemplate model.
     """
-    # Customize the Mermaid source for ServiceTemplate
+    queryset = ServiceTemplate.objects.all()
+
     mermaid_source = " \
-    graph TD \
-        Service[Service Template] \
-        Service --> Requirement[Requirements] \
-        Requirement --> Deployment[Deployment] \
+    graph TB \
+        A[Start] --> B[Process] \
+        B --> C[Finish] \
     "
+    template_name = "netbox_servicemgmt/default-diagram.html"  # Shared template
+    
+    tab = ViewTab(
+        label='Diagram',
+        badge=lambda obj: 1, 
+        permission=None  
+    )
 
 class ServiceTemplateEditView(generic.ObjectEditView):
     queryset = ServiceTemplate.objects.all()

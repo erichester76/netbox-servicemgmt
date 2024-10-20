@@ -113,21 +113,3 @@ class BaseObjectView(generic.ObjectView):
         
 
 
-class BaseDiagramView(generic.ObjectView):
-    """
-    Base class for object views that include a Mermaid diagram tab.
-    Subclasses should define the model and `mermaid_source` to customize the diagram.
-    """
-     # Mermaid diagram source - should be overridden by subclasses
-    mermaid_source = " \
-    graph TB \
-        A[Start] --> B[Process] \
-        B --> C[Finish] \
-    "
-    template_name = "netbox_servicemgmt/default-diagram.html"  # Shared template
-    
-    tab = ViewTab(
-        label='Diagram',
-        badge=lambda obj: 1,  # You can customize this as needed
-        permission=None  # Subclasses should define the appropriate permission
-    )
