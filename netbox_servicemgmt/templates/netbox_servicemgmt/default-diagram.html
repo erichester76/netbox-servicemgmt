@@ -1,0 +1,26 @@
+{% extends 'generic/object.html' %}
+
+{% block content %}
+<h2>{{ object.name }} - Diagram</h2>
+
+<ul class="nav nav-tabs">
+    {% for tab in tabs %}
+        <li class="nav-item">
+            <a class="nav-link{% if forloop.first %} active{% endif %}" href="#">{{ tab.label }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active">
+        <div class="mermaid">
+            {{ mermaid_source|safe }}
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
+</script>
+{% endblock %}

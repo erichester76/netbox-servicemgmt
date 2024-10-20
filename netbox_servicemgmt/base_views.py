@@ -2,6 +2,8 @@ import re
 from netbox.views import generic
 from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 from django.urls import reverse
+from netbox.plugins import ViewTab, ViewTabGroup
+from django.shortcuts import render
 
 from . import (
     filtersets, 
@@ -108,3 +110,39 @@ class BaseObjectView(generic.ObjectView):
             'field_data': field_data,
             'related_tables': related_tables,
         }
+        
+class BaseObjectDiagramView(BaseObjectView):
+    """
+    Base class for object views that include a Mermaid diagram tab.
+    """
+    
+    # Define a tab group, which includes the diagram tab
+    tabs = ViewTabGroup(
+        ViewTab(label="Details", permission="netbox_servicemgmt.view_object"),
+        ViewTab(label="Diagram", permission="netbox_servicemgmt.view_object", badge=lambda obj: 1),
+    )
+
+    # Diagram source should be provided or customized by subclasses
+    mermaid_source = """
+    graph TB
+        A[Start] --> B[Process]
+        B --> C[Finish]
+    """
+
+    def get(self, request, pk):
+        obj = self.get_object()
+
+        # Call the base class's get context if necessary
+        context = {
+            "tabs": self.tabs,
+            "object": obj,
+            "mermaid_source": self.mermaid_source,  # Use default or subclass-defined diagram
+        }
+
+        # Render the template, subclasses should define their own template
+        return render(
+            request,
+            "netbox_servicemgmt/default-diagram.html",  # Can be overridden by subclasses
+            context=context,
+        )
+
