@@ -46,12 +46,10 @@
       <div id="form_fields" hx-disinherit="hx-select hx-swap">
         {% block form %}
           {% include 'htmx/form.html' %}
+          <div id="requirement-fields">
+            <!-- Requirement fields will be populated here -->
+          </div>
         {% endblock form %}
-      </div>
-
-      {# Add Requirement Button #}
-      <div class="my-3">
-        <button id="add-requirement-button" class="btn btn-secondary">{% trans "Add Requirement" %}</button>
       </div>
 
       <div class="btn-float-group-right">
@@ -70,83 +68,36 @@
     </form>
   </div>
 
-  {# Include your custom JavaScript here for dynamic behavior #}
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let currentRequirement = 1;
+document.addEventListener('DOMContentLoaded', function() {
+    const objectTypeField = document.getElementById("id_object_type");
 
-        function hideUnusedRequirements() {
-            for (let i = currentRequirement + 1; i <= 20; i++) {
-                let field = document.getElementById(`id_requirement${i}_field`);
-                let value = document.getElementById(`id_requirement${i}_value`);
-                if (field && value) {
-                    field.parentElement.style.display = 'none';
-                    value.parentElement.style.display = 'none';
-                }
-            }
-        }
+    objectTypeField.addEventListener('change', function() {
+        const objectTypeId = objectTypeField.value;
+        if (objectTypeId) {
+            fetch(`/api/plugins/netbox_servicemgmt/object-fields/${objectTypeId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const fields = data.fields;
+                    const requirementFieldsContainer = document.getElementById("requirement-fields");
 
-        function showNextRequirement() {
-            currentRequirement += 1;
-            if (currentRequirement <= 20) {
-                let field = document.getElementById(`id_requirement${currentRequirement}_field`);
-                let value = document.getElementById(`id_requirement${currentRequirement}_value`);
-                if (field && value) {
-                    field.parentElement.style.display = 'block';
-                    value.parentElement.style.display = 'block';
-                }
-            }
-        }
+                    requirementFieldsContainer.innerHTML = '';  // Clear current fields
 
-        // Hide unused requirement fields initially
-        hideUnusedRequirements();
+                    fields.forEach((field, index) => {
+                        if (index < 10) {  // Limit to the first 10 fields
+                            const nameField = `<label for="id_requirement${index+1}_name">Field Name</label>
+                                <input type="text" name="requirement${index+1}_name" value="${field}" readonly class="form-control" />`;
+                            const valueField = `<label for="id_requirement${index+1}_value">Field Value</label>
+                                <input type="text" name="requirement${index+1}_value" class="form-control" />`;
 
-        // Event listener for "Add Requirement" button
-        document.getElementById('add-requirement-button').addEventListener('click', function (e) {
-            e.preventDefault();
-            showNextRequirement();
-        });
-
-          // SLO Selection Behavior
-          document.getElementById('id_service_slo').addEventListener('change', function () {
-            const ftId = this.value;
-            if (ftId) {
-                fetch(`/api/plugins/netbox_servicemgmt/ft-fields/${ftId}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update form fields with the SLO override values
-                        document.getElementById('id_vip_required').checked = data.vip_required;
-                        document.getElementById('id_primary_site').value = data.primary_site;
-                        document.getElementById('id_secondary_site').value = data.secondary_site;
-                        document.getElementById('id_tertiary_site').value = data.tertiary_site;
-                        document.getElementById('id_instances_per_site').value = data.instances_per_site;
-                        // Continue for other fields...
-                    });
-            }
-        });
-
-        // Load field options dynamically based on selected object_type
-        document.getElementById('id_object_type').addEventListener('change', function () {
-            const objectType = this.value;
-            if (objectType) {
-                fetch(`/api/plugins/netbox_servicemgmt/object-fields/${objectType}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        for (let i = 1; i <= currentRequirement; i++) {
-                            const fieldSelect = document.getElementById(`id_requirement${i}_field`);
-                            fieldSelect.innerHTML = '';  // Clear current options
-                            data.fields.forEach(field => {
-                                const option = document.createElement('option');
-                                option.value = field.name;
-                                option.text = field.verbose_name;
-                                fieldSelect.add(option);
-                            });
+                            requirementFieldsContainer.innerHTML += nameField + valueField;
                         }
                     });
-            }
-        });
+                });
+        }
     });
-  </script>
+});
+</script>
 {% endblock content %}
 
 {% block modals %}
