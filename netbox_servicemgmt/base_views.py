@@ -196,7 +196,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
 
-    # Traverse reverse relationships (many-to-one, many-to-many)
+    """ # Traverse reverse relationships (many-to-one, many-to-many)
     if obj._meta.model_name not in models_to_skip_reverse_relations:
         for rel in obj._meta.get_fields():
             if rel.is_relation and rel.auto_created and not rel.concrete:
@@ -210,7 +210,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         # Add reverse relationship and recurse with indent for readability
                         mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-
+    """
     return mermaid_code
 
 class BaseDiagramView(generic.ObjectView):    
