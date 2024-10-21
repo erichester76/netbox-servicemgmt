@@ -111,13 +111,53 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
+def generate_mermaid_code(obj, visited=None, depth=0):
+    """
+    Recursively generates the Mermaid code for the given object and its relationships.
+    Tracks visited objects to avoid infinite loops.
+    """
+    if visited is None:
+        visited = set()
 
+    mermaid_code = ""
+    indent = "    " * depth  # Indentation for readability
+
+    # Mark the object as visited to avoid revisiting it
+    obj_id = f"{obj._meta.model_name}_{obj.pk}"
+    if obj_id in visited:
+        return mermaid_code  # Stop if this object was already visited
+
+    visited.add(obj_id)
+
+    # Add the object to the diagram
+    mermaid_code += f"{indent}{obj_id}[{obj}]"
+
+    # Traverse forward relationships (ForeignKey, OneToOneField)
+    for field in obj._meta.get_fields():
+        if isinstance(field, (models.ForeignKey, models.OneToOneField)):
+            related_obj = getattr(obj, field.name, None)
+            if related_obj and related_obj.pk:
+                related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                # Add relationship and recurse
+                mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+
+    # Traverse reverse relationships (many-to-one, many-to-many)
+    for rel in obj._meta.get_fields():
+        if rel.is_relation and rel.auto_created and not rel.concrete:
+            related_objects = getattr(obj, rel.get_accessor_name()).all()
+            for related_obj in related_objects:
+                related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                # Add reverse relationship and recurse
+                mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+
+    return mermaid_code
 
 class BaseDiagramView(generic.ObjectView):    
     """
-    Diagram tab.
+    Diagram tab View to show mermiad diagram of relationships of object
     """
-    mermaid_source = "graph TD\nA[Start] --> B[Process]\nB --> C[Finish]\n"
     
     template_name = "netbox_servicemgmt/default-diagram.html"  
     
@@ -125,3 +165,25 @@ class BaseDiagramView(generic.ObjectView):
         label='Diagram',
         badge=lambda obj: 1, 
     )
+    
+    def get(self, request, pk):
+        # Get the object based on the specific model queryset
+        obj = self.get_object()
+
+        # Call the recursive function to generate the Mermaid diagram source
+        mermaid_source = f"graph TD\n{generate_mermaid_code(obj)}"
+        
+        # Prepare the context
+        context = {
+            "tab": self.tab,
+            "object": obj,
+            "mermaid_source": mermaid_source,  # Dynamically generated diagram
+        }
+
+        # Render the template with the diagram
+        return render(
+            request,
+            self.template_name,  # You can allow subclasses to override this if needed
+            context=context,
+        )
+
