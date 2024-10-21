@@ -182,7 +182,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     visited.add(obj_id)  # Mark the object as visited *before* recursion
 
     # Add the object to the diagram
-    mermaid_code += f"{indent}{obj_id}[{obj}]\n"
+    obj_name = sanitize_name(str(obj))  # Sanitize the related object name
+    mermaid_code += f"{indent}{obj_id}[{obj_name}]\n"
 
     # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
     for field in obj._meta.get_fields():
@@ -190,7 +191,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         if field.name in excluded_fields:
             continue
 
-        """         # Handle ForeignKey and OneToOneField relationships
+        """# Handle ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
