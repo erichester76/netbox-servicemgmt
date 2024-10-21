@@ -1,12 +1,12 @@
 from netbox.api.viewsets import NetBoxModelViewSet
-from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
-from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultToleranceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
+from .. import models 
+from . import serializers 
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 
 def get_ft_fields(request, slo_id):
     """API endpoint to get the details of a selected SLO."""
-    ft = FaultTolerance.objects.get(id=ft_id)
+    ft = models.FaultTolerance.objects.get(id=ft_id)
 
     data = {
         'vip_required': ft.vip_required,
@@ -18,9 +18,6 @@ def get_ft_fields(request, slo_id):
     }
 
     return JsonResponse(data)
-
-from django.http import JsonResponse
-from django.contrib.contenttypes.models import ContentType
 
 def get_object_fields(request, object_type_id):
     content_type = ContentType.objects.get(id=object_type_id)
@@ -63,29 +60,33 @@ def get_object_fields(request, object_type_id):
 
 
 class SLOViewSet(NetBoxModelViewSet):
-    queryset = SLO.objects.all()
-    serializer_class = SLOSerializer
+    queryset = models.SLO.objects.all()
+    serializer_class = serializers.SLOSerializer
 
 class SolutionTemplateViewSet(NetBoxModelViewSet):
-    queryset = SolutionTemplate.objects.all()
-    serializer_class = SolutionTemplateSerializer
+    queryset = models.SolutionTemplate.objects.all()
+    serializer_class = serializers.SolutionTemplateSerializer
+
+class SolutionRequestViewSet(NetBoxModelViewSet):
+    queryset = models.SolutionTemplate.objects.all()
+    serializer_class = serializers.SolutionRequestSerializer
 
 class FaultToleranceViewSet(NetBoxModelViewSet):
-    queryset = FaultTolerance.objects.all()
-    serializer_class = FaultToleranceSerializer
+    queryset = models.FaultTolerance.objects.all()
+    serializer_class = serializers.FaultToleranceSerializer
 
 class ServiceTemplateViewSet(NetBoxModelViewSet):
-    queryset = ServiceTemplate.objects.all()
-    serializer_class = ServiceTemplateSerializer
+    queryset = models.ServiceTemplate.objects.all()
+    serializer_class = serializers.ServiceTemplateSerializer
 
 class ServiceRequirementViewSet(NetBoxModelViewSet):
-    queryset = ServiceRequirement.objects.all()
-    serializer_class = ServiceRequirementSerializer
+    queryset = models.ServiceRequirement.objects.all()
+    serializer_class = serializers.ServiceRequirementSerializer
     
 class ServiceDeploymentViewSet(NetBoxModelViewSet):
-    queryset = ServiceDeployment.objects.all()
-    serializer_class = ServiceDeploymentSerializer
+    queryset = models.ServiceDeployment.objects.all()
+    serializer_class = serializers.ServiceDeploymentSerializer
 
 class ServiceComponentViewSet(NetBoxModelViewSet):
-    queryset = ServiceComponent.objects.all()
-    serializer_class = ServiceComponentSerializer
+    queryset = models.ServiceComponent.objects.all()
+    serializer_class = serializers.ServiceComponentSerializer

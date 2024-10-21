@@ -6,6 +6,17 @@ urlpatterns = [
     path('<str:app_label>/<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
 
     # Solution Template URLs
+    path('solution-requests/', views.SolutionRequestListView.as_view(), name='solutionrequest_list'),
+    path('solution-requests/<int:pk>/', views.SolutionRequestDetailView.as_view(), name='solutionrequest'),
+    path('solution-requests/add/', views.SolutionRequestEditView.as_view(), name='solutionrequest_add'),
+    path('solution-requests/<int:pk>/edit/', views.SolutionRequestEditView.as_view(), name='solutionrequest_edit'),
+    path('solution-requests/<int:pk>/delete/', views.SolutionRequestDeleteView.as_view(), name='solutionrequest_delete'),
+    path('solution-requests/bulk-import/', views.SolutionRequestBulkImportView.as_view(), name='solutionrequest_bulk_import'),
+    path('solution-requests/<int:pk>/changelog/', views.SolutionRequestChangeLogView.as_view(), name='solutionrequest_changelog', kwargs={'model': models.SolutionRequest}),
+    path('solution-requests/<int:pk>/diagram/', views.SolutionRequestDiagramView.as_view(), name='solutionrequest_diagram'),
+   
+
+    # Solution Template URLs
     path('solution-templates/', views.SolutionTemplateListView.as_view(), name='solutiontemplate_list'),
     path('solution-templates/<int:pk>/', views.SolutionTemplateDetailView.as_view(), name='solutiontemplate'),
     path('solution-templates/add/', views.SolutionTemplateEditView.as_view(), name='solutiontemplate_add'),

@@ -1,26 +1,21 @@
 from netbox.api.routers import NetBoxRouter
 from django.urls import path
-from .views import (
-    SLOViewSet, SolutionTemplateViewSet, FaultToleranceViewSet,
-    ServiceTemplateViewSet, ServiceRequirementViewSet,
-    ServiceDeploymentViewSet, ServiceComponentViewSet,
-    get_object_fields, get_ft_fields
-)
+from . import views
 
 app_name = 'netbox_servicemgmt'
 
 router = NetBoxRouter()
-router.register(r'slo', SLOViewSet)
-router.register(r'solution-templates', SolutionTemplateViewSet)
-router.register(r'fault-tolerances', FaultToleranceViewSet)
-router.register(r'service-templates', ServiceTemplateViewSet)
-router.register(r'service-requirements', ServiceRequirementViewSet)
-router.register(r'service-deployments', ServiceDeploymentViewSet)
-router.register(r'service-components', ServiceComponentViewSet)
+router.register(r'slo', views.SLOViewSet)
+router.register(r'solution-templates', views.SolutionTemplateViewSet)
+router.register(r'fault-tolerances', views.FaultToleranceViewSet)
+router.register(r'service-templates', views.ServiceTemplateViewSet)
+router.register(r'service-requirements', views.ServiceRequirementViewSet)
+router.register(r'service-deployments', views.ServiceDeploymentViewSet)
+router.register(r'service-components', views.ServiceComponentViewSet)
 
 # Combine router URLs with additional custom API paths
 urlpatterns = router.urls + [
-    path('object-fields/<int:object_type_id>/', get_object_fields, name='get_object_fields'),
-    path('ft-fields/<int:ft_id>/', get_ft_fields, name='get_ft_fields'),
+    path('object-fields/<int:object_type_id>/', views.get_object_fields, name='get_object_fields'),
+    path('ft-fields/<int:ft_id>/', views.get_ft_fields, name='get_ft_fields'),
 
 ]

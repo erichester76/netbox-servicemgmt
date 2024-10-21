@@ -1,19 +1,16 @@
 from netbox.views import generic
-from .base_views import BaseObjectView, BaseChangeLogView, BaseDiagramView
-from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
-from .forms import AttachForm, SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
-from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, ServiceDeploymentTable, ServiceComponentTable
+from . import base_views
 from utilities.views import register_model_view, ViewTab
 from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.urls import reverse  # Import reverse
 
+from . import models, tables, views, forms
 
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView
-from .forms import AttachForm
 
 
 def get_model_class(app_label, model_name):
@@ -23,7 +20,7 @@ def get_model_class(app_label, model_name):
 
 class GenericAttachView(FormView):
     template_name = "netbox_servicemgmt/attach_form.html"
-    form_class = AttachForm
+    form_class = forms.AttachForm
 
     def get_form_kwargs(self):
         # Get the default form kwargs
@@ -75,185 +72,209 @@ class GenericAttachView(FormView):
         
 # SLO Views
 class SLOListView(generic.ObjectListView):
-    queryset = SLO.objects.all()
-    table = SLOTable
+    queryset = models.SLO.objects.all()
+    table = tables.SLOTable
 
-class SLODetailView(BaseObjectView):
-    queryset = SLO.objects.all()
+class SLODetailView(base_views.BaseObjectView):
+    queryset = models.SLO.objects.all()
 
 class SLOEditView(generic.ObjectEditView):
-    queryset = SLO.objects.all()
-    form = SLOForm
+    queryset = models.SLO.objects.all()
+    form = forms.SLOForm
 
 class SLODeleteView(generic.ObjectDeleteView):
-    queryset = SLO.objects.all()
+    queryset = models.SLO.objects.all()
 
 class SLOBulkImportView(generic.BulkImportView):
-    queryset = SLO.objects.all()
-    model_form = SLOImportForm
+    queryset = models.SLO.objects.all()
+    model_form = forms.SLOImportForm
 
-class SLOChangeLogView(BaseChangeLogView):
-    base_model = SLO
+class SLOChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.SLO
+
+
+
+# Fault Tolerence Views
+class SolutionRequestListView(generic.ObjectListView):
+    queryset = models.SolutionRequest.objects.all()
+    table = tables.SolutionRequestTable
+
+class SolutionRequestDetailView(base_views.BaseObjectView):
+    queryset = models.SolutionRequest.objects.all()
+
+class SolutionRequestEditView(generic.ObjectEditView):
+    queryset = models.SolutionRequest.objects.all()
+    form = forms.SolutionRequestForm
+
+class SolutionRequestDeleteView(generic.ObjectDeleteView):
+    queryset = models.SolutionRequest.objects.all()
+
+class SolutionRequestBulkImportView(generic.BulkImportView):
+    queryset = models.SolutionRequest.objects.all()
+    model_form = forms.SolutionRequestImportForm
+
+class SolutionRequestChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.models.SolutionRequest
 
 
 # Solution Template Views
 class SolutionTemplateListView(generic.ObjectListView):
-    queryset = SolutionTemplate.objects.all()
-    table = SolutionTemplateTable
+    queryset = models.SolutionTemplate.objects.all()
+    table = tables.SolutionTemplateTable
 
-@register_model_view(SolutionTemplate)
-class SolutionTemplateDetailView(BaseObjectView):
-    queryset = SolutionTemplate.objects.all()
+@register_model_view(models.SolutionTemplate)
+class SolutionTemplateDetailView(base_views.BaseObjectView):
+    queryset = models.SolutionTemplate.objects.all()
 
-@register_model_view(SolutionTemplate, 'diagram', path='diagram')
-class SolutionTemplateDiagramView(BaseDiagramView):
+@register_model_view(models.SolutionTemplate, 'diagram', path='diagram')
+class SolutionTemplateDiagramView(base_views.BaseDiagramView):
     """
     Diagram tab for SolutionTemplate model.
     """
-    queryset = SolutionTemplate.objects.all()
+    queryset = models.SolutionTemplate.objects.all()
 
 class SolutionTemplateEditView(generic.ObjectEditView):
-    queryset = SolutionTemplate.objects.all()
-    form = SolutionTemplateForm
+    queryset = models.SolutionTemplate.objects.all()
+    form = forms.SolutionTemplateForm
 
 class SolutionTemplateDeleteView(generic.ObjectDeleteView):
-    queryset = SolutionTemplate.objects.all()
+    queryset = models.SolutionTemplate.objects.all()
 
 class SolutionTemplateBulkImportView(generic.BulkImportView):
-    queryset = SolutionTemplate.objects.all()
-    model_form = SolutionTemplateImportForm
+    queryset = models.SolutionTemplate.objects.all()
+    model_form = forms.SolutionTemplateImportForm
 
-class SolutionTemplateChangeLogView(BaseChangeLogView):
-    base_model = SolutionTemplate
+class SolutionTemplateChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.SolutionTemplate
 
 
-# Fault Tolerence Views
+# Solution Request Views
 class FaultToleranceListView(generic.ObjectListView):
-    queryset = FaultTolerance.objects.all()
-    table = FaultToleranceTable
+    queryset = models.FaultTolerance.objects.all()
+    table = tables.FaultToleranceTable
 
-class FaultToleranceDetailView(BaseObjectView):
-    queryset = FaultTolerance.objects.all()
+class FaultToleranceDetailView(base_views.BaseObjectView):
+    queryset = models.FaultTolerance.objects.all()
 
 class FaultToleranceEditView(generic.ObjectEditView):
-    queryset = FaultTolerance.objects.all()
-    form = FaultToleranceForm
+    queryset = models.FaultTolerance.objects.all()
+    form = forms.FaultToleranceForm
 
 class FaultToleranceDeleteView(generic.ObjectDeleteView):
-    queryset = FaultTolerance.objects.all()
+    queryset = models.FaultTolerance.objects.all()
 
 class FaultToleranceBulkImportView(generic.BulkImportView):
-    queryset = FaultTolerance.objects.all()
-    model_form = FaultToleranceImportForm
+    queryset = models.FaultTolerance.objects.all()
+    model_form = forms.FaultToleranceImportForm
 
-class FaultToleranceChangeLogView(BaseChangeLogView):
-    base_model = FaultTolerance
+class FaultToleranceChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.FaultTolerance
 
 
 # Service Template Views
 class ServiceTemplateListView(generic.ObjectListView):
-    queryset = ServiceTemplate.objects.all()
-    table = ServiceTemplateTable
+    queryset = models.ServiceTemplate.objects.all()
+    table = tables.ServiceTemplateTable
 
-@register_model_view(ServiceTemplate)
-class ServiceTemplateDetailView(BaseObjectView):
-    queryset = ServiceTemplate.objects.all()
+@register_model_view(models.ServiceTemplate)
+class ServiceTemplateDetailView(base_views.BaseObjectView):
+    queryset = models.ServiceTemplate.objects.all()
 
-@register_model_view(ServiceTemplate, 'diagram', path='diagram')
-class ServiceTemplateDiagramView(BaseDiagramView):
+@register_model_view(models.ServiceTemplate, 'diagram', path='diagram')
+class ServiceTemplateDiagramView(base_views.BaseDiagramView):
     """
     Diagram tab for ServceTemplate model.
     """  
-    queryset = ServiceTemplate.objects.all()
+    queryset = models.ServiceTemplate.objects.all()
 
 class ServiceTemplateEditView(generic.ObjectEditView):
-    queryset = ServiceTemplate.objects.all()
-    form = ServiceTemplateForm
+    queryset = models.ServiceTemplate.objects.all()
+    form = forms.ServiceTemplateForm
 
 class ServiceTemplateDeleteView(generic.ObjectDeleteView):
-    queryset = ServiceTemplate.objects.all()
+    queryset = models.ServiceTemplate.objects.all()
 
 class ServiceTemplateBulkImportView(generic.BulkImportView):
-    queryset = ServiceTemplate.objects.all()
-    model_form = ServiceTemplateImportForm
+    queryset = models.ServiceTemplate.objects.all()
+    model_form = forms.ServiceTemplateImportForm
 
-class ServiceTemplateChangeLogView(BaseChangeLogView):
-    base_model = ServiceTemplate
+class ServiceTemplateChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.ServiceTemplate
 
 
 # Service Requirement Views
 class ServiceRequirementListView(generic.ObjectListView):
-    queryset = ServiceRequirement.objects.all()
-    table = ServiceRequirementTable
+    queryset = models.ServiceRequirement.objects.all()
+    table = tables.ServiceRequirementTable
 
-class ServiceRequirementDetailView(BaseObjectView):
-    queryset = ServiceRequirement.objects.all()
+class ServiceRequirementDetailView(base_views.BaseObjectView):
+    queryset = models.ServiceRequirement.objects.all()
 
 class ServiceRequirementEditView(generic.ObjectEditView):
-    queryset = ServiceRequirement.objects.all()
-    form = ServiceRequirementForm
+    queryset = models.ServiceRequirement.objects.all()
+    form = forms.ServiceRequirementForm
     template_name = 'netbox_servicemgmt/servicerequirement-form.html'
 
 class ServiceRequirementDeleteView(generic.ObjectDeleteView):
-    queryset = ServiceRequirement.objects.all()
+    queryset = models.ServiceRequirement.objects.all()
 
 class ServiceRequirementBulkImportView(generic.BulkImportView):
-    queryset = ServiceRequirement.objects.all()
-    model_form = ServiceRequirementImportForm
+    queryset = models.ServiceRequirement.objects.all()
+    model_form = forms.ServiceRequirementImportForm
 
-class ServiceRequirementChangeLogView(BaseChangeLogView):
-    base_model = ServiceRequirement
+class ServiceRequirementChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.ServiceRequirement
 
 
 # Service Deployment Views
 class ServiceDeploymentListView(generic.ObjectListView):
-    queryset = ServiceDeployment.objects.all()
-    table = ServiceDeploymentTable
+    queryset = models.ServiceDeployment.objects.all()
+    table = tables.ServiceDeploymentTable
 
-@register_model_view(ServiceDeployment)
-class ServiceDeploymentDetailView(BaseObjectView):
-    queryset = ServiceDeployment.objects.all()
+@register_model_view(models.ServiceDeployment)
+class ServiceDeploymentDetailView(base_views.BaseObjectView):
+    queryset = models.ServiceDeployment.objects.all()
 
-@register_model_view(ServiceDeployment, 'diagram', path='diagram')
-class ServiceDeploymentDiagramView(BaseDiagramView):
+@register_model_view(models.ServiceDeployment, 'diagram', path='diagram')
+class ServiceDeploymentDiagramView(base_views.BaseDiagramView):
     """
     Diagram tab for ServiceDeployment model.
     """  
-    queryset = ServiceDeployment.objects.all()
+    queryset = models.ServiceDeployment.objects.all()
 
 class ServiceDeploymentEditView(generic.ObjectEditView):
-    queryset = ServiceDeployment.objects.all()
-    form = ServiceDeploymentForm
+    queryset = models.ServiceDeployment.objects.all()
+    form = forms.ServiceDeploymentForm
 
 class ServiceDeploymentDeleteView(generic.ObjectDeleteView):
-    queryset = ServiceDeployment.objects.all()
+    queryset = models.ServiceDeployment.objects.all()
 
 class ServiceDeploymentBulkImportView(generic.BulkImportView):
-    queryset = ServiceDeployment.objects.all()
-    model_form = ServiceDeploymentImportForm
+    queryset = models.ServiceDeployment.objects.all()
+    model_form = forms.ServiceDeploymentImportForm
 
-class ServiceDeploymentChangeLogView(BaseChangeLogView):
-    base_model = ServiceDeployment
+class ServiceDeploymentChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.ServiceDeployment
 
 
 # Service Component Views
 class ServiceComponentListView(generic.ObjectListView):
-    queryset = ServiceComponent.objects.all()
-    table = ServiceComponentTable
+    queryset = models.ServiceComponent.objects.all()
+    table = tables.ServiceComponentTable
 
-class ServiceComponentDetailView(BaseObjectView):
-    queryset = ServiceComponent.objects.all()
+class ServiceComponentDetailView(base_views.BaseObjectView):
+    queryset = models.ServiceComponent.objects.all()
 
 class ServiceComponentEditView(generic.ObjectEditView):
-    queryset = ServiceComponent.objects.all()
-    form = ServiceComponentForm
+    queryset = models.ServiceComponent.objects.all()
+    form = forms.ServiceComponentForm
 
 class ServiceComponentDeleteView(generic.ObjectDeleteView):
-    queryset = ServiceComponent.objects.all()
+    queryset = models.ServiceComponent.objects.all()
 
 class ServiceComponentBulkImportView(generic.BulkImportView):
-    queryset = ServiceComponent.objects.all()
-    model_form = ServiceComponentImportForm
+    queryset = models.ServiceComponent.objects.all()
+    model_form = forms.ServiceComponentImportForm
 
-class ServiceComponentChangeLogView(BaseChangeLogView):
-    base_model = ServiceComponent
+class ServiceComponentChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.ServiceComponent
