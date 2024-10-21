@@ -54,7 +54,7 @@ class SolutionRequest(NetBoxModel):
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     requirements = models.TextField()
-    version = models.CharField(max_length=50, help_text="Version of the solution request")
+    version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -93,7 +93,7 @@ class SolutionTemplate(NetBoxModel):
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     requirements = models.TextField()
-    version = models.CharField(max_length=50, help_text="Version of the solution template")
+    version = models.CharField(max_length=50, null=True, help_text="Version of the solution template")
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -165,7 +165,7 @@ class ServiceTemplate(NetBoxModel):
     service_type = models.CharField(max_length=255)
     vendor_management_assessment = models.CharField(max_length=255)
     vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor', verbose_name='Vendor')
-    version = models.CharField(max_length=50, help_text="Version of the service")
+    version = models.CharField(max_length=50, null=True, help_text="Version of the service")
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -227,7 +227,7 @@ class ServiceRequirement(NetBoxModel):
     backup_schedule = models.CharField(max_length=255, null=True, blank=True)
     offsite_backup = models.BooleanField(null=True, blank=True)
     airgap_backup = models.BooleanField(null=True, blank=True)
-    version = models.CharField(max_length=50, help_text="Version of the solution template")
+    version = models.CharField(max_length=50, null=True, help_text="Version of the solution template")
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -316,7 +316,7 @@ class ServiceDeployment(NetBoxModel):
     monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring', verbose_name='Monitoring Contact')
     maintenance_window = models.CharField(max_length=255, verbose_name='Maintenance Window Timeframes')
     deployment_rfc = models.CharField(max_length=255, verbose_name='Associated RFC for Deployment')
-    version = models.CharField(max_length=50, help_text="Version of the deployment")
+    version = models.CharField(max_length=50, null=True, help_text="Version of the deployment")
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -351,7 +351,7 @@ class ServiceComponent(NetBoxModel):
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
-    version = models.CharField(max_length=50, help_text="Version of the Component")
+    version = models.CharField(max_length=50, null=True, help_text="Version of the Component")
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
