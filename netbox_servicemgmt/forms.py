@@ -1,6 +1,22 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 
+
+class AttachForm(forms.Form):
+    existing_object = forms.ModelChoiceField(
+        queryset=None,  # The queryset will be set dynamically
+        label="Select an existing object to attach"
+    )
+
+    def __init__(self, *args, **kwargs):
+        current_object = kwargs.pop('current_object')
+        related_model_class = kwargs.pop('related_model_class')  # Dynamically passed related model
+        super().__init__(*args, **kwargs)
+
+        # Populate the queryset dynamically based on the related model class
+        self.fields['existing_object'].queryset = related_model_class.objects.exclude(pk__in=current_object.related_objects.all())
+
+        
 class SLOForm(NetBoxModelForm):
     class Meta:
         model = SLO

@@ -74,7 +74,7 @@ class BaseObjectView(generic.ObjectView):
             field_data.append({
                 'name': field.verbose_name if hasattr(field, 'verbose_name') else field.name,
                 'value': value,
-                'url': url,  
+                'url': url, 
             })
 
         # Find reverse relations dynamically and add them to related_tables
@@ -93,7 +93,15 @@ class BaseObjectView(generic.ObjectView):
                     )   
                     # Pre-fill the linking field with the current object's ID, if possible
                     add_url += f'?{instance._meta.model_name.lower()}={instance.pk}'
-
+                    content_type = ContentType.objects.get_for_model(instance)
+                    attach_url = reverse(
+                        'generic_attach',  # You will create this view later
+                        kwargs={
+                            'app_label': content_type.app_label,
+                            'model_name': content_type.model,
+                            'pk': instance.pk
+                        }
+                    )
                 # Create a table dynamically if a suitable one exists
                 table_class_name = f"{related_model.__name__}Table"
                 if hasattr(tables, table_class_name):
@@ -109,6 +117,7 @@ class BaseObjectView(generic.ObjectView):
                     'objects': related_objects,
                     'table': related_table,
                     'add_url': add_url,
+                    'attach_url': attach_url,
                 })
 
                     

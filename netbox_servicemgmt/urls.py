@@ -2,6 +2,10 @@ from django.urls import path
 from . import views, models
 
 urlpatterns = [
+    
+    
+    path('<str:app_label>/<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
+
     # Solution Template URLs
     path('solution-templates/', views.SolutionTemplateListView.as_view(), name='solutiontemplate_list'),
     path('solution-templates/<int:pk>/', views.SolutionTemplateDetailView.as_view(), name='solutiontemplate'),

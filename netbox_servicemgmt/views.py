@@ -1,9 +1,47 @@
 from netbox.views import generic
 from .base_views import BaseObjectView, BaseChangeLogView, BaseDiagramView
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
-from .forms import SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm ,SolutionDeploymentForm, SolutionDeploymentImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
+from .forms import AttachForm, SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm ,SolutionDeploymentForm, SolutionDeploymentImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
 from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
 from utilities.views import register_model_view, ViewTab
+from django.views.generic import FormView
+from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import get_object_or_404
+
+class GenericAttachView(FormView):
+    template_name = "netbox_servicemgmt/attach_form.html"
+    form_class = AttachForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+
+        # Retrieve the model dynamically based on app_label and model_name
+        content_type = get_object_or_404(
+            ContentType, 
+            app_label=self.kwargs['app_label'], 
+            model=self.kwargs['model_name']
+        )
+        model_class = content_type.model_class()
+        
+        # Get the current object to which we're attaching
+        current_object = get_object_or_404(model_class, pk=self.kwargs['pk'])
+        kwargs['current_object'] = current_object  # Pass the current object to the form
+        return kwargs
+
+    def form_valid(self, form):
+        # Logic for attaching the selected object
+        existing_object = form.cleaned_data['existing_object']
+        current_object = form.current_object
+
+        # You will need to define how to attach the object based on your use case
+        current_object.your_relationship_field.add(existing_object)  # Attach the existing object
+        
+        # Redirect to a success page or the object detail page
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Redirect to the object's detail view after successful attachment
+        return reverse('plugins:netbox_servicemgmt:yourmodel_detail', kwargs={'pk': self.kwargs['pk']})
 
 # SLO Views
 class SLOListView(generic.ObjectListView):
