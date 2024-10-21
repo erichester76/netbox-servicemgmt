@@ -4,6 +4,7 @@ from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOn
 from django.urls import reverse
 from utilities.views import ViewTab
 from django.shortcuts import render
+from django.db import models
 
 from . import (
     filtersets, 
