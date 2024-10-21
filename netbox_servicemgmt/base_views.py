@@ -186,7 +186,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     # Add the object to the diagram
     obj_name = sanitize_name(str(obj))  # Sanitize the related object name
     if depth == 0: 
-        mermaid_code += f"{indent}{obj_id}[{obj_name}]\n"
+        mermaid_code += f"{indent}{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
         if hasattr(obj, 'get_absolute_url'):
             mermaid_code += f'{indent}click {obj_id} "{obj.get_absolute_url()}"\n'
 
@@ -225,7 +225,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         continue  # Skip if already visited
                     # Add relationship and recurse with indent for readability
                     indent = "    " * (depth+1)
-                    mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}]\n"
+                    mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
@@ -247,7 +247,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                             continue  # Skip if already visited
                         # Add reverse relationship and recurse with indent for readability
                         indent = "    " * (depth+1)
-                        mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}]\n"
+                        mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                         if hasattr(related_obj, 'get_absolute_url'):
                             mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                         mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
