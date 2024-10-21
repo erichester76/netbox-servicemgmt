@@ -182,7 +182,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     visited.add(obj_id)  # Mark the object as visited *before* recursion
 
     # Add the object to the diagram
-    obj_name = sanitize_name(str(obj))  # Sanitize the related object name
+    obj_name = sanitize_name(str(obj.name))  # Sanitize the related object name
     if depth == 0: mermaid_code += f"{indent}{obj_id}[{obj_name}]\n"
 
     # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
