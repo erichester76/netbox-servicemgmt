@@ -36,7 +36,7 @@ class SolutionTemplateListView(generic.ObjectListView):
 class SolutionTemplateDetailView(BaseObjectView):
     queryset = SolutionTemplate.objects.all()
 
-@register_model_view(SolutionTemplate, name='diagram', path='diagram')
+@register_model_view(SolutionTemplate, 'diagram', path='diagram')
 class SolutionTemplateDiagramView(generic.ObjectView):
     """
     Diagram tab for SolutionTemplate model.
@@ -47,7 +47,7 @@ class SolutionTemplateDiagramView(generic.ObjectView):
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
-    template_name = "netbox_servicemgmt/default-diagram.html"  # Shared template
+    template_name = "netbox_servicemgmt/default-diagram.html"
     
     tab = ViewTab(
         label='Diagram',
@@ -102,7 +102,7 @@ class ServiceTemplateListView(generic.ObjectListView):
 class ServiceTemplateDetailView(BaseObjectView):
     queryset = ServiceTemplate.objects.all()
 
-@register_model_view(ServiceTemplate, name='diagram', path='diagram')
+@register_model_view(ServiceTemplate, 'diagram', path='diagram')
 class ServiceTemplateDiagramView(generic.ObjectView):
     """
     Diagram tab for ServceTemplate model.
@@ -114,7 +114,7 @@ class ServiceTemplateDiagramView(generic.ObjectView):
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
-    template_name = "netbox_servicemgmt/default-diagram.html"  # Shared template
+    template_name = "netbox_servicemgmt/default-diagram.html"  
     
     tab = ViewTab(
         label='Diagram',
