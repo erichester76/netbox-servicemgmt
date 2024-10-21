@@ -164,7 +164,7 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-       mermaid_source = f"{generate_mermaid_code(instance, starting_object=instance)}"
+       mermaid_source = f"{generate_mermaid_code(instance)}"
 
        return {
           'mermaid_source': mermaid_source,
