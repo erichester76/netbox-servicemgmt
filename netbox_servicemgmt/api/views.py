@@ -1,6 +1,6 @@
 from netbox.api.viewsets import NetBoxModelViewSet
-from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
-from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultToleranceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, SolutionDeploymentSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
+from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
+from .serializers import SLOSerializer, SolutionTemplateSerializer, FaultToleranceSerializer, ServiceTemplateSerializer, ServiceRequirementSerializer, ServiceDeploymentSerializer, ServiceComponentSerializer
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 
@@ -47,11 +47,7 @@ class ServiceTemplateViewSet(NetBoxModelViewSet):
 class ServiceRequirementViewSet(NetBoxModelViewSet):
     queryset = ServiceRequirement.objects.all()
     serializer_class = ServiceRequirementSerializer
-
-class SolutionDeploymentViewSet(NetBoxModelViewSet):
-    queryset = SolutionDeployment.objects.all()
-    serializer_class = SolutionDeploymentSerializer
-
+    
 class ServiceDeploymentViewSet(NetBoxModelViewSet):
     queryset = ServiceDeployment.objects.all()
     serializer_class = ServiceDeploymentSerializer

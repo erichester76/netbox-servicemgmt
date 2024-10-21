@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (
     SLOViewSet, SolutionTemplateViewSet, FaultToleranceViewSet,
     ServiceTemplateViewSet, ServiceRequirementViewSet,
-    SolutionDeploymentViewSet, ServiceDeploymentViewSet, ServiceComponentViewSet,
+    ServiceDeploymentViewSet, ServiceComponentViewSet,
     get_object_fields, get_ft_fields
 )
 
@@ -15,7 +15,6 @@ router.register(r'solution-templates', SolutionTemplateViewSet)
 router.register(r'fault-tolerances', FaultToleranceViewSet)
 router.register(r'service-templates', ServiceTemplateViewSet)
 router.register(r'service-requirements', ServiceRequirementViewSet)
-router.register(r'solution-deployments', SolutionDeploymentViewSet)
 router.register(r'service-deployments', ServiceDeploymentViewSet)
 router.register(r'service-components', ServiceComponentViewSet)
 

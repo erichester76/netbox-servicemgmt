@@ -1,8 +1,8 @@
 from netbox.views import generic
 from .base_views import BaseObjectView, BaseChangeLogView, BaseDiagramView
-from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
-from .forms import AttachForm, SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm ,SolutionDeploymentForm, SolutionDeploymentImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
-from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
+from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
+from .forms import AttachForm, SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
+from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, ServiceDeploymentTable, ServiceComponentTable
 from utilities.views import register_model_view, ViewTab
 from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
@@ -203,38 +203,6 @@ class ServiceRequirementBulkImportView(generic.BulkImportView):
 
 class ServiceRequirementChangeLogView(BaseChangeLogView):
     base_model = ServiceRequirement
-
-
-# Solution Deployment Views
-class SolutionDeploymentListView(generic.ObjectListView):
-    queryset = SolutionDeployment.objects.all()
-    table = SolutionDeploymentTable
-
-@register_model_view(SolutionDeployment)
-class SolutionDeploymentDetailView(BaseObjectView):
-    queryset = SolutionDeployment.objects.all()
-
-@register_model_view(SolutionDeployment, 'diagram', path='diagram')
-class SolutionDeploymentDiagramView(BaseDiagramView):
-    """
-    Diagram tab for SolutionDeployment model.
-    """  
-    queryset = SolutionDeployment.objects.all()
-
-
-class SolutionDeploymentEditView(generic.ObjectEditView):
-    queryset = SolutionDeployment.objects.all()
-    form = SolutionDeploymentForm
-
-class SolutionDeploymentDeleteView(generic.ObjectDeleteView):
-    queryset = SolutionDeployment.objects.all()
-
-class SolutionDeploymentBulkImportView(generic.BulkImportView):
-    queryset = SolutionDeployment.objects.all()
-    model_form = SolutionDeploymentImportForm
-
-class SolutionDeploymentChangeLogView(BaseChangeLogView):
-    base_model = SolutionDeployment
 
 
 # Service Deployment Views

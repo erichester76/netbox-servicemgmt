@@ -281,7 +281,6 @@ class BaseDiagramView(generic.ObjectView):
             'solutiontemplate': '#16a2b8',  # Darker Teal 
             'servicetemplate': '#184990',   # Teal 
             'servicerequirement': '#02252f',  # GreenBlue
-            'solutiondeployment': '#f59f01',  # Orange1
             'servicedeployment': '#f76706',  # Orange2
             'servicecomponent': '#d63a39',  # Red 
         }

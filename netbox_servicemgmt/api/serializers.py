@@ -1,5 +1,5 @@
 from netbox.api.serializers import NetBoxModelSerializer, WritableNestedSerializer
-from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from ..models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
 
 class SLOSerializer(NetBoxModelSerializer):
     class Meta:
@@ -25,11 +25,6 @@ class ServiceRequirementSerializer(NetBoxModelSerializer):
     class Meta:
         model = ServiceRequirement
         fields = ['id', 'name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'primary_site', 'secondary_site', 'requirement1_field', 'requirement1_value', 'requirement2_field', 'requirement2_value', 'requirement3_field', 'requirement3_value']
-
-class SolutionDeploymentSerializer(NetBoxModelSerializer):
-    class Meta:
-        model = SolutionDeployment
-        fields = ['id', 'name', 'description', 'solution_template', 'deployment_type', 'deployment_date']
 
 class ServiceDeploymentSerializer(NetBoxModelSerializer):
     class Meta:

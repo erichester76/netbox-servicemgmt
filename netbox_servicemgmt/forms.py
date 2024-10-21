@@ -1,5 +1,5 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
-from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
 from django import forms
 
 
@@ -135,12 +135,7 @@ class ServiceRequirementImportForm(NetBoxModelImportForm):
             'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
             'offsite_backup', 'airgap_backup', 'object_type'
         ]
-
-class SolutionDeploymentImportForm(NetBoxModelImportForm):
-    class Meta:
-        model = SolutionDeployment
-        fields = ['name', 'description', 'solution_template', 'deployment_type', 'deployment_date']
-
+        
 class ServiceDeploymentForm(NetBoxModelForm):
     class Meta:
         model = ServiceDeployment

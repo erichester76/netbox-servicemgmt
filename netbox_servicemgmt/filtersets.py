@@ -1,6 +1,6 @@
 """ import django_filters
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
 from dcim.models import Site
 from tenancy.models import Tenant, Contact
 from taggit.models import Tag
@@ -48,12 +48,6 @@ class ServiceRequirementFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = ServiceRequirement
         fields = ['name', 'service_template', 'requirement_owner', 'service_slo', 'primary_site', 'secondary_site']
-
-# SolutionDeployment FilterSet
-class SolutionDeploymentFilterSet(NetBoxModelFilterSet):
-    class Meta:
-        model = SolutionDeployment
-        fields = ['name', 'solution_template', 'deployment_type', 'deployment_date']
 
 # ServiceDeployment FilterSet
 class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
