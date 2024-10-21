@@ -160,6 +160,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
         # Handle regular ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
+            # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
                 related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
@@ -169,8 +170,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
         # Handle GenericForeignKey
         elif isinstance(field, GenericForeignKey):
-            content_type = getattr(obj, field.ct_field)
-            object_id = getattr(obj, field.fk_field)
+            content_type = getattr(obj, field.ct_field, None)
+            object_id = getattr(obj, field.fk_field, None)
             if content_type and object_id:
                 related_model = content_type.model_class()
                 try:
@@ -184,15 +185,14 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Traverse reverse relationships (many-to-one, many-to-many)
     for rel in obj._meta.get_fields():
-        if rel.name.lower() in excluded_fields:
-            continue
         if rel.is_relation and rel.auto_created and not rel.concrete:
-            related_objects = getattr(obj, rel.get_accessor_name()).all()
-            for related_obj in related_objects:
-                related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                # Add reverse relationship and recurse
-                mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+            related_objects = getattr(obj, rel.get_accessor_name(), None)
+            if related_objects:
+                for related_obj in related_objects.all():
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    # Add reverse relationship and recurse
+                    mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
     return mermaid_code
 

@@ -34,6 +34,9 @@ class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers', verbose_name='Architect')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='solution_business_owners', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owners', verbose_name='Business Owner Contact')
+    solution_type = models.CharField(max_length=255)
     requirements = models.TextField()
 
     class Meta:
