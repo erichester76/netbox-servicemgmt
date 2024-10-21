@@ -52,7 +52,6 @@ class SolutionTemplateDiagramView(generic.ObjectView):
     tab = ViewTab(
         label='Diagram',
         badge=lambda obj: 1,  
-        permission=None  
     )
 
 
@@ -119,7 +118,6 @@ class ServiceTemplateDiagramView(generic.ObjectView):
     tab = ViewTab(
         label='Diagram',
         badge=lambda obj: 1, 
-        permission=None  
     )
 
 class ServiceTemplateEditView(generic.ObjectEditView):
