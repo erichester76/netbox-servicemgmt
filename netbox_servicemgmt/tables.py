@@ -13,6 +13,8 @@ class SLOTable(NetBoxTable):
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
     design_contact = tables.Column(linkify=True)
+    business_owner_contact = tables.Column(linkify=True)
+    business_owner_tenant = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = SolutionTemplate
@@ -40,9 +42,9 @@ class ServiceTemplateTable(NetBoxTable):
 
 class ServiceRequirementTable(NetBoxTable):
     name = tables.Column(linkify=True)
-    solution_template = tables.Column(linkify=True)
     requirement_owner = tables.Column(linkify=True)
     service_slo = tables.Column(linkify=True)
+    service_template = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = ServiceRequirement
@@ -53,26 +55,16 @@ class ServiceRequirementTable(NetBoxTable):
             'offsite_backup', 'airgap_backup', 'object_type'
         )
         
-class SolutionDeploymentTable(NetBoxTable):
-    name = tables.Column(linkify=True)
-    solution_template = tables.Column(linkify=True)
-
-    class Meta(NetBoxTable.Meta):
-        model = SolutionDeployment
-        default_columns = ('name', 'description', 'solution_template', 'deployment_type', 'deployment_date')
-        fields = ('pk', 'id', 'name', 'description', 'solution_template', 'deployment_type', 'deployment_date')
-
 class ServiceDeploymentTable(NetBoxTable):
     name = tables.Column(linkify=True)
     service_template = tables.Column(linkify=True)
-    solution_deployment = tables.Column(linkify=True)
     business_owner_tenant = tables.Column(linkify=True)
     service_owner_tenant = tables.Column(linkify=True)
     
     class Meta(NetBoxTable.Meta):
         model = ServiceDeployment
-        default_columns = ('name', 'description', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant')
-        fields = ('pk', 'id', 'name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
+        default_columns = ('name', 'description', 'service_template', 'business_owner_tenant', 'service_owner_tenant')
+        fields = ('pk', 'id', 'name', 'description', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
 
 class ServiceComponentTable(NetBoxTable):
     name = tables.Column(linkify=True)

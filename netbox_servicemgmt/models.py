@@ -193,32 +193,11 @@ class ServiceRequirement(NetBoxModel):
         return reverse('plugins:netbox_servicemgmt:servicerequirement', kwargs={'pk': self.pk})    
 
 
-# Solution Deployment Model
-class SolutionDeployment(NetBoxModel):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, related_name='solution_deployments', verbose_name='Solution Template')
-    deployment_type = models.CharField(max_length=255, null=True, blank=True)
-    deployment_date = models.DateTimeField()
-
-    class Meta:
-        ordering = ['name']
-        verbose_name = ('Deployment')
-        verbose_name_plural = ('Deployments') 
-
-    def __str__(self):
-        return f'{self.name}'
-        
-    def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:solutiondeployment', kwargs={'pk': self.pk})
-
-
 # Service Deployment Model
 class ServiceDeployment(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     service_template = models.ForeignKey(ServiceTemplate, on_delete=models.CASCADE, related_name='service_deployments',  verbose_name='Service Template')
-    solution_deployment = models.ForeignKey(SolutionDeployment, on_delete=models.CASCADE, related_name='service_deployments', verbose_name='Solution Deployment')
     production_readiness_checklist = models.CharField(max_length=255, null=True, blank=True, verbose_name='Production Readiness Checklist')   
     business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sd_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_business_owners', verbose_name='Business Owner Contact')
@@ -245,7 +224,6 @@ class ServiceComponent(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Requirement')
-    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Deployment')
 
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)

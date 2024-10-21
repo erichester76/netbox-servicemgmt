@@ -34,16 +34,6 @@ urlpatterns = [
     path('service-requirements/bulk-import/', views.ServiceRequirementBulkImportView.as_view(), name='servicerequirement_bulk_import'),
     path('service-requirements/<int:pk>/changelog/', views.ServiceRequirementChangeLogView.as_view(), name='servicerequirement_changelog', kwargs={'model': models.ServiceRequirement}),
 
-    # Solution Deployment URLs
-    path('solution-deployments/', views.SolutionDeploymentListView.as_view(), name='solutiondeployment_list'),
-    path('solution-deployments/<int:pk>/', views.SolutionDeploymentDetailView.as_view(), name='solutiondeployment'),
-    path('solution-deployments/add/', views.SolutionDeploymentEditView.as_view(), name='solutiondeployment_add'),
-    path('solution-deployments/<int:pk>/edit/', views.SolutionDeploymentEditView.as_view(), name='solutiondeployment_edit'),
-    path('solution-deployments/<int:pk>/delete/', views.SolutionDeploymentDeleteView.as_view(), name='solutiondeployment_delete'),
-    path('solution-deployments/bulk-import/', views.SolutionDeploymentBulkImportView.as_view(), name='solutiondeployment_bulk_import'),
-    path('solution-deployments/<int:pk>/changelog/', views.SolutionDeploymentChangeLogView.as_view(), name='solutiondeployment_changelog', kwargs={'model': models.SolutionDeployment}),
-    path('solution-deplotments/<int:pk>/diagram/', views.SolutionDeploymentDiagramView.as_view(), name='solutiondeployment_diagram'),
-
     # Service Deployment URLs
     path('service-deployments/', views.ServiceDeploymentListView.as_view(), name='servicedeployment_list'),
     path('service-deployments/<int:pk>/', views.ServiceDeploymentDetailView.as_view(), name='servicedeployment'),

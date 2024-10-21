@@ -136,11 +136,6 @@ class ServiceRequirementImportForm(NetBoxModelImportForm):
             'offsite_backup', 'airgap_backup', 'object_type'
         ]
 
-class SolutionDeploymentForm(NetBoxModelForm):
-    class Meta:
-        model = SolutionDeployment
-        fields = ['name', 'description', 'solution_template', 'deployment_type', 'deployment_date']
-
 class SolutionDeploymentImportForm(NetBoxModelImportForm):
     class Meta:
         model = SolutionDeployment
@@ -149,12 +144,12 @@ class SolutionDeploymentImportForm(NetBoxModelImportForm):
 class ServiceDeploymentForm(NetBoxModelForm):
     class Meta:
         model = ServiceDeployment
-        fields = ['name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
+        fields = ['name', 'description', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
 class ServiceDeploymentImportForm(NetBoxModelImportForm):
     class Meta:
         model = ServiceDeployment
-        fields = ['name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
+        fields = ['name', 'description', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
 class ServiceComponentForm(NetBoxModelForm):
     class Meta:

@@ -18,23 +18,6 @@ solution_items = (
             ),
         ]
     ),
-    # Solution Deployment Menu Item
-    PluginMenuItem(
-        link="plugins:netbox_servicemgmt:solutiondeployment_list",
-        link_text="Deployments",
-        buttons=[
-            PluginMenuButton(
-                link="plugins:netbox_servicemgmt:solutiondeployment_add",
-                title="Add",
-                icon_class="mdi mdi-plus-thick",
-            ),
-            PluginMenuButton(
-                link="plugins:netbox_servicemgmt:solutiondeployment_bulk_import",
-                title="Import",
-                icon_class="mdi mdi-upload",
-            ),
-        ]
-    )
 )
 service_items = ( 
     # Service Requirement Menu Item
@@ -73,7 +56,7 @@ service_items = (
     # Service Deployment Menu Item
     PluginMenuItem(
         link="plugins:netbox_servicemgmt:servicedeployment_list",
-        link_text="Service Deployments",
+        link_text="Deployments",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_servicemgmt:servicedeployment_add",
