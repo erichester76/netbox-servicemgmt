@@ -44,12 +44,6 @@ class SolutionTemplateDiagramView(BaseDiagramView):
     """
     queryset = SolutionTemplate.objects.all()
 
-    mermaid_source = "\n\
-    graph TD\n\
-        A[Start] --> B[Process]\n\
-        B --> C[Finish]\n\
-    "
-
 class SolutionTemplateEditView(generic.ObjectEditView):
     queryset = SolutionTemplate.objects.all()
     form = SolutionTemplateForm
@@ -103,12 +97,6 @@ class ServiceTemplateDiagramView(BaseDiagramView):
     Diagram tab for ServceTemplate model.
     """  
     queryset = ServiceTemplate.objects.all()
-
-    mermaid_source = "\n\
-    graph TD\n\
-        A[Start] --> B[Process]\n\
-        B --> C[Finish]\n\
-    "
 
 class ServiceTemplateEditView(generic.ObjectEditView):
     queryset = ServiceTemplate.objects.all()
@@ -165,11 +153,6 @@ class SolutionDeploymentDiagramView(BaseDiagramView):
     """  
     queryset = SolutionDeployment.objects.all()
 
-    mermaid_source = "\n\
-    graph TD\n\
-        A[Start] --> B[Process]\n\
-        B --> C[Finish]\n\
-    "
 
 class SolutionDeploymentEditView(generic.ObjectEditView):
     queryset = SolutionDeployment.objects.all()
@@ -201,11 +184,7 @@ class ServiceDeploymentDiagramView(BaseDiagramView):
     Diagram tab for ServiceDeployment model.
     """  
     queryset = ServiceDeployment.objects.all()
-    mermaid_source = "\n\
-    graph TD\n\
-        A[Start] --> B[Process]\n\
-        B --> C[Finish]\n\
-    "
+
 class ServiceDeploymentEditView(generic.ObjectEditView):
     queryset = ServiceDeployment.objects.all()
     form = ServiceDeploymentForm
