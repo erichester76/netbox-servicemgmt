@@ -270,12 +270,12 @@ class BaseDiagramView(generic.ObjectView):
     def get_extra_context(self, request, instance):
        mermaid_source = f"graph LR\n{generate_mermaid_code(instance)}"
        color_map = {
-            'solution': '#16a2b8',  # Darker Teal 
-            'service': '#184990',   # Teal 
-            'servicetemplate': '#02252f',  # GreenBlue
-            'servicetemplategroup': '#f59f01',  # Orange1
-            'servicetemplategroupcomponent': '#f76706',  # Orange2
-            'component': '#d63a39',  # Red 
+            'solutiontemplate': '#16a2b8',  # Darker Teal 
+            'servicetemplate': '#184990',   # Teal 
+            'servicerequirement': '#02252f',  # GreenBlue
+            'solutiondeployment': '#f59f01',  # Orange1
+            'servicedeployment': '#f76706',  # Orange2
+            'servicecomponent': '#d63a39',  # Red 
         }
        for obj_type, color in color_map.items():
           mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
