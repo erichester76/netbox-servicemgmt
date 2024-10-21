@@ -109,7 +109,7 @@ class BaseObjectView(generic.ObjectView):
 def generate_mermaid_code(obj, visited=None, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
-    Tracks visited objects to avoid infinite loops.
+    Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
     """
     if visited is None:
         visited = set()
@@ -173,8 +173,10 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
                 related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                # Add relationship and recurse
-                mermaid_code += f"{obj_id} --> {related_obj_id}[{related_obj}]\n"
+                if related_obj_id in visited:
+                     continue  # Skip if already visited
+                # Add relationship and recurse with indent for readability
+                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj}]\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
         # Handle GenericForeignKey
@@ -186,8 +188,10 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 try:
                     related_obj = related_model.objects.get(pk=object_id)
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    # Add relationship and recurse
-                    mermaid_code += f"{obj_id} --> {related_obj_id}[{related_obj}]\n"
+                    if related_obj_id in visited:
+                        continue  # Skip if already visited
+                    # Add relationship and recurse with indent for readability
+                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj}]\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
@@ -200,8 +204,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 if hasattr(related_objects, 'all'):
                     for related_obj in related_objects.all():
                         related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                        # Add reverse relationship and recurse
-                        mermaid_code += f"{related_obj_id}[{related_obj}] --> {obj_id}\n"
+                        # Check if the related object was already visited to avoid loops
+                        if related_obj_id in visited:
+                            continue  # Skip if already visited
+                        # Add reverse relationship and recurse with indent for readability
+                        mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
     return mermaid_code
