@@ -1,17 +1,9 @@
-import re
 from netbox.views import generic
-from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 from django.urls import reverse
 from utilities.views import ViewTab
-from django.shortcuts import render
 from django.db import models
 
-from . import (
-    filtersets, 
-    forms, 
-    tables,
-    models
-    )
+from . import tables 
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
     base_template = 'netbox_servicemgmt/default-detail.html'
