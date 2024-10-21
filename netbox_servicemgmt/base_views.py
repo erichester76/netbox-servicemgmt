@@ -150,6 +150,12 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'fault_tolerence',
         'service_slo',
         'vendor',
+        'business_owner_contact',
+        'business_owner_tenant',
+        'service_owner_contact',
+        'service_owner_tenant',
+        'design_contact',
+        'requirement_owner',
     }
 
     models_to_skip_reverse_relations = {
