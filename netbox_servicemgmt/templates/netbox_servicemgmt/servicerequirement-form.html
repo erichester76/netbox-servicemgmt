@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     requirementFieldsContainer.innerHTML = '';  // Clear current fields
 
                     fields.forEach((field, index) => {
-                        if (index < 10) {  // Limit to the first 10 fields
+                        if (index < 21) { 
                             const nameField = `<label for="id_requirement${index+1}_name">Field Name</label>
                                 <input type="text" name="requirement${index+1}_name" value="${field}" readonly class="form-control" />`;
                             const valueField = `<label for="id_requirement${index+1}_value">Field Value</label>
