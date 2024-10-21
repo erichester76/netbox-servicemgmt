@@ -30,7 +30,7 @@ class SLOImportForm(NetBoxModelImportForm):
 class SolutionTemplateForm(NetBoxModelForm):
     class Meta:
         model = SolutionTemplate
-        fields = ['name', 'description', 'design_contact', 'requirements']
+        fields = ['name', 'description', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements']
         
 class SolutionTemplateImportForm(NetBoxModelImportForm):
     class Meta:

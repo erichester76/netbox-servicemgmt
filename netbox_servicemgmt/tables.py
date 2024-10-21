@@ -17,7 +17,7 @@ class SolutionTemplateTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = SolutionTemplate
         default_columns = ('name', 'description', 'design_contact')
-        fields = ['pk', 'id', 'name', 'description', 'design_contact', 'requirements']
+        fields = ['pk', 'id', 'name', 'description', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements']
 
 class FaultToleranceTable(NetBoxTable):
     name = tables.Column(linkify=True)
