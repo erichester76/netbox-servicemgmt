@@ -10,29 +10,50 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse  # Import reverse
 
 
+from django.urls import reverse
+from django.shortcuts import get_object_or_404
+from django.views.generic import FormView
+from .forms import AttachForm
+
+
+def get_model_class(app_label, model_name):
+    # Use ContentType to get the model class
+    content_type = get_object_or_404(ContentType, app_label=app_label, model=model_name)
+    return content_type.model_class()
+
 class GenericAttachView(FormView):
     template_name = "netbox_servicemgmt/attach_form.html"
     form_class = AttachForm
 
     def get_form_kwargs(self):
-        # Get the default form kwargs from the parent class
+        # Get the default form kwargs
         kwargs = super().get_form_kwargs()
 
-        # Retrieve the related model dynamically using ContentType
-        content_type = get_object_or_404(
-            ContentType, 
-            app_label=self.kwargs['app_label'], 
-            model=self.kwargs['model_name']
-        )
-        related_model_class = content_type.model_class()  # Dynamically get the model class
-
-        # Get the current object (the object to which we are attaching another object)
+        # Dynamically determine the related model class from app_label and model_name
+        related_model_class = get_model_class(self.kwargs['app_label'], self.kwargs['model_name'])
+        
+        # Get the current object to which we are attaching
         current_object = get_object_or_404(related_model_class, pk=self.kwargs['pk'])
 
         # Pass the current object and related model class to the form
         kwargs['current_object'] = current_object
-        kwargs['related_model_class'] = related_model_class  # Ensure this is passed to the form
+        kwargs['related_model_class'] = related_model_class
         return kwargs
+
+    def form_valid(self, form):
+        # Attach the selected object to the current object
+        existing_object = form.cleaned_data['existing_object']
+        current_object = form.cleaned_data['current_object']
+
+        # Here, use the correct relationship field to attach the object
+        current_object.your_relationship_field.add(existing_object)
+
+        # Redirect to a success page or the object detail page
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Redirect to the object's detail view after successful attachment
+        return reverse('plugins:netbox_servicemgmt:yourmodel_detail', kwargs={'pk': self.kwargs['pk']})
 
     def form_valid(self, form):
         # Attach the selected object to the current object
