@@ -4,8 +4,18 @@ from utilities.views import ViewTab
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
 from . import tables 
+import re
+
+def sanitize_name(name):
+    """
+    Cleans up the name by removing or replacing characters not allowed in Mermaid diagrams.
+    Currently removes parentheses and other special characters.
+    """
+    # Remove parentheses and replace other characters if needed
+    clean_name = re.sub(r'[^\w\s]', '', name)  # Remove all non-alphanumeric characters except spaces
+    clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
+    return clean_name
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
     base_template = 'netbox_servicemgmt/default-detail.html'
@@ -176,10 +186,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
                 related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
                 if related_obj_id in visited:
                      continue  # Skip if already visited
                 # Add relationship and recurse with indent for readability
-                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj}]\n"
+                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
         # Handle GenericForeignKey
@@ -191,10 +202,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 try:
                     related_obj = related_model.objects.get(pk=object_id)
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
                     if related_obj_id in visited:
                         continue  # Skip if already visited
                     # Add relationship and recurse with indent for readability
-                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj}]\n"
+                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
@@ -207,11 +219,12 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 if hasattr(related_objects, 'all'):
                     for related_obj in related_objects.all():
                         related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                        related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
                         # Check if the related object was already visited to avoid loops
                         if related_obj_id in visited:
                             continue  # Skip if already visited
                         # Add reverse relationship and recurse with indent for readability
-                        mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
+                        mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}] --> {obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
     """
     return mermaid_code
