@@ -95,7 +95,7 @@ class BaseObjectView(generic.ObjectView):
                     add_url += f'?{instance._meta.model_name.lower()}={instance.pk}'
                     content_type = ContentType.objects.get_for_model(instance)
                     attach_url = reverse(
-                        'generic_attach', 
+                        'plugins:netbox_servicemgmt:generic_attach', 
                         kwargs={
                             'app_label': content_type.app_label,
                             'model_name': content_type.model,

@@ -7,6 +7,7 @@ from utilities.views import register_model_view, ViewTab
 from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
+from django.urls import reverse  # Import reverse
 
 class GenericAttachView(FormView):
     template_name = "netbox_servicemgmt/attach_form.html"
@@ -41,8 +42,11 @@ class GenericAttachView(FormView):
 
     def get_success_url(self):
         # Redirect to the object's detail view after successful attachment
-        return reverse('plugins:netbox_servicemgmt:yourmodel_detail', kwargs={'pk': self.kwargs['pk']})
-
+        return reverse(
+            f'plugins:{self.kwargs["app_label"]}:{self.kwargs["model_name"]}',  # Generate the correct detail view name
+            kwargs={'pk': self.kwargs['pk']}
+        )
+        
 # SLO Views
 class SLOListView(generic.ObjectListView):
     queryset = SLO.objects.all()

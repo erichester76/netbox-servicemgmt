@@ -3,7 +3,6 @@ from . import views, models
 
 urlpatterns = [
     
-    
     path('<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
 
     # Solution Template URLs
