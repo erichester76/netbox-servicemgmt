@@ -43,7 +43,7 @@ class SolutionTemplateDiagramView(BaseDiagramView):
     """
 
     mermaid_source = " \
-    graph TB \
+    graph TD \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
@@ -101,7 +101,7 @@ class ServiceTemplateDiagramView(BaseDiagramView):
     Diagram tab for ServceTemplate model.
     """  
     mermaid_source = " \
-    graph TB \
+    graph TD \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
@@ -159,7 +159,7 @@ class SolutionDeploymentDiagramView(BaseDiagramView):
     Diagram tab for SolutionDeployment model.
     """  
     mermaid_source = " \
-    graph TB \
+    graph TD \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
@@ -193,7 +193,7 @@ class ServiceDeploymentDiagramView(BaseDiagramView):
     Diagram tab for ServiceDeployment model.
     """  
     mermaid_source = " \
-    graph TB \
+    graph TD \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
