@@ -112,8 +112,28 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if visited is None:
         visited = set()
         
-    excluded_fields = {'tags', 'created', 'last_updated', 'custom_fields'}
-
+    excluded_fields = {
+            'id', 
+            'custom_fielddata', 
+            'tags', 
+            'bookmarks', 
+            'journal_entries', 
+            'subscriptions', 
+            'tagged_items', 
+            'device',
+            'role',
+            'ipaddress'
+            'depends_on',
+            'dependencies',
+            'created',
+            'last_updated',
+            'objectid',
+            'primary_ip4',
+            'primary_ip6',
+            'ipaddresses',
+            'cluster_group',
+            'cluster_type',
+        }
     mermaid_code = "graph TD\n"
     indent = "    " * depth # Indentation for readability
 
