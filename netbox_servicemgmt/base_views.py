@@ -137,6 +137,9 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'ipaddresses',
         'cluster_group',
         'cluster_type',
+        'fault_tolerence',
+        'service_slo',
+        'vendor',
     }
 
     models_to_skip_reverse_relations = {
