@@ -94,14 +94,13 @@ class BaseObjectView(generic.ObjectView):
                     # Pre-fill the linking field with the current object's ID, if possible
                     add_url += f'?{instance._meta.model_name.lower()}={instance.pk}'
                     content_type = ContentType.objects.get_for_model(instance)
-                    attach_url = reverse(
-                        'plugins:netbox_servicemgmt:generic_attach', 
-                        kwargs={
+                    if hasattr(related_objects, 'all') or related_model.objects.exists():
+                        attach_url = reverse('plugins:netbox_servicemgmt:generic_attach', kwargs={
                             'app_label': content_type.app_label,
                             'model_name': content_type.model,
                             'pk': instance.pk
-                        }
-                    )
+                        })
+
                 # Create a table dynamically if a suitable one exists
                 table_class_name = f"{related_model.__name__}Table"
                 if hasattr(tables, table_class_name):
