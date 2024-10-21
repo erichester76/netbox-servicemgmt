@@ -3,7 +3,7 @@ from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, Serv
 from django import forms
 
 
-class AttachForm(NetBoxModelForm):
+class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
         queryset=None,  # The queryset will be set dynamically
         label="Select an existing object to attach"

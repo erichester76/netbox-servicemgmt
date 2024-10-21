@@ -4,7 +4,7 @@ from . import views, models
 urlpatterns = [
     
     
-    path('<str:app_label>/<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
+    path('<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
 
     # Solution Template URLs
     path('solution-templates/', views.SolutionTemplateListView.as_view(), name='solutiontemplate_list'),
