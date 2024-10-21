@@ -201,7 +201,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 if related_obj_id in visited:
                      continue  # Skip if already visited
                 # Add relationship and recurse with indent for readability
-                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
+                mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}] --> {obj_id}\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1) 
         """
 
@@ -218,7 +218,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     if related_obj_id in visited:
                         continue  # Skip if already visited
                     # Add relationship and recurse with indent for readability
-                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
+                    mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}] --> {obj_id}\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
@@ -254,7 +254,7 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-       mermaid_source = f"graph TD\n{generate_mermaid_code(instance)}"
+       mermaid_source = f"graph LR\n{generate_mermaid_code(instance)}"
 
        return {
           'mermaid_source': mermaid_source,
