@@ -161,6 +161,10 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     models_to_skip_reverse_relations = {
         'Site', 
         'Tenant',
+        'Contact',
+        'Site',
+        'FaultTolerence',
+        'SLO',
         'IPAddress',
         'Interface',
         'Manufacturer', 
@@ -186,7 +190,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         if field.name in excluded_fields:
             continue
 
-        # Handle ForeignKey and OneToOneField relationships
+        """         # Handle ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
@@ -197,10 +201,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                      continue  # Skip if already visited
                 # Add relationship and recurse with indent for readability
                 mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1) 
+        """
 
         # Handle GenericForeignKey
-        elif isinstance(field, GenericForeignKey):
+        if isinstance(field, GenericForeignKey):
             content_type = getattr(obj, field.ct_field, None)
             object_id = getattr(obj, field.fk_field, None)
             if content_type and object_id:
@@ -217,7 +222,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
 
-    """ # Traverse reverse relationships (many-to-one, many-to-many)
+    # Traverse reverse relationships (many-to-one, many-to-many)
     if obj._meta.model_name not in models_to_skip_reverse_relations:
         for rel in obj._meta.get_fields():
             if rel.is_relation and rel.auto_created and not rel.concrete:
@@ -232,7 +237,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         # Add reverse relationship and recurse with indent for readability
                         mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}] --> {obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-    """
+    
     return mermaid_code
 
 class BaseDiagramView(generic.ObjectView):    
