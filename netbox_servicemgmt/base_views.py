@@ -14,7 +14,7 @@ def sanitize_name(name):
     """
     # Remove parentheses and replace other characters if needed
     clean_name = re.sub(r'[^\w\s]', '', name)  # Remove all non-alphanumeric characters except spaces
-    clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
+    #clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
     return clean_name
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
