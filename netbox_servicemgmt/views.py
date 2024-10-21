@@ -9,34 +9,39 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.urls import reverse  # Import reverse
 
+
 class GenericAttachView(FormView):
     template_name = "netbox_servicemgmt/attach_form.html"
     form_class = AttachForm
 
     def get_form_kwargs(self):
+        # Get the default form kwargs from the parent class
         kwargs = super().get_form_kwargs()
 
-        # Retrieve the model dynamically based on app_label and model_name
+        # Retrieve the related model dynamically using ContentType
         content_type = get_object_or_404(
             ContentType, 
             app_label=self.kwargs['app_label'], 
             model=self.kwargs['model_name']
         )
-        model_class = content_type.model_class()
-        
-        # Get the current object to which we're attaching
-        current_object = get_object_or_404(model_class, pk=self.kwargs['pk'])
-        kwargs['current_object'] = current_object  # Pass the current object to the form
+        related_model_class = content_type.model_class()  # Dynamically get the model class
+
+        # Get the current object (the object to which we are attaching another object)
+        current_object = get_object_or_404(related_model_class, pk=self.kwargs['pk'])
+
+        # Pass the current object and related model class to the form
+        kwargs['current_object'] = current_object
+        kwargs['related_model_class'] = related_model_class  # Ensure this is passed to the form
         return kwargs
 
     def form_valid(self, form):
-        # Logic for attaching the selected object
+        # Attach the selected object to the current object
         existing_object = form.cleaned_data['existing_object']
-        current_object = form.current_object
+        current_object = form.cleaned_data['current_object']
 
-        # You will need to define how to attach the object based on your use case
-        current_object.your_relationship_field.add(existing_object)  # Attach the existing object
-        
+        # Example: Attach the existing object using a ManyToManyField (adjust as needed)
+        current_object.your_relationship_field.add(existing_object)
+
         # Redirect to a success page or the object detail page
         return super().form_valid(form)
 
