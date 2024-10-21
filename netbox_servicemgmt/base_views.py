@@ -173,6 +173,7 @@ class BaseDiagramView(generic.ObjectView):
 
         mermaid_code = "graph TD\n"
         depth = 0
+        visited = None
         indent = "    " * depth # Indentation for readability
         obj = instance
         
