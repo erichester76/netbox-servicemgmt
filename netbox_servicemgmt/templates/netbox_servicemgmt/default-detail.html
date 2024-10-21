@@ -27,7 +27,7 @@
 <div class="col col-md-12">
 {% for related_table in related_tables %}
     <div class="card">
-        <h5 class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-header d-flex justify-content-end align-items-center">
             <span>{{ related_table.name|title }}</span>
             {% if related_table.add_url %}
                 <a href="{{ related_table.add_url }}" class="btn btn-sm btn-primary">
