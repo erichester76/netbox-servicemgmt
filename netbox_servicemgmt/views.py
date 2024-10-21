@@ -114,7 +114,7 @@ class SolutionRequestBulkImportView(generic.BulkImportView):
     model_form = forms.SolutionRequestImportForm
 
 class SolutionRequestChangeLogView(base_views.BaseChangeLogView):
-    base_model = models.models.SolutionRequest
+    base_model = models.SolutionRequest
 
 
 # Solution Template Views
