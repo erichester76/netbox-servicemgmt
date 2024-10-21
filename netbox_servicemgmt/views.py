@@ -1,5 +1,5 @@
 from netbox.views import generic
-from .base_views import BaseObjectView, BaseChangeLogView
+from .base_views import BaseObjectView, BaseChangeLogView, BaseDiagramView
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
 from .forms import SLOForm, SLOImportForm, SolutionTemplateForm, SolutionTemplateImportForm, FaultToleranceForm, FaultToleranceImportForm, ServiceTemplateForm, ServiceTemplateImportForm, ServiceRequirementForm, ServiceRequirementImportForm ,SolutionDeploymentForm, SolutionDeploymentImportForm, ServiceDeploymentForm, ServiceDeploymentImportForm, ServiceComponentForm, ServiceComponentImportForm
 from .tables import SLOTable, SolutionTemplateTable, FaultToleranceTable, ServiceTemplateTable, ServiceRequirementTable, SolutionDeploymentTable, ServiceDeploymentTable, ServiceComponentTable
@@ -37,22 +37,16 @@ class SolutionTemplateDetailView(BaseObjectView):
     queryset = SolutionTemplate.objects.all()
 
 @register_model_view(SolutionTemplate, 'diagram', path='diagram')
-class SolutionTemplateDiagramView(generic.ObjectView):
+class SolutionTemplateDiagramView(BaseDiagramView):
     """
     Diagram tab for SolutionTemplate model.
     """
-    queryset = SolutionTemplate.objects.all()
+
     mermaid_source = " \
     graph TB \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
-    template_name = "netbox_servicemgmt/default-diagram.html"
-    
-    tab = ViewTab(
-        label='Diagram',
-        badge=lambda obj: 1,  
-    )
 
 
 
@@ -102,23 +96,16 @@ class ServiceTemplateDetailView(BaseObjectView):
     queryset = ServiceTemplate.objects.all()
 
 @register_model_view(ServiceTemplate, 'diagram', path='diagram')
-class ServiceTemplateDiagramView(generic.ObjectView):
+class ServiceTemplateDiagramView(BaseDiagramView):
     """
     Diagram tab for ServceTemplate model.
-    """
-    queryset = ServiceTemplate.objects.all()
-
+    """  
     mermaid_source = " \
     graph TB \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
-    template_name = "netbox_servicemgmt/default-diagram.html"  
-    
-    tab = ViewTab(
-        label='Diagram',
-        badge=lambda obj: 1, 
-    )
+
 
 class ServiceTemplateEditView(generic.ObjectEditView):
     queryset = ServiceTemplate.objects.all()
@@ -162,8 +149,20 @@ class SolutionDeploymentListView(generic.ObjectListView):
     queryset = SolutionDeployment.objects.all()
     table = SolutionDeploymentTable
 
+@register_model_view(SolutionDeployment)
 class SolutionDeploymentDetailView(BaseObjectView):
     queryset = SolutionDeployment.objects.all()
+
+@register_model_view(SolutionDeployment, 'diagram', path='diagram')
+class SolutionDeploymentDiagramView(BaseDiagramView):
+    """
+    Diagram tab for SolutionDeployment model.
+    """  
+    mermaid_source = " \
+    graph TB \
+        A[Start] --> B[Process] \
+        B --> C[Finish] \
+    "
 
 class SolutionDeploymentEditView(generic.ObjectEditView):
     queryset = SolutionDeployment.objects.all()
@@ -184,9 +183,20 @@ class ServiceDeploymentListView(generic.ObjectListView):
     queryset = ServiceDeployment.objects.all()
     table = ServiceDeploymentTable
 
+@register_model_view(ServiceDeployment)
 class ServiceDeploymentDetailView(BaseObjectView):
     queryset = ServiceDeployment.objects.all()
 
+@register_model_view(ServiceDeployment, 'diagram', path='diagram')
+class ServiceDeploymentDiagramView(BaseDiagramView):
+    """
+    Diagram tab for ServiceDeployment model.
+    """  
+    mermaid_source = " \
+    graph TB \
+        A[Start] --> B[Process] \
+        B --> C[Finish] \
+    "
 class ServiceDeploymentEditView(generic.ObjectEditView):
     queryset = ServiceDeployment.objects.all()
     form = ServiceDeploymentForm

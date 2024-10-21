@@ -113,3 +113,18 @@ class BaseObjectView(generic.ObjectView):
         
 
 
+class BaseDiagramView(generic.ObjectView):
+    """
+    Diagram tab.
+    """
+    mermaid_source = " \
+    graph TB \
+        A[Start] --> B[Process] \
+        B --> C[Finish] \
+    "
+    template_name = "netbox_servicemgmt/default-diagram.html"  
+    
+    tab = ViewTab(
+        label='Diagram',
+        badge=lambda obj: 1, 
+    )
