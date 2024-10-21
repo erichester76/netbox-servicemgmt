@@ -111,7 +111,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, visited=None, depth=0):
+def generate_mermaid_code(obj, visited=None:
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops.
@@ -119,8 +119,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if visited is None:
         visited = set()
 
-    mermaid_code = ""
-    indent = "    " * depth  # Indentation for readability
+    mermaid_code = "graph TD\n"
+    indent = "    " # Indentation for readability
 
     # Mark the object as visited to avoid revisiting it
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
@@ -171,7 +171,7 @@ class BaseDiagramView(generic.ObjectView):
         obj = self.get_object()
 
         # Call the recursive function to generate the Mermaid diagram source
-        mermaid_source = f"graph TD\n{generate_mermaid_code(obj)}"
+        mermaid_source = f"{generate_mermaid_code(obj)}"
         
         # Prepare the context
         context = {
