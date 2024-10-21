@@ -111,6 +111,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     """
     if visited is None:
         visited = set()
+        
+    excluded_fields = {'tags', 'created', 'last_updated', 'custom_fields'}
 
     mermaid_code = "graph TD\n"
     indent = "    " * depth # Indentation for readability
@@ -127,6 +129,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Traverse forward relationships (ForeignKey, OneToOneField)
     for field in obj._meta.get_fields():
+        if field.name in excluded_fields:
+            continue
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
@@ -160,7 +164,7 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-       mermaid_source = f"{generate_mermaid_code(instance)}"
+       mermaid_source = f"{generate_mermaid_code(instance, starting_object=instance)}"
 
        return {
           'mermaid_source': mermaid_source,
