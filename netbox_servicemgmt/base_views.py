@@ -2,6 +2,8 @@ from netbox.views import generic
 from django.urls import reverse
 from utilities.views import ViewTab
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 from . import tables 
 
@@ -114,7 +116,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         
     excluded_fields = {
             'id', 
-            'custom_fielddata', 
+            'custom_fielddata',
+            'custom_fields', 
             'tag', 
             'tags',
             'bookmarks', 
@@ -149,17 +152,35 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     # Add the object to the diagram
     mermaid_code += f"{indent}{obj_id}[{obj}]"
 
-    # Traverse forward relationships (ForeignKey, OneToOneField)
+# Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
     for field in obj._meta.get_fields():
-        if field.name.lower() in excluded_fields:
+        # Skip excluded fields like 'tags'
+        if field.name in excluded_fields:
             continue
+
+        # Handle regular ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
                 related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                 # Add relationship and recurse
                 mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1, starting_object)
+
+        # Handle GenericForeignKey
+        elif isinstance(field, GenericForeignKey):
+            content_type = getattr(obj, field.ct_field)
+            object_id = getattr(obj, field.fk_field)
+            if content_type and object_id:
+                related_model = content_type.model_class()
+                try:
+                    related_obj = related_model.objects.get(pk=object_id)
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    # Add relationship and recurse
+                    mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1, starting_object)
+                except related_model.DoesNotExist:
+                    continue  # If the related object doesn't exist, skip it
 
     # Traverse reverse relationships (many-to-one, many-to-many)
     for rel in obj._meta.get_fields():
