@@ -7,16 +7,17 @@ class SLOTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = SLO
+        default_columns = ('name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_reponse')
         fields = ('pk', 'id', 'name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_reponse')
-
+        
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
     design_contact = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = SolutionTemplate
-        fields = ['pk', 'id', 'name', 'description', 'design_contact', 'requirements']
         default_columns = ('name', 'description', 'design_contact')
+        fields = ['pk', 'id', 'name', 'description', 'design_contact', 'requirements']
 
 class FaultToleranceTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -58,6 +59,7 @@ class SolutionDeploymentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = SolutionDeployment
+        default_columns = ('name', 'description', 'solution_template', 'deployment_type', 'deployment_date')
         fields = ('pk', 'id', 'name', 'description', 'solution_template', 'deployment_type', 'deployment_date')
 
 class ServiceDeploymentTable(NetBoxTable):
