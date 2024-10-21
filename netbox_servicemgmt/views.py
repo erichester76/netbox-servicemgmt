@@ -32,6 +32,7 @@ class SolutionTemplateListView(generic.ObjectListView):
     queryset = SolutionTemplate.objects.all()
     table = SolutionTemplateTable
 
+@register_model_view(SolutionTemplate)
 class SolutionTemplateDetailView(BaseObjectView):
     queryset = SolutionTemplate.objects.all()
 
@@ -97,6 +98,7 @@ class ServiceTemplateListView(generic.ObjectListView):
     queryset = ServiceTemplate.objects.all()
     table = ServiceTemplateTable
 
+@register_model_view(ServiceTemplate)
 class ServiceTemplateDetailView(BaseObjectView):
     queryset = ServiceTemplate.objects.all()
 
