@@ -116,6 +116,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         
     excluded_fields = {
             'id', 
+            'all',
             'custom_field_data',
             'custom_fields', 
             'tag', 
