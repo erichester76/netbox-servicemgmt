@@ -111,7 +111,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, visited=None:
+def generate_mermaid_code(obj, visited=None):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops.
@@ -165,7 +165,12 @@ class BaseDiagramView(generic.ObjectView):
         label='Diagram',
         badge=lambda obj: 1, 
     )
-    obj = get_object()
-    mermaid_source = f"{generate_mermaid_code(obj)}"
+    
+    def get_extra_context(self, request, instance):
+       mermaid_source = f"{generate_mermaid_code(instance)}"
+
+       return {
+          'mermaid_source': mermaid_source,
+       }
 
 
