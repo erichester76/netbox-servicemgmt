@@ -117,10 +117,10 @@ class BaseDiagramView(generic.ObjectView):
     """
     Diagram tab.
     """
-    mermaid_source = " \
-    graph TB \
-        A[Start] --> B[Process] \
-        B --> C[Finish] \
+    mermaid_source = "\n\
+    graph TD\n\
+        A[Start] --> B[Process]\n\
+        B --> C[Finish]\n\
     "
     template_name = "netbox_servicemgmt/default-diagram.html"  
     
