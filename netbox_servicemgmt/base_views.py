@@ -167,10 +167,48 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-       mermaid_source = f"{generate_mermaid_code(instance)}"
+        
+        if visited is None:
+            visited = set()
 
-       return {
-          'mermaid_source': mermaid_source,
-       }
+        mermaid_code = "graph TD\n"
+        depth = 0
+        indent = "    " * depth # Indentation for readability
+        obj = instance
+        
+        # Mark the object as visited to avoid revisiting it
+        obj_id = f"{obj._meta.model_name}_{obj.pk}"
+        if obj_id in visited:
+            return mermaid_code  # Stop if this object was already visited
+
+        visited.add(obj_id)
+
+        # Add the object to the diagram
+        mermaid_code += f"{indent}{obj_id}[{obj}]"
+
+        # Traverse forward relationships (ForeignKey, OneToOneField)
+        for field in obj._meta.get_fields():
+            if isinstance(field, (models.ForeignKey, models.OneToOneField)):
+                related_obj = getattr(obj, field.name, None)
+                if related_obj and related_obj.pk:
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    # Add relationship and recurse
+                    mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+
+        # Traverse reverse relationships (many-to-one, many-to-many)
+        for rel in obj._meta.get_fields():
+            if rel.is_relation and rel.auto_created and not rel.concrete:
+                related_objects = getattr(obj, rel.get_accessor_name()).all()
+                for related_obj in related_objects:
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    # Add reverse relationship and recurse
+                    mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+
+
+        return {
+           'mermaid_source': mermaid_source,
+        }
 
 
