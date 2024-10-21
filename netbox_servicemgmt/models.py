@@ -85,7 +85,11 @@ class ServiceTemplate(NetBoxModel):
     
     name = models.CharField(max_length=255)
     description = models.TextField()
-    solution_template = models.ForeignKey(SolutionTemplate, on_delete=models.CASCADE, null=True, related_name='st_solutions', verbose_name='Solution Template')
+    solution_templates = models.ManyToManyField(
+        'SolutionTemplate', 
+        related_name='service_templates', 
+        verbose_name='Solution Templates'
+    )    
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
     service_type = models.CharField(max_length=255)
     vendor_management_assessment = models.CharField(max_length=255)

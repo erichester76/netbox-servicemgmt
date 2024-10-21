@@ -34,12 +34,12 @@ class FaultToleranceImportForm(NetBoxModelImportForm):
 class ServiceTemplateForm(NetBoxModelForm):
     class Meta:
         model = ServiceTemplate
-        fields = ['name', 'description', 'solution_template', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
+        fields = ['name', 'description', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
 
 class ServiceTemplateImportForm(NetBoxModelImportForm):
     class Meta:
         model = ServiceTemplate
-        fields = ['name', 'description', 'solution_template', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
+        fields = ['name', 'description', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
 
 
 class ServiceRequirementForm(NetBoxModelForm):

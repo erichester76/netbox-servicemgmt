@@ -19,7 +19,7 @@ class FaultToleranceSerializer(NetBoxModelSerializer):
 class ServiceTemplateSerializer(NetBoxModelSerializer):
     class Meta:
         model = ServiceTemplate
-        fields = ['id', 'name', 'description', 'solution_template', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
+        fields = ['id', 'name', 'description', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo']
 
 class ServiceRequirementSerializer(NetBoxModelSerializer):
     class Meta:

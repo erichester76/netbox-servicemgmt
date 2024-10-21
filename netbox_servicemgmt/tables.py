@@ -32,7 +32,7 @@ class ServiceTemplateTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = ServiceTemplate
-        fields = ('name', 'description', 'solution_template', 'service_type', 'fault_tolerence', 'service_slo')
+        fields = ('name', 'description', 'service_type', 'fault_tolerence', 'service_slo')
 
 class ServiceRequirementTable(NetBoxTable):
     name = tables.Column(linkify=True)
