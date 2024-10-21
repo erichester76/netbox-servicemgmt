@@ -7,7 +7,7 @@ class SLOTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = SLO
-        fields = ('name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_reponse')
+        fields = ('pk', 'id', 'name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_reponse')
 
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -15,15 +15,17 @@ class SolutionTemplateTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = SolutionTemplate
-        fields = ('name', 'description', 'design_contact')
+        fields = ['pk', 'id', 'name', 'description', 'design_contact', 'requirements']
+        default_columns = ('name', 'description', 'design_contact')
 
 class FaultToleranceTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = FaultTolerance
-        fields = ('name', 'description', 'primary_site', 'secondary_site', 'tertiary_site')
-        
+        default_columns = ('name', 'description', 'primary_site', 'secondary_site', 'tertiary_site')
+        fields = ('pk', 'id', 'name', 'description', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule')
+
 class ServiceTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
     solution_template = tables.Column(linkify=True)
@@ -32,7 +34,8 @@ class ServiceTemplateTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = ServiceTemplate
-        fields = ('name', 'description', 'service_type', 'fault_tolerence', 'service_slo')
+        default_columns = ('name', 'description', 'service_type', 'fault_tolerence', 'service_slo')
+        fields = ('pk', 'id', 'name', 'description', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo')
 
 class ServiceRequirementTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -42,15 +45,20 @@ class ServiceRequirementTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = ServiceRequirement
-        fields = ('name', 'description', 'service_template', 'requirement_owner', 'service_slo')
-
+        default_columns = ('name', 'description', 'service_template', 'requirement_owner', 'service_slo')
+        fields = ('pk', 'id', 'name', 'description', 'service_template', 'requirement_owner', 'service_slo',
+            'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
+            'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
+            'offsite_backup', 'airgap_backup', 'object_type'
+        )
+        
 class SolutionDeploymentTable(NetBoxTable):
     name = tables.Column(linkify=True)
     solution_template = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = SolutionDeployment
-        fields = ('name', 'description', 'solution_template', 'deployment_type', 'deployment_date')
+        fields = ('pk', 'id', 'name', 'description', 'solution_template', 'deployment_type', 'deployment_date')
 
 class ServiceDeploymentTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -61,7 +69,8 @@ class ServiceDeploymentTable(NetBoxTable):
     
     class Meta(NetBoxTable.Meta):
         model = ServiceDeployment
-        fields = ('name', 'description', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant')
+        default_columns = ('name', 'description', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant')
+        fields = ('pk', 'id', 'name', 'description', 'service_template', 'solution_deployment', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
 
 class ServiceComponentTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -71,4 +80,6 @@ class ServiceComponentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = ServiceComponent
-        fields = ('name', 'description', 'service_deployment', 'service_requirement', 'content_object')
+        default_columns = ('name', 'description', 'service_deployment', 'service_requirement', 'content_object')
+        fields = ('pk', 'id', 'name', 'description', 'service_deployment', 'service_requirement', 'object_type', 'object_id')
+
