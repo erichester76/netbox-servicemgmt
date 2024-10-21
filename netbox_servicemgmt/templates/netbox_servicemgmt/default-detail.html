@@ -25,27 +25,32 @@
 </div>
 </div>
 <div class="col col-md-12">
-{% for related_table in related_tables %}
-    <div class="card">
-        <h5 class="card-header d-flex justify-content-end align-items-center">
-            <span>{{ related_table.name|title }}</span>
-            {% if related_table.add_url %}
-                <a href="{{ related_table.add_url }}" class="btn btn-sm btn-primary">
-                    <i class="mdi mdi-plus"></i> New
-                </a>
-            {% endif %}
-            {% if related_table.attach_url %}
-            <a href="{{ related_table.attach_url }}" class="btn btn-sm btn-secondary">
-                <i class="mdi mdi-link"></i> Attach
-            </a>
-            {% endif %}
-        </h5>
-        <div class="card-body">
+    {% for related_table in related_tables %}
+        <div class="card">
+            <h5 class="card-header d-flex justify-content-between align-items-center">
+                <!-- Left-aligned table name -->
+                <span>{{ related_table.name|title }}</span>
+                <!-- Right-aligned buttons grouped together -->
+                <div class="d-flex justify-content-end">
+                    {% if related_table.add_url %}
+                        <a href="{{ related_table.add_url }}" class="btn btn-sm btn-primary me-2">
+                            <i class="mdi mdi-plus"></i> New
+                        </a>
+                    {% endif %}
+                    {% if related_table.attach_url %}
+                        <a href="{{ related_table.attach_url }}" class="btn btn-sm btn-secondary">
+                            <i class="mdi mdi-link"></i> Attach
+                        </a>
+                    {% endif %}
+                </div>
+            </h5>
+            <div class="card-body">
                 {% render_table related_table.table %}
+            </div>
         </div>
-    </div>
-{% endfor %}
+    {% endfor %}
 </div>
+
  </div>
 </div>   
 </div>
