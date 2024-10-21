@@ -1,8 +1,9 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
 from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, SolutionDeployment, ServiceDeployment, ServiceComponent
+from django import forms
 
 
-class AttachForm(forms.Form):
+class AttachForm(NetBoxModelForm):
     existing_object = forms.ModelChoiceField(
         queryset=None,  # The queryset will be set dynamically
         label="Select an existing object to attach"
