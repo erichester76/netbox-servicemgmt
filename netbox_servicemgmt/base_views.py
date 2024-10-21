@@ -188,7 +188,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if depth == 0: 
         mermaid_code += f"{indent}{obj_id}[{obj_name}]\n"
         if hasattr(obj, 'get_absolute_url'):
-            diagram += f'{indent}click {obj_id} "{obj.get_absolute_url()}"\n'
+            mermaid_code += f'{indent}click {obj_id} "{obj.get_absolute_url()}"\n'
 
     # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
     for field in obj._meta.get_fields():
@@ -227,7 +227,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     indent = "    " * (depth+1)
                     mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}]\n"
                     if hasattr(related_obj, 'get_absolute_url'):
-                        diagram += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                        mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                 except related_model.DoesNotExist:
@@ -249,7 +249,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         indent = "    " * (depth+1)
                         mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}]\n"
                         if hasattr(related_obj, 'get_absolute_url'):
-                            diagram += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                            mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                         mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
     
