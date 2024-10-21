@@ -135,6 +135,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             'cluster_group',
             'cluster_type',
         }
+    
     mermaid_code = "graph TD\n"
     indent = "    " * depth # Indentation for readability
 
@@ -150,7 +151,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Traverse forward relationships (ForeignKey, OneToOneField)
     for field in obj._meta.get_fields():
-        if field.name in excluded_fields:
+        if field.name.lower() in excluded_fields:
             continue
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             related_obj = getattr(obj, field.name, None)
@@ -162,6 +163,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Traverse reverse relationships (many-to-one, many-to-many)
     for rel in obj._meta.get_fields():
+        if rel.name.lower() in excluded_fields:
+            continue
         if rel.is_relation and rel.auto_created and not rel.concrete:
             related_objects = getattr(obj, rel.get_accessor_name()).all()
             for related_obj in related_objects:
