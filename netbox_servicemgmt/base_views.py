@@ -113,67 +113,68 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     """
     if visited is None:
         visited = set()
-        
+
     excluded_fields = {
-            'id', 
-            'all',
-            'custom_field_data',
-            'custom_fields', 
-            'tag', 
-            'tags',
-            'bookmarks', 
-            'journal_entries', 
-            'subscriptions', 
-            'tagged_items', 
-            'device',
-            'role',
-            'ipaddress'
-            'depends_on',
-            'dependencies',
-            'created',
-            'last_updated',
-            'object_id',
-            'primary_ip4',
-            'primary_ip6',
-            'ipaddresses',
-            'cluster_group',
-            'cluster_type',
-        }
-    
+        'id', 
+        'custom_field_data',
+        'custom_fields', 
+        'tags',
+        'bookmarks', 
+        'journal_entries', 
+        'subscriptions', 
+        'tagged_items', 
+        'device_type',
+        'device',
+        'role',
+        'ipaddress',
+        'depends_on',
+        'dependencies',
+        'created',
+        'last_updated',
+        'object_id',
+        'primary_ip4',
+        'primary_ip6',
+        'ipaddresses',
+        'cluster_group',
+        'cluster_type',
+    }
+
     models_to_skip_reverse_relations = {
         'Site', 
         'Tenant',
         'IPAddress',
         'Interface',
+        'Manufacturer', 
+        'Tag',       
     }
 
-    mermaid_code = "graph TD\n"
-    indent = "    " * depth # Indentation for readability
+    mermaid_code = ""
+    indent = "    " * depth  # Indentation for readability
 
-    # Mark the object as visited to avoid revisiting it
+    # Get object identifier and mark the object as visited to avoid revisiting it
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
     if obj_id in visited:
         return mermaid_code  # Stop if this object was already visited
 
-    visited.add(obj_id)
+    visited.add(obj_id)  # Mark the object as visited *before* recursion
 
     # Add the object to the diagram
-    mermaid_code += f"{indent}{obj_id}[{obj}]"
+    mermaid_code += f"{indent}{obj_id}[{obj}]\n"
 
-# Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
+    # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
     for field in obj._meta.get_fields():
         # Skip excluded fields like 'tags'
         if field.name in excluded_fields:
             continue
 
-        # Handle regular ForeignKey and OneToOneField relationships
+        # Handle ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
                 related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                 # Add relationship and recurse
-                mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
+                mermaid_code += f"{obj_id} --> {related_obj_id}[{related_obj}]\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
         # Handle GenericForeignKey
@@ -186,7 +187,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     related_obj = related_model.objects.get(pk=object_id)
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                     # Add relationship and recurse
-                    mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
+                    mermaid_code += f"{obj_id} --> {related_obj_id}[{related_obj}]\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
@@ -200,7 +201,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     for related_obj in related_objects.all():
                         related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                         # Add reverse relationship and recurse
-                        mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
+                        mermaid_code += f"{related_obj_id}[{related_obj}] --> {obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
     return mermaid_code
