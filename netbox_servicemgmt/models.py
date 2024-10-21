@@ -224,7 +224,7 @@ class ServiceComponent(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.CASCADE, related_name='sc_components', verbose_name='Service Requirement')
-
+    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.CASCADE, related_name='sc_deployments', verbose_name='Service Deployment')
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField()
