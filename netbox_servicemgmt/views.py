@@ -25,7 +25,8 @@ class SLOBulkImportView(generic.BulkImportView):
     model_form = SLOImportForm
 
 class SLOChangeLogView(BaseChangeLogView):
-    base_model = SLO
+    model = SLO
+
 
 # Solution Template Views
 class SolutionTemplateListView(generic.ObjectListView):
@@ -41,14 +42,13 @@ class SolutionTemplateDiagramView(BaseDiagramView):
     """
     Diagram tab for SolutionTemplate model.
     """
+    queryset = SolutionTemplate.objects.all()
 
     mermaid_source = " \
     graph TD \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
-
-
 
 class SolutionTemplateEditView(generic.ObjectEditView):
     queryset = SolutionTemplate.objects.all()
@@ -62,7 +62,8 @@ class SolutionTemplateBulkImportView(generic.BulkImportView):
     model_form = SolutionTemplateImportForm
 
 class SolutionTemplateChangeLogView(BaseChangeLogView):
-    base_model = SolutionTemplate
+    model = SolutionTemplate
+
 
 # Fault Tolerence Views
 class FaultToleranceListView(generic.ObjectListView):
@@ -84,7 +85,8 @@ class FaultToleranceBulkImportView(generic.BulkImportView):
     model_form = FaultToleranceImportForm
 
 class FaultToleranceChangeLogView(BaseChangeLogView):
-    base_model = FaultTolerance
+    model = FaultTolerance
+
 
 # Service Template Views
 class ServiceTemplateListView(generic.ObjectListView):
@@ -100,12 +102,13 @@ class ServiceTemplateDiagramView(BaseDiagramView):
     """
     Diagram tab for ServceTemplate model.
     """  
+    queryset = ServiceTemplate.objects.all()
+
     mermaid_source = " \
     graph TD \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
-
 
 class ServiceTemplateEditView(generic.ObjectEditView):
     queryset = ServiceTemplate.objects.all()
@@ -119,7 +122,8 @@ class ServiceTemplateBulkImportView(generic.BulkImportView):
     model_form = ServiceTemplateImportForm
 
 class ServiceTemplateChangeLogView(BaseChangeLogView):
-    base_model = ServiceTemplate
+    model = ServiceTemplate
+
 
 # Service Requirement Views
 class ServiceRequirementListView(generic.ObjectListView):
@@ -142,7 +146,8 @@ class ServiceRequirementBulkImportView(generic.BulkImportView):
     model_form = ServiceRequirementImportForm
 
 class ServiceRequirementChangeLogView(BaseChangeLogView):
-    base_model = ServiceRequirement
+    model = ServiceRequirement
+
 
 # Solution Deployment Views
 class SolutionDeploymentListView(generic.ObjectListView):
@@ -158,6 +163,8 @@ class SolutionDeploymentDiagramView(BaseDiagramView):
     """
     Diagram tab for SolutionDeployment model.
     """  
+    queryset = SolutionDeployment.objects.all()
+
     mermaid_source = " \
     graph TD \
         A[Start] --> B[Process] \
@@ -176,7 +183,8 @@ class SolutionDeploymentBulkImportView(generic.BulkImportView):
     model_form = SolutionDeploymentImportForm
 
 class SolutionDeploymentChangeLogView(BaseChangeLogView):
-    base_model = SolutionDeployment
+    model = SolutionDeployment
+
 
 # Service Deployment Views
 class ServiceDeploymentListView(generic.ObjectListView):
@@ -192,11 +200,13 @@ class ServiceDeploymentDiagramView(BaseDiagramView):
     """
     Diagram tab for ServiceDeployment model.
     """  
+    queryset = ServiceDeployment.objects.all()
     mermaid_source = " \
     graph TD \
         A[Start] --> B[Process] \
         B --> C[Finish] \
     "
+    
 class ServiceDeploymentEditView(generic.ObjectEditView):
     queryset = ServiceDeployment.objects.all()
     form = ServiceDeploymentForm
@@ -209,7 +219,8 @@ class ServiceDeploymentBulkImportView(generic.BulkImportView):
     model_form = ServiceDeploymentImportForm
 
 class ServiceDeploymentChangeLogView(BaseChangeLogView):
-    base_model = ServiceDeployment
+    model = ServiceDeployment
+
 
 # Service Component Views
 class ServiceComponentListView(generic.ObjectListView):
@@ -231,4 +242,4 @@ class ServiceComponentBulkImportView(generic.BulkImportView):
     model_form = ServiceComponentImportForm
 
 class ServiceComponentChangeLogView(BaseChangeLogView):
-    base_model = ServiceComponent
+    model = ServiceComponent

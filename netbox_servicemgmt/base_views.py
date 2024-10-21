@@ -13,7 +13,7 @@ from . import (
     )
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
-    template_name = 'netbox_servicemgmt/default-detail.html'
+    base_template = 'netbox_servicemgmt/default-detail.html'
     
 class BaseObjectView(generic.ObjectView):
     template_name = 'netbox_servicemgmt/default-detail.html'
@@ -113,7 +113,7 @@ class BaseObjectView(generic.ObjectView):
         
 
 
-class BaseDiagramView(generic.ObjectView):
+class BaseDiagramView(generic.ObjectView):    
     """
     Diagram tab.
     """
