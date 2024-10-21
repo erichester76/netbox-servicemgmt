@@ -13,7 +13,6 @@ urlpatterns = [
     path('solution-requests/<int:pk>/delete/', views.SolutionRequestDeleteView.as_view(), name='solutionrequest_delete'),
     path('solution-requests/bulk-import/', views.SolutionRequestBulkImportView.as_view(), name='solutionrequest_bulk_import'),
     path('solution-requests/<int:pk>/changelog/', views.SolutionRequestChangeLogView.as_view(), name='solutionrequest_changelog', kwargs={'model': models.SolutionRequest}),
-    path('solution-requests/<int:pk>/diagram/', views.SolutionRequestDiagramView.as_view(), name='solutionrequest_diagram'),
    
 
     # Solution Template URLs
