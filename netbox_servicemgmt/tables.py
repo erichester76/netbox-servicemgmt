@@ -18,8 +18,8 @@ class SolutionTemplateTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = SolutionTemplate
-        default_columns = ('name', 'description', 'design_contact')
-        fields = ['pk', 'id', 'name', 'description', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements']
+        default_columns = ('name', 'version', 'solution_type', 'business_owner_contact', 'business_owner_tenant', 'design_contact')
+        fields = ['pk', 'id', 'name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements']
 
 class FaultToleranceTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -37,8 +37,8 @@ class ServiceTemplateTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = ServiceTemplate
-        default_columns = ('name', 'description', 'service_type', 'fault_tolerence', 'service_slo')
-        fields = ('pk', 'id', 'name', 'description', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo')
+        default_columns = ('name', 'description', 'version', 'service_type', 'fault_tolerence', 'service_slo')
+        fields = ('pk', 'id', 'name', 'description', 'version', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo')
 
 class ServiceRequirementTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -48,8 +48,8 @@ class ServiceRequirementTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = ServiceRequirement
-        default_columns = ('name', 'description', 'service_template', 'requirement_owner', 'service_slo')
-        fields = ('pk', 'id', 'name', 'description', 'service_template', 'requirement_owner', 'service_slo',
+        default_columns = ('name', 'description', 'version', 'service_template', 'requirement_owner', 'service_slo')
+        fields = ('pk', 'id', 'name', 'description', 'version', 'service_template', 'requirement_owner', 'service_slo',
             'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
             'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
             'offsite_backup', 'airgap_backup', 'object_type'
@@ -63,8 +63,8 @@ class ServiceDeploymentTable(NetBoxTable):
     
     class Meta(NetBoxTable.Meta):
         model = ServiceDeployment
-        default_columns = ('name', 'description', 'service_template', 'business_owner_tenant', 'service_owner_tenant')
-        fields = ('pk', 'id', 'name', 'description', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
+        default_columns = ('name', 'description', 'version', 'service_template', 'business_owner_tenant', 'service_owner_tenant')
+        fields = ('pk', 'id', 'name', 'description', 'version', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
 
 class ServiceComponentTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -74,6 +74,6 @@ class ServiceComponentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = ServiceComponent
-        default_columns = ('name', 'description', 'service_deployment', 'service_requirement', 'content_object')
-        fields = ('pk', 'id', 'name', 'description', 'service_deployment', 'service_requirement', 'object_type', 'object_id')
+        default_columns = ('name', 'description', 'version', 'service_deployment', 'service_requirement', 'content_object')
+        fields = ('pk', 'id', 'name', 'description', 'version', 'service_deployment', 'service_requirement', 'object_type', 'object_id')
 

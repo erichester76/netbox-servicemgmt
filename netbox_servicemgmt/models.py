@@ -7,7 +7,23 @@ from dcim.models import Site, Manufacturer
 from taggit.managers import TaggableManager
 from django.urls import reverse  # Import reverse
 
+# Status choices
+STATUS_INACTIVE = 'inactive'
+STATUS_ACTIVE = 'active'
+STATUS_STAGED = 'staged'
+STATUS_DETECTED = 'detected'
+STATUS_REPLACED = 'replaced'
+STATUS_DECOMMISSIONED = 'decommissioned'
 
+STATUS_CHOICES = [
+    (STATUS_INACTIVE, 'inactive'),
+    (STATUS_ACTIVE, 'active'),
+    (STATUS_STAGED, 'staged'),
+    (STATUS_DETECTED, 'detected'),
+    (STATUS_REPLACED, 'replaced'),
+    (STATUS_DECOMMISSIONED, 'decommissioned'),
+]
+    
 # Service Level Objective (SLO) Model
 class SLO(NetBoxModel):
     name = models.CharField(max_length=255)
@@ -28,17 +44,72 @@ class SLO(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:slo', kwargs={'pk': self.pk})
+   
+# Solution Request Model
+class SolutionRequest(NetBoxModel):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sreq_designers', verbose_name='Architect')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
+    solution_type = models.CharField(max_length=255, null=True)
+    requirements = models.TextField()
+    version = models.CharField(max_length=50, help_text="Version of the solution request")
     
+    # Self-referencing foreign key to track the previous version of the template
+    previous_version = models.ForeignKey(
+        'self',  # Self-reference to the same model
+        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
+        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
+        blank=True,
+        related_name='next_versions',  # Allows backward reference from the newer version to older ones
+        help_text="Previous version of this solution"
+    )
+    
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,    
+    )
+    
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Solution Request')
+        verbose_name_plural = ('Solution Requests') 
+
+    def __str__(self):
+        return f'{self.name}'
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:solutionrequest', kwargs={'pk': self.pk})
+ 
 # Solution Template Model
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
+    solution_request = models.ForeignKey(SolutionRequest, on_delete=models.CASCADE, related_name='solution_templates',  verbose_name='Solution Request')
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers', verbose_name='Architect')
     business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='solution_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     requirements = models.TextField()
-
+    version = models.CharField(max_length=50, help_text="Version of the solution template")
+    
+    # Self-referencing foreign key to track the previous version of the template
+    previous_version = models.ForeignKey(
+        'self',  # Self-reference to the same model
+        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
+        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
+        blank=True,
+        related_name='next_versions',  # Allows backward reference from the newer version to older ones
+        help_text="Previous version of this solution"
+    )
+    
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,    
+    )
     class Meta:
         ordering = ['name']
         verbose_name = ('Solution')
@@ -94,7 +165,24 @@ class ServiceTemplate(NetBoxModel):
     service_type = models.CharField(max_length=255)
     vendor_management_assessment = models.CharField(max_length=255)
     vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor', verbose_name='Vendor')
+    version = models.CharField(max_length=50, help_text="Version of the service")
+    
+    # Self-referencing foreign key to track the previous version of the template
+    previous_version = models.ForeignKey(
+        'self',  # Self-reference to the same model
+        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
+        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
+        blank=True,
+        related_name='next_versions',  # Allows backward reference from the newer version to older ones
+        help_text="Previous version of this service"
+    )
 
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,   
+    )
+    
     #fault tolerence defaults, can be overridden at servicerequirement level
     fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
     #slo defaults, can be overridden at servicerequirement level
@@ -139,6 +227,23 @@ class ServiceRequirement(NetBoxModel):
     backup_schedule = models.CharField(max_length=255, null=True, blank=True)
     offsite_backup = models.BooleanField(null=True, blank=True)
     airgap_backup = models.BooleanField(null=True, blank=True)
+    version = models.CharField(max_length=50, help_text="Version of the solution template")
+    
+    # Self-referencing foreign key to track the previous version of the template
+    previous_version = models.ForeignKey(
+        'self',  # Self-reference to the same model
+        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
+        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
+        blank=True,
+        related_name='next_versions',  # Allows backward reference from the newer version to older ones
+        help_text="Previous version of this requirement"
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,   
+    )
     
     # Object Type field to link to any NetBox object type
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)    
@@ -211,7 +316,24 @@ class ServiceDeployment(NetBoxModel):
     monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring', verbose_name='Monitoring Contact')
     maintenance_window = models.CharField(max_length=255, verbose_name='Maintenance Window Timeframes')
     deployment_rfc = models.CharField(max_length=255, verbose_name='Associated RFC for Deployment')
+    version = models.CharField(max_length=50, help_text="Version of the deployment")
     
+    # Self-referencing foreign key to track the previous version of the template
+    previous_version = models.ForeignKey(
+        'self',  # Self-reference to the same model
+        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
+        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
+        blank=True,
+        related_name='next_versions',  # Allows backward reference from the newer version to older ones
+        help_text="Previous version of this deployment"
+    )
+    
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,   
+    )
+
     def __str__(self):
         return f'{self.name}'   
     
@@ -229,7 +351,23 @@ class ServiceComponent(NetBoxModel):
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
-
+    version = models.CharField(max_length=50, help_text="Version of the Component")
+    # Self-referencing foreign key to track the previous version of the template
+    previous_version = models.ForeignKey(
+        'self',  # Self-reference to the same model
+        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
+        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
+        blank=True,
+        related_name='next_versions',  # Allows backward reference from the newer version to older ones
+        help_text="Previous version of this Component"
+    )
+    
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,   
+    )
+    
     class Meta:
         ordering = ['name']
         verbose_name = ('Deployment Component')
