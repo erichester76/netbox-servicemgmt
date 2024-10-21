@@ -140,6 +140,13 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             'cluster_type',
         }
     
+    models_to_skip_reverse_relations = {
+        'Site', 
+        'Tenant',
+        'IPAddress',
+        'Interface',
+    }
+
     mermaid_code = "graph TD\n"
     indent = "    " * depth # Indentation for readability
 
@@ -185,15 +192,16 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     continue  # If the related object doesn't exist, skip it
 
     # Traverse reverse relationships (many-to-one, many-to-many)
-    for rel in obj._meta.get_fields():
-        if rel.is_relation and rel.auto_created and not rel.concrete:
-            related_objects = getattr(obj, rel.get_accessor_name(), None)
-            if related_objects:
-                for related_obj in related_objects.all():
-                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    # Add reverse relationship and recurse
-                    mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+    if obj._meta.model_name not in models_to_skip_reverse_relations:
+        for rel in obj._meta.get_fields():
+            if rel.is_relation and rel.auto_created and not rel.concrete:
+                related_objects = getattr(obj, rel.get_accessor_name(), None)
+                if hasattr(related_objects, 'all'):
+                    for related_obj in related_objects.all():
+                        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                        # Add reverse relationship and recurse
+                        mermaid_code += f"{indent}{related_obj_id}[{related_obj}] --> {obj_id}\n"
+                        mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
     return mermaid_code
 
