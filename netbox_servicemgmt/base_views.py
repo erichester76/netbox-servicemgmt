@@ -201,7 +201,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 if related_obj_id in visited:
                      continue  # Skip if already visited
                 # Add relationship and recurse with indent for readability
-                mermaid_code += f"{indent}{related_obj_id}[{related_obj_name}] --> {obj_id}\n"
+                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}[{related_obj_name}]\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1) 
         """
 
