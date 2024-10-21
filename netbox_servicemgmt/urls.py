@@ -10,6 +10,7 @@ urlpatterns = [
     path('solution-templates/<int:pk>/delete/', views.SolutionTemplateDeleteView.as_view(), name='solutiontemplate_delete'),
     path('solution-templates/bulk-import/', views.SolutionTemplateBulkImportView.as_view(), name='solutiontemplate_bulk_import'),
     path('solution-templates/<int:pk>/changelog/', views.SolutionTemplateChangeLogView.as_view(), name='solutiontemplate_changelog', kwargs={'model': models.SolutionTemplate}),
+    path('solution-templates/<int:pk>/diagram/', views.SolutionTemplateDiagramView.as_view(), name='solutiontemplate_diagram'),
 
     # Service Template URLs
     path('service-templates/', views.ServiceTemplateListView.as_view(), name='servicetemplate_list'),
@@ -19,6 +20,7 @@ urlpatterns = [
     path('service-templates/<int:pk>/delete/', views.ServiceTemplateDeleteView.as_view(), name='servicetemplate_delete'),
     path('service-templates/bulk-import/', views.ServiceTemplateBulkImportView.as_view(), name='servicetemplate_bulk_import'),
     path('service-templates/<int:pk>/changelog/', views.ServiceTemplateChangeLogView.as_view(), name='servicetemplate_changelog', kwargs={'model': models.ServiceTemplate}),
+    path('service-templates/<int:pk>/diagram/', views.ServiceTemplateDiagramView.as_view(), name='servicetemplate_diagram'),
 
     # Service Requirement URLs
     path('service-requirements/', views.ServiceRequirementListView.as_view(), name='servicerequirement_list'),
