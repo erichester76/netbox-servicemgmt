@@ -165,25 +165,7 @@ class BaseDiagramView(generic.ObjectView):
         label='Diagram',
         badge=lambda obj: 1, 
     )
-    
-    def get(self, request, pk):
-        # Get the object based on the specific model queryset
-        obj = self.get_object()
+    obj = get_object()
+    mermaid_source = f"{generate_mermaid_code(obj)}"
 
-        # Call the recursive function to generate the Mermaid diagram source
-        mermaid_source = f"{generate_mermaid_code(obj)}"
-        
-        # Prepare the context
-        context = {
-            "tab": self.tab,
-            "object": obj,
-            "mermaid_source": mermaid_source,  # Dynamically generated diagram
-        }
-
-        # Render the template with the diagram
-        return render(
-            request,
-            self.template_name,  # You can allow subclasses to override this if needed
-            context=context,
-        )
 
