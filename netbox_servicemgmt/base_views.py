@@ -148,7 +148,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'Tag',       
     }
 
-    mermaid_code = ""
+    mermaid_code = "\n"
     indent = "    " * depth  # Indentation for readability
 
     # Get object identifier and mark the object as visited to avoid revisiting it
@@ -226,7 +226,7 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-       mermaid_source = f"{generate_mermaid_code(instance)}"
+       mermaid_source = f"graph TD\n {generate_mermaid_code(instance)}"
 
        return {
           'mermaid_source': mermaid_source,
