@@ -209,7 +209,7 @@ class BaseDiagramView(generic.ObjectView):
 
 
         return {
-           'mermaid_source': mermaid_source,
+           'mermaid_source': mermaid_code,
         }
 
 
