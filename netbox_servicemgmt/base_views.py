@@ -35,7 +35,7 @@ class BaseObjectView(generic.ObjectView):
         # Extract fields and their values for the object, including relationships
         field_data = []
         for field in instance._meta.get_fields():      
-            # Skip excluded fields
+            # Skip excluded fields listed above
             if field.name in excluded_extras or ('Requirement' in field.name):
                 continue      
             
@@ -116,7 +116,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         
     excluded_fields = {
             'id', 
-            'custom_fielddata',
+            'custom_field_data',
             'custom_fields', 
             'tag', 
             'tags',
@@ -131,7 +131,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             'dependencies',
             'created',
             'last_updated',
-            'objectid',
+            'object_id',
             'primary_ip4',
             'primary_ip6',
             'ipaddresses',
@@ -165,7 +165,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                 # Add relationship and recurse
                 mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1, starting_object)
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
         # Handle GenericForeignKey
         elif isinstance(field, GenericForeignKey):
@@ -178,7 +178,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                     # Add relationship and recurse
                     mermaid_code += f" --> {related_obj_id}[{related_obj}]\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1, starting_object)
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
 
