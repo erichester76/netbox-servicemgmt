@@ -91,23 +91,23 @@
 
                         // Create the select box
                         const selectBoxCol = document.createElement('div');
-                        selectBoxCol.classList.add('col-md-6');  // Bootstrap class for 50% width
+                        selectBoxCol.classList.add('col-md-3');  // Bootstrap class for 50% width
 
                         const selectBox = document.createElement('select');
                         selectBox.name = `requirement${index + 1}_field`;
                         selectBox.classList.add('form-control');  // Apply Bootstrap classes
 
                         // Populate the select box options
-                        fields.forEach(choice => {
+                        fields.forEach((choice, index) => {
                             const option = document.createElement('option');
-                            option.value = choice.value;
-                            option.textContent = choice.value;
+                            option.value = choice;
+                            option.textContent = choice;
                             selectBox.appendChild(option);
                         });
                         
                         // Create the value input box
                         const valueInputCol = document.createElement('div');
-                        valueInputCol.classList.add('col-md-6');  // Bootstrap class for 50% width
+                        valueInputCol.classList.add('col-md-3');  // Bootstrap class for 50% width
 
                         const valueInput = document.createElement('input');
                         valueInput.name = `requirement${index + 1}_value`;
