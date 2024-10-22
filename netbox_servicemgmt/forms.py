@@ -157,6 +157,10 @@ class ServiceRequirementForm(NetBoxModelForm):
             'tags', 
             'comments', 
             'name', 
+            'role',
+            'serial_number'
+            'cluster',
+            'site',
             'custom_fields', 
             'custom_field_data',
             'status',
