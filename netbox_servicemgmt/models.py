@@ -87,7 +87,7 @@ class SolutionRequest(NetBoxModel):
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    solution_request = models.ForeignKey(SolutionRequest, on_delete=models.CASCADE, related_name='solution_templates',  verbose_name='Solution Request')
+    solution_request = models.ForeignKey(SolutionRequest, on_delete=models.CASCADE, null=True, related_name='solution_templates',  verbose_name='Solution Request')
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers', verbose_name='Architect')
     business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='solution_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owners', verbose_name='Business Owner Contact')
