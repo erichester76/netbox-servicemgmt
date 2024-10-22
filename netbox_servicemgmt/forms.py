@@ -1,7 +1,7 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
 from . import models
 from django import forms
-
+from django.contrib.contenttypes.models import ContentType
 
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
@@ -108,20 +108,28 @@ class ServiceRequirementForm(NetBoxModelForm):
         super().__init__(*args, **kwargs)
 
         # Load the field names dynamically based on selected object_type
-        object_type = self.initial.get('object_type')
-        if object_type:
-            model_class = object_type.model_class()
-            for field, _ in self.requirement_fields:
-                self.fields[field].widget = forms.Select(choices=self._get_model_field_choices(model_class))
-        
-        # Load default values from the SLO
-        if self.instance and self.instance.service_slo:
-            self._load_slo_defaults(self.instance.service_slo)
+        object_type_id = self.initial.get('object_type')
+        if object_type_id:
+            try:
+                # Retrieve ContentType instance and corresponding model class
+                object_type = ContentType.objects.get(pk=object_type_id)
+                model_class = object_type.model_class()
+
+                # Update widgets for each requirement field with the field choices from the model
+                for field, _ in self.requirement_fields:
+                    self.fields[field].widget = forms.Select(choices=self._get_model_field_choices(model_class))
+            except ContentType.DoesNotExist:
+                pass  # Handle the case where the ContentType doesn't exist
 
     def _get_model_field_choices(self, model_class):
-        """ Returns a list of fields for the selected model class """
-        fields = [(field.name, field.verbose_name) for field in model_class._meta.fields]
-        return fields
+        """Return the field choices for the given model class."""
+        fields = model_class._meta.get_fields()
+
+        # Define the list of fields to exclude
+        exclude_field_list = ['id', 'created', 'last_updated', 'tags', 'comments', 'interfaces', 'custom_fields', 'custom_field_data']
+
+        # Return choices excluding the fields in the exclude list
+        return [(field.name, field.verbose_name) for field in fields if field.name not in exclude_field_list]
 
     def _load_slo_defaults(self, slo):
         """ Dynamically load default SLO fields if SLO is provided """
