@@ -2,6 +2,7 @@ from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
 from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
+from dcim.models import Device
 
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
@@ -78,26 +79,6 @@ class ServiceRequirementForm(NetBoxModelForm):
             'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
             'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
             'offsite_backup', 'airgap_backup', 'object_type',
-            """ 'requirement1_field', 'requirement1_value',
-            'requirement2_field', 'requirement2_value',
-            'requirement3_field', 'requirement3_value',
-            'requirement4_field', 'requirement4_value',
-            'requirement5_field', 'requirement5_value',
-            'requirement6_field', 'requirement6_value',
-            'requirement7_field', 'requirement7_value',
-            'requirement8_field', 'requirement8_value',
-            'requirement9_field', 'requirement9_value',
-            'requirement10_field', 'requirement10_value',
-            'requirement11_field', 'requirement11_value',
-            'requirement12_field', 'requirement12_value',
-            'requirement13_field', 'requirement13_value',
-            'requirement14_field', 'requirement14_value',
-            'requirement15_field', 'requirement15_value',
-            'requirement16_field', 'requirement16_value',
-            'requirement17_field', 'requirement17_value',
-            'requirement18_field', 'requirement18_value',
-            'requirement19_field', 'requirement19_value',
-            'requirement20_field', 'requirement20_value', """
         ]
 
     # Dynamically add requirement fields
@@ -127,20 +108,27 @@ class ServiceRequirementForm(NetBoxModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Load the field names dynamically based on selected object_type
-        object_type_id = self.initial.get('object_type')
-        if object_type_id:
-            try:
-                # Retrieve ContentType instance and corresponding model class
-                object_type = ContentType.objects.get(pk=object_type_id)
-                model_class = object_type.model_class()
+        # Default to 'Device' ContentType if no object_type is set
+        object_type_id = self.initial.get('object_type') or self.data.get('object_type')
 
-                # Update widgets for each requirement field with the field choices from the model
-                for field, _ in self.requirement_fields:
+        # If no object_type is passed (new object), default to 'Device' object type
+        if not object_type_id:
+            device_content_type = ContentType.objects.get_for_model(Device)
+            object_type_id = device_content_type.id
+            self.initial['object_type'] = object_type_id
+
+        # Load the field names dynamically based on the selected object_type
+        try:
+            object_type = ContentType.objects.get(pk=object_type_id)
+            model_class = object_type.model_class()
+
+            # Update widgets for each requirement field with the field choices from the model
+            for field, _ in self.requirement_fields:
+                if field in self.fields:
                     self.fields[field].widget = forms.Select(choices=self._get_model_field_choices(model_class))
-                    
-            except ContentType.DoesNotExist:
-                pass  # Handle the case where the ContentType doesn't exist
+        except ContentType.DoesNotExist:
+            pass  # Handle the case where the ContentType doesn't exist
+
 
     def _get_model_field_choices(self, model_class):
         """Return the field choices for the given model class."""
@@ -175,6 +163,7 @@ class ServiceRequirementForm(NetBoxModelForm):
             for field in fields
             if field.concrete and field.name not in exclude_field_list and hasattr(field, 'verbose_name')
         ]
+        
     def _load_slo_defaults(self, slo):
         """ Dynamically load default SLO fields if SLO is provided """
         for field in slo._meta.get_fields():

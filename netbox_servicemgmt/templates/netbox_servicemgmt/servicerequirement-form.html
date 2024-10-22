@@ -85,18 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     fields.forEach((field, index) => {
                         if (index < 21) { 
-                            const nameField = `<div class="col">
-                                <label for="id_requirement${index+1}_field">Field</label>
-                                <select name="requirement${index+1}_field" class="form-control">${this._generateSelectOptions(field)}</select>
-                            </div>`;
-                            const valueField = `<div class="col">
-                                <label for="id_requirement${index+1}_value">Value</label>
-                                <input type="text" name="requirement${index+1}_value" class="form-control" />
-                            </div>`;
-
+                            const nameField = `<label for="id_requirement${index+1}_name"></label>
+                                <input type="text" value="${field}" readonly class="form-control" />`;
+                            const valueField = `<label for="id_requirement${index+1}_value"></label>
+                                <input type="text" class="form-control" />`;
 
                             requirementFieldsContainer.innerHTML += `<div class="form-row mb-3">${nameField}${valueField}</div>`;
-                        }
+                              }
                     });
                 });
         }
