@@ -83,19 +83,18 @@
                 .then(data => {
                     const fields = data.fields;
                     requirementFieldsContainer.innerHTML = '';  // Clear current fields
-    
                     fields.forEach((field, index) => {
                         // Create a new row
                         const row = document.createElement('div');
-                        row.classList.add('form-row', 'mb-3');
+                        row.classList.add('row', 'mb-3');
 
                         // Create the select box
                         const selectBoxCol = document.createElement('div');
-                        selectBoxCol.classList.add('col-md-3');  // Bootstrap class for 50% width
+                        selectBoxCol.classList.add('col-md-2');  
 
                         const selectBox = document.createElement('select');
                         selectBox.name = `requirement${index + 1}_field`;
-                        selectBox.classList.add('form-control');  // Apply Bootstrap classes
+                        selectBox.classList.add('form-control');  
 
                         // Populate the select box options
                         fields.forEach((choice, index) => {
@@ -107,12 +106,12 @@
                         
                         // Create the value input box
                         const valueInputCol = document.createElement('div');
-                        valueInputCol.classList.add('col-md-3');  // Bootstrap class for 50% width
+                        valueInputCol.classList.add('col-md-4');  
 
                         const valueInput = document.createElement('input');
                         valueInput.name = `requirement${index + 1}_value`;
                         valueInput.type = 'text';
-                        valueInput.classList.add('form-control');  // Apply Bootstrap classes
+                        valueInput.classList.add('form-control'); 
 
                         // Add the select box and input to the row
                         row.appendChild(selectBox);
