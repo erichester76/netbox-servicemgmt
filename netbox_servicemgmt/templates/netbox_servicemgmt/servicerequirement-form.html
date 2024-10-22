@@ -47,8 +47,19 @@
         {% block form %}
           {% include 'htmx/form.html' %}
           <div id="requirement-fields">
-            <!-- Requirement fields will be populated here -->
-          </div>
+            {% for field, value in form.requirement_fields %}
+            <div class="form-row mb-3">
+                <div class="col">
+                    <label for="{{ field.id_for_label }}">Field</label>
+                    {{ field }}
+                </div>
+                <div class="col">
+                    <label for="{{ value.id_for_label }}">Value</label>
+                    {{ value }}
+                </div>
+            </div>
+        {% endfor %}          
+      </div>
         {% endblock form %}
       </div>
 
@@ -69,35 +80,51 @@
   </div>
 
   <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const objectTypeField = document.getElementById("id_object_type");
-
-    objectTypeField.addEventListener('change', function() {
-        const objectTypeId = objectTypeField.value;
-        if (objectTypeId) {
-            fetch(`/api/plugins/netbox_servicemgmt/object-fields/${objectTypeId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    const fields = data.fields;
-                    const requirementFieldsContainer = document.getElementById("requirement-fields");
-
-                    requirementFieldsContainer.innerHTML = '';  // Clear current fields
-
-                    fields.forEach((field, index) => {
-                        if (index < 21) { 
-                            const nameField = `<label for="id_requirement${index+1}_name">Field Name</label>
-                                <input type="text" name="requirement${index+1}_name" value="${field}" readonly class="form-control" />`;
-                            const valueField = `<label for="id_requirement${index+1}_value">Field Value</label>
-                                <input type="text" name="requirement${index+1}_value" class="form-control" />`;
-
-                            requirementFieldsContainer.innerHTML += nameField + valueField;
-                        }
+    document.addEventListener('DOMContentLoaded', function() {
+        const objectTypeField = document.getElementById("id_object_type");
+    
+        // When object_type changes, dynamically rebuild the requirement fields
+        objectTypeField.addEventListener('change', function() {
+            const objectTypeId = objectTypeField.value;
+    
+            if (objectTypeId) {
+                fetch(`/api/plugins/netbox_servicemgmt/object-fields/${objectTypeId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const fields = data.fields;
+                        const requirementFieldsContainer = document.getElementById("requirement-fields");
+    
+                        requirementFieldsContainer.innerHTML = '';  // Clear current fields
+    
+                        fields.forEach((field, index) => {
+                            if (index < 10) {  // Limit to the first 10 fields
+                                const nameField = `<div class="col">
+                                    <label for="id_requirement${index+1}_field">Field</label>
+                                    <select name="requirement${index+1}_field" class="form-control">${this._generateSelectOptions(field)}</select>
+                                </div>`;
+                                const valueField = `<div class="col">
+                                    <label for="id_requirement${index+1}_value">Value</label>
+                                    <input type="text" name="requirement${index+1}_value" class="form-control" />
+                                </div>`;
+    
+                                // Append to the form row
+                                requirementFieldsContainer.innerHTML += `<div class="form-row mb-3">${nameField}${valueField}</div>`;
+                            }
+                        });
                     });
-                });
+            }
+        });
+        
+        // Helper function to generate options for the select field
+        this._generateSelectOptions = function (field) {
+            let options = '';
+            field.choices.forEach(choice => {
+                options += `<option value="${choice.value}">${choice.display}</option>`;
+            });
+            return options;
         }
     });
-});
-</script>
+    </script>
 {% endblock content %}
 
 {% block modals %}
