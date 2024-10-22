@@ -74,12 +74,11 @@ class ServiceRequirementForm(NetBoxModelForm):
     
     class Meta:
         model = models.ServiceRequirement
-        fields = [
-            'name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'object_type',
-             """ 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
-            'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
-            'offsite_backup', 'airgap_backup',  """
-        ]
+        fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'object_type']
+        
+        """ 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
+        'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
+        'offsite_backup', 'airgap_backup',  """
 
     # Dynamically add requirement fields
     requirement_fields = [
