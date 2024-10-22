@@ -105,20 +105,6 @@ class ServiceRequirementForm(NetBoxModelForm):
         ('requirement20_field', 'requirement20_value'),
     ]
 
-        
-    def _load_slo_defaults(self, slo):
-        """ Dynamically load default SLO fields if SLO is provided """
-        for field in slo._meta.get_fields():
-            # Skip many-to-many and reverse relations
-            if field.is_relation and (field.many_to_many or field.auto_created):
-                continue
-            
-            # Check if the form has a corresponding field
-            form_field_name = field.name
-            if form_field_name in self.fields:
-                # Set the initial value for the form field based on the SLO field value
-                self.fields[form_field_name].initial = getattr(slo, form_field_name)
-
 class ServiceRequirementImportForm(NetBoxModelImportForm):
     
     class Meta:
