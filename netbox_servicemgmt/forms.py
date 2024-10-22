@@ -118,6 +118,7 @@ class ServiceRequirementForm(NetBoxModelForm):
                 # Update widgets for each requirement field with the field choices from the model
                 for field, _ in self.requirement_fields:
                     self.fields[field].widget = forms.Select(choices=self._get_model_field_choices(model_class))
+                    
             except ContentType.DoesNotExist:
                 pass  # Handle the case where the ContentType doesn't exist
 
@@ -128,9 +129,12 @@ class ServiceRequirementForm(NetBoxModelForm):
         # Define the list of fields to exclude
         exclude_field_list = ['id', 'created', 'last_updated', 'tags', 'comments', 'interfaces', 'custom_fields', 'custom_field_data']
 
-        # Return choices excluding the fields in the exclude list
-        return [(field.name, field.verbose_name) for field in fields if field.name not in exclude_field_list]
-
+        # Return choices excluding the fields in the exclude list and reverse relations
+        return [
+            (field.name, field.verbose_name)
+            for field in fields
+            if field.concrete and field.name not in exclude_field_list and hasattr(field, 'verbose_name')
+        ]
     def _load_slo_defaults(self, slo):
         """ Dynamically load default SLO fields if SLO is provided """
         for field in slo._meta.get_fields():
