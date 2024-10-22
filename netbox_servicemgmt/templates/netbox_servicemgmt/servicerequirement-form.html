@@ -93,17 +93,14 @@
                         selectBox.name = `requirement${index + 1}_field`;
                         selectBox.classList.add('form-control', 'col');  // Apply Bootstrap classes
     
-                        // Check if 'choices' exists and is an array
-                        if (Array.isArray(field.choices)) {
-                            // Populate the select box options
-                            field.choices.forEach(choice => {
-                                const option = document.createElement('option');
-                                option.value = choice.value;
-                                option.textContent = choice.display;
-                                selectBox.appendChild(option);
-                            });
-                        }
-    
+                        // Populate the select box options
+                        fields.forEach(choice => {
+                            const option = document.createElement('option');
+                            option.value = choice.value;
+                            option.textContent = choice.value;
+                            selectBox.appendChild(option);
+                        });
+                        
                         // Create the value input box
                         const valueInput = document.createElement('input');
                         valueInput.name = `requirement${index + 1}_value`;
