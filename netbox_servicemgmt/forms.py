@@ -105,64 +105,6 @@ class ServiceRequirementForm(NetBoxModelForm):
         ('requirement20_field', 'requirement20_value'),
     ]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Default to 'Device' ContentType if no object_type is set
-        object_type_id = self.initial.get('object_type') or self.data.get('object_type')
-
-        # If no object_type is passed (new object), default to 'Device' object type
-        if not object_type_id:
-            device_content_type = ContentType.objects.get_for_model(Device)
-            object_type_id = device_content_type.id
-            self.initial['object_type'] = object_type_id
-
-        # Load the field names dynamically based on the selected object_type
-        try:
-            object_type = ContentType.objects.get(pk=object_type_id)
-            model_class = object_type.model_class()
-
-            # Update widgets for each requirement field with the field choices from the model
-            for field, _ in self.requirement_fields:
-                if field in self.fields:
-                    self.fields[field].widget = forms.Select(choices=self._get_model_field_choices(model_class))
-        except ContentType.DoesNotExist:
-            pass  # Handle the case where the ContentType doesn't exist
-
-
-    def _get_model_field_choices(self, model_class):
-        """Return the field choices for the given model class."""
-        fields = model_class._meta.get_fields()
-
-        # Define the list of fields to exclude
-        exclude_field_list = [
-            'id', 
-            'created', 
-            'tenant', 
-            'local_context_data', 
-            'description', 
-            'last_updated', 
-            'tags', 
-            'comments', 
-            'name', 
-            'role',
-            'serial_number'
-            'cluster',
-            'site',
-            'custom_fields', 
-            'custom_field_data',
-            'status',
-            'tags',
-            'config_template',
-            'device',
-        ]
-
-        # Return choices excluding the fields in the exclude list and reverse relations
-        return [
-            (field.name, field.verbose_name)
-            for field in fields
-            if field.concrete and field.name not in exclude_field_list and hasattr(field, 'verbose_name')
-        ]
         
     def _load_slo_defaults(self, slo):
         """ Dynamically load default SLO fields if SLO is provided """
