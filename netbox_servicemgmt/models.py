@@ -249,7 +249,7 @@ class ServiceRequirement(NetBoxModel):
     object_type = models.ForeignKey(
         ContentType, 
         on_delete=models.CASCADE, 
-        limit_choices_to={'model__in': ['device', 'virtualmachine', 'ipaddress', 'hostname', 'certificate', 'vip', 'container', 'software_product']},  # Filter by model names
+        limit_choices_to={'model__in': ['device', 'virtualmachine', 'softwareproduct', 'ipaddress', 'hostname', 'certificate', 'lbvirtualserver', 'container']},  # Filter by model names
         verbose_name="Attached Component Type"
     )
     # Enumerated requirement fields (these will be fields from the referenced object to set defaults for deployment)
