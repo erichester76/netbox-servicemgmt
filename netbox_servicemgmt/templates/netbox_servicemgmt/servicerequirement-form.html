@@ -46,6 +46,7 @@
       <div id="form_fields" hx-disinherit="hx-select hx-swap">
         {% block form %}
           {% include 'htmx/form.html' %}
+          <h4 id="requirements-header">Requirements</h4>
           <div id="requirement-fields" class="form-group">
             <!-- Requirement fields will be populated here -->
           </div>
@@ -83,7 +84,11 @@
                 .then(data => {
                     const fields = data.fields;
                     requirementFieldsContainer.innerHTML = '';  // Clear current fields
-    
+                    if (fields.length > 0) {
+                        requirementsHeader.style.display = 'block';  // Show header if fields exist
+                    } else {
+                        requirementsHeader.style.display = 'none';  // Hide header if no fields
+                    }
                     fields.forEach((field, index) => {
                         // Create a new row with Bootstrap grid layout
                         const row = document.createElement('div');
