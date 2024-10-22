@@ -46,7 +46,6 @@
       <div id="form_fields" hx-disinherit="hx-select hx-swap">
         {% block form %}
           {% include 'htmx/form.html' %}
-          <div><h2>Requirements for Component</h2></div>
           <div id="requirement-fields">
             <!-- Requirement fields will be populated here -->
           </div>
@@ -94,13 +93,16 @@
                         selectBox.name = `requirement${index + 1}_field`;
                         selectBox.classList.add('form-control', 'col');  // Apply Bootstrap classes
     
-                        // Populate the select box options
-                        field.choices.forEach(choice => {
-                            const option = document.createElement('option');
-                            option.value = choice.value;
-                            option.textContent = choice.display;
-                            selectBox.appendChild(option);
-                        });
+                        // Check if 'choices' exists and is an array
+                        if (Array.isArray(field.choices)) {
+                            // Populate the select box options
+                            field.choices.forEach(choice => {
+                                const option = document.createElement('option');
+                                option.value = choice.value;
+                                option.textContent = choice.display;
+                                selectBox.appendChild(option);
+                            });
+                        }
     
                         // Create the value input box
                         const valueInput = document.createElement('input');
@@ -132,6 +134,7 @@
         }
     });
     </script>
+    
     
 {% endblock content %}
 
