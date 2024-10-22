@@ -46,8 +46,21 @@
       <div id="form_fields" hx-disinherit="hx-select hx-swap">
         {% block form %}
           {% include 'htmx/form.html' %}
+          <!-- Requirement fields will be dynamically populated here -->
           <div id="requirement-fields">
-          </div>     
+            {% for field, value in form.requirement_fields %}
+                <div class="form-row mb-3">
+                    <div class="col">
+                        <label for="{{ field.id_for_label }}">Field</label>
+                        {{ field }}
+                    </div>
+                    <div class="col">
+                        <label for="{{ value.id_for_label }}">Value</label>
+                        {{ value }}
+                    </div>
+                </div>
+            {% endfor %}
+          </div>    
       </div>
         {% endblock form %}
       </div>
