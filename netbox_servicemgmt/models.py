@@ -246,7 +246,7 @@ class ServiceRequirement(NetBoxModel):
     )
     
     # Object Type field to link to any NetBox object type
-    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)    
+    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, verbose_name="Attached Component Type")    
 
     # Enumerated requirement fields (these will be fields from the referenced object to set defaults for deployment)
     requirement1_field = models.CharField(max_length=255, null=True, blank=True)
