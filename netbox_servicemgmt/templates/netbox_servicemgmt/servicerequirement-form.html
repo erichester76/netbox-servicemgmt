@@ -69,35 +69,69 @@
   </div>
 
   <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const objectTypeField = document.getElementById("id_object_type");
-
-    objectTypeField.addEventListener('change', function() {
-        const objectTypeId = objectTypeField.value;
-        if (objectTypeId) {
+    document.addEventListener('DOMContentLoaded', function() {
+        const objectTypeField = document.getElementById("id_object_type");
+        const requirementFieldsContainer = document.getElementById("requirement-fields");
+    
+        // Function to build requirement fields
+        function buildRequirementFields(objectTypeId) {
+            if (!objectTypeId) return;
+    
+            // Fetch the object fields from the server
             fetch(`/api/plugins/netbox_servicemgmt/object-fields/${objectTypeId}/`)
                 .then(response => response.json())
                 .then(data => {
                     const fields = data.fields;
-                    const requirementFieldsContainer = document.getElementById("requirement-fields");
-
                     requirementFieldsContainer.innerHTML = '';  // Clear current fields
-
+    
                     fields.forEach((field, index) => {
-                        if (index < 21) { 
-                            const nameField = `<label for="id_requirement${index+1}_name"></label>
-                                <input type="text" value="${field}" readonly class="form-control" />`;
-                            const valueField = `<label for="id_requirement${index+1}_value"></label>
-                                <input type="text" class="form-control" />`;
-
-                            requirementFieldsContainer.innerHTML += `<div class="form-row mb-3">${nameField}${valueField}</div>`;
-                              }
+                        // Create a new row with select box and empty text input
+                        const row = document.createElement('div');
+                        row.classList.add('form-row', 'mb-3');
+    
+                        const selectBox = document.createElement('select');
+                        selectBox.name = `requirement${index + 1}_field`;
+                        selectBox.classList.add('form-control', 'col');  // Apply Bootstrap classes
+    
+                        // Populate the select box options
+                        field.choices.forEach(choice => {
+                            const option = document.createElement('option');
+                            option.value = choice.value;
+                            option.textContent = choice.display;
+                            selectBox.appendChild(option);
+                        });
+    
+                        // Create the value input box
+                        const valueInput = document.createElement('input');
+                        valueInput.name = `requirement${index + 1}_value`;
+                        valueInput.type = 'text';
+                        valueInput.classList.add('form-control', 'col');  // Apply Bootstrap classes
+    
+                        // Add the select box and input to the row
+                        row.appendChild(selectBox);
+                        row.appendChild(valueInput);
+    
+                        // Append the row to the requirement fields container
+                        requirementFieldsContainer.appendChild(row);
                     });
-                });
+                })
+                .catch(err => console.error('Error fetching object fields:', err));
+        }
+    
+        // On change of the object type, rebuild the requirement fields
+        objectTypeField.addEventListener('change', function() {
+            const objectTypeId = objectTypeField.value;
+            buildRequirementFields(objectTypeId);
+        });
+    
+        // On page load, if object type is already set, build the fields
+        const initialObjectTypeId = objectTypeField.value;
+        if (initialObjectTypeId) {
+            buildRequirementFields(initialObjectTypeId);
         }
     });
-});
-</script>
+    </script>
+    
 {% endblock content %}
 
 {% block modals %}
