@@ -48,7 +48,7 @@ class BaseObjectView(generic.ObjectView):
         field_data = []
         for field in instance._meta.get_fields():      
             # Skip excluded fields listed above
-            if field.name in excluded_extras or ('Requirement' in field.name):
+            if field.name in excluded_extras or ('equirement' in field.name):
                 continue      
             
             value = None
