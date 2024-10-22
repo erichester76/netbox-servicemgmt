@@ -147,7 +147,23 @@ class ServiceRequirementForm(NetBoxModelForm):
         fields = model_class._meta.get_fields()
 
         # Define the list of fields to exclude
-        exclude_field_list = ['id', 'created', 'last_updated', 'tags', 'comments', 'interfaces', 'custom_fields', 'custom_field_data']
+        exclude_field_list = [
+            'id', 
+            'created', 
+            'tenant', 
+            'local_context_data', 
+            'description', 
+            'last_updated', 
+            'tags', 
+            'comments', 
+            'name', 
+            'custom_fields', 
+            'custom_field_data',
+            'status',
+            'tags',
+            'config_template',
+            'device',
+        ]
 
         # Return choices excluding the fields in the exclude list and reverse relations
         return [
