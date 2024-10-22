@@ -78,7 +78,7 @@ class ServiceRequirementForm(NetBoxModelForm):
             'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
             'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
             'offsite_backup', 'airgap_backup', 'object_type',
-            'requirement1_field', 'requirement1_value',
+            """ 'requirement1_field', 'requirement1_value',
             'requirement2_field', 'requirement2_value',
             'requirement3_field', 'requirement3_value',
             'requirement4_field', 'requirement4_value',
@@ -97,7 +97,7 @@ class ServiceRequirementForm(NetBoxModelForm):
             'requirement17_field', 'requirement17_value',
             'requirement18_field', 'requirement18_value',
             'requirement19_field', 'requirement19_value',
-            'requirement20_field', 'requirement20_value',
+            'requirement20_field', 'requirement20_value', """
         ]
 
     # Dynamically add requirement fields
