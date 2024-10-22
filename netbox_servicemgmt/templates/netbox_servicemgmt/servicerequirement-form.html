@@ -46,7 +46,7 @@
       <div id="form_fields" hx-disinherit="hx-select hx-swap">
         {% block form %}
           {% include 'htmx/form.html' %}
-          <div><h4 id="requirements-header">Specifications</h4></div>
+          <div id="requirements-header"><h4>Specifications</h4></div>
           <div id="requirement-fields" class="form-group">
             <!-- Requirement fields will be populated here -->
           </div>
@@ -73,6 +73,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         const objectTypeField = document.getElementById("id_object_type");
         const requirementFieldsContainer = document.getElementById("requirement-fields");
+        const requirementsHeader = document.getElementById("requirements-header");
+
     
         // Function to build requirement fields
         function buildRequirementFields(objectTypeId) {
