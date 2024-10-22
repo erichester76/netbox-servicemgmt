@@ -46,7 +46,6 @@
       <div id="form_fields" hx-disinherit="hx-select hx-swap">
         {% block form %}
           {% include 'htmx/form.html' %}
-          <!-- <div id="requirements-header"><h4>Required Specifications</h4></div> -->
           <div id="requirement-fields" class="form-group">
             <!-- Requirement fields will be populated here -->
           </div>
@@ -73,8 +72,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const objectTypeField = document.getElementById("id_object_type");
         const requirementFieldsContainer = document.getElementById("requirement-fields");
-        const requirementsHeader = document.getElementById("requirements-header");
-
+    
         // Function to build requirement fields
         function buildRequirementFields(objectTypeId) {
             if (!objectTypeId) return;
@@ -85,11 +83,7 @@
                 .then(data => {
                     const fields = data.fields;
                     requirementFieldsContainer.innerHTML = '';  // Clear current fields
-                    if (fields.length > 0) {
-                        requirementsHeader.style.display = 'block';  // Show header if fields exist
-                    } else {
-                        requirementsHeader.style.display = 'none';  // Hide header if no fields
-                    }
+    
                     fields.forEach((field, index) => {
                         // Create a new row with Bootstrap grid layout
                         const row = document.createElement('div');
