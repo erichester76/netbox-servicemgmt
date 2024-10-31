@@ -11,6 +11,6 @@ class servicemgmtConfig(PluginConfig):
     verbose_name = "Netbox Service Management Plugin"
     description = "Netbox Plugin for Service Management"
     version = "0.1.5"
-    base_url = "netbox_servicemgmt"
+    base_url = "netboxservicemgmt"
 
 config = servicemgmtConfig
