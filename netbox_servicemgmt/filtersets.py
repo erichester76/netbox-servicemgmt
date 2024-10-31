@@ -53,7 +53,7 @@ class ServiceTemplateFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceTemplate
-        fields = ('name', 'solution_template', 'design_contact', 'service_type', 'vendor', 'tags')
+        fields = ('name', 'solution_templates', 'design_contact', 'service_type', 'vendor', 'tags')
 
 # ServiceRequirement FilterSet
 class ServiceRequirementFilterSet(NetBoxModelFilterSet):

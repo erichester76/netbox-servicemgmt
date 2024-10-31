@@ -11,7 +11,6 @@ class SLASerializer(NetBoxModelSerializer):
         model = models.SLA
         fields = ['id', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
 
-
 class SolutionTemplateSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.SolutionTemplate
