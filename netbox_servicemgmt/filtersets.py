@@ -9,13 +9,13 @@ from taggit.models import Tag
 class SLOFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = SLO
-        fields = ['name', 'rpo', 'rto', 'sev1_response', 'sev2_response']
+        fields = ('name', 'rpo', 'rto', 'sev1_response', 'sev2_response')
 
 # SLA FilterSet
 class SLAFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = SLA
-        fields = ['name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+        fields = ('name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
         
 # SolutionTemplate FilterSet
 class SolutionTemplateFilterSet(NetBoxModelFilterSet):
@@ -23,7 +23,7 @@ class SolutionTemplateFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = SolutionTemplate
-        fields = ['name', 'design_contact', 'requirements']
+        fields = ('name', 'design_contact', 'requirements')
 
 # FaultTolerance FilterSet
 class FaultToleranceFilterSet(NetBoxModelFilterSet):
@@ -33,7 +33,7 @@ class FaultToleranceFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = FaultTolerance
-        fields = ['name', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site']
+        fields = ('name', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site')
 
 # ServiceTemplate FilterSet
 class ServiceTemplateFilterSet(NetBoxModelFilterSet):
@@ -43,7 +43,7 @@ class ServiceTemplateFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceTemplate
-        fields = ['name', 'solution_template', 'design_contact', 'service_type', 'vendor', 'tags']
+        fields = ('name', 'solution_template', 'design_contact', 'service_type', 'vendor', 'tags')
 
 # ServiceRequirement FilterSet
 class ServiceRequirementFilterSet(NetBoxModelFilterSet):
@@ -53,7 +53,7 @@ class ServiceRequirementFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceRequirement
-        fields = ['name', 'service_template', 'requirement_owner', 'service_slo', 'primary_site', 'secondary_site']
+        fields = ('name', 'service_template', 'requirement_owner', 'service_slo', 'primary_site', 'secondary_site')
 
 # ServiceDeployment FilterSet
 class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
@@ -62,7 +62,7 @@ class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceDeployment
-        fields = ['name', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant']
+        fields = ('name', 'service_template', 'solution_deployment', 'business_owner_tenant', 'service_owner_tenant')
 
 # ServiceComponent FilterSet
 class ServiceComponentFilterSet(NetBoxModelFilterSet):
@@ -71,5 +71,5 @@ class ServiceComponentFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceComponent
-        fields = ['name', 'service_deployment', 'service_requirement', 'content_object']
+        fields = ('name', 'service_deployment', 'service_requirement', 'content_object')
  """
