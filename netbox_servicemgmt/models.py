@@ -31,10 +31,10 @@ DATA_CONFIDENTIAL = 'confidential'
 DATA_RESTRICTED= 'restricted'
 
 DATA_CHOICES = [
-    (DATA_PUBLIC, 'public'),
-    (DATA_INTERNAL, 'internal_use'),
-    (DATA_CONFIDENTIAL, 'confidential'),
-    (DATA_RESTRICTED, 'restricted'),
+    (DATA_PUBLIC, 'Public'),
+    (DATA_INTERNAL, 'Internal Use'),
+    (DATA_CONFIDENTIAL, 'Confidential'),
+    (DATA_RESTRICTED, 'Restricted'),
 ]
     
 
@@ -70,7 +70,6 @@ class SLA(NetBoxModel):
     data_classification = models.CharField(
         max_length=20,
         choices=DATA_CHOICES,  
-        default=DATA_PUBLIC
     )
     class Meta:
         ordering = ['name']
