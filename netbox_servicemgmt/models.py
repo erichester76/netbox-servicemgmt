@@ -72,8 +72,17 @@ class SLA(NetBoxModel):
         choices=DATA_CHOICES,  
         default=DATA_PUBLIC
     )
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Service Level Agreement')
+        verbose_name_plural = ('Service Level Agreements')    
 
-   
+    def __str__(self):
+        return f'{self.name}'
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:sla', kwargs={'pk': self.pk})
+
 # Solution Request Model
 class SolutionRequest(NetBoxModel):
     name = models.CharField(max_length=255)
