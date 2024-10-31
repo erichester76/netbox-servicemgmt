@@ -1,6 +1,6 @@
-""" import django_filters
+import django_filters
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
+from .models import SLA, SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
 from dcim.models import Site
 from tenancy.models import Tenant, Contact
 from taggit.models import Tag
@@ -11,6 +11,12 @@ class SLOFilterSet(NetBoxModelFilterSet):
         model = SLO
         fields = ['name', 'rpo', 'rto', 'sev1_response', 'sev2_response']
 
+# SLA FilterSet
+class SLAFilterSet(NetBoxModelFilterSet):
+    class Meta:
+        model = SLA
+        fields = ['name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+        
 # SolutionTemplate FilterSet
 class SolutionTemplateFilterSet(NetBoxModelFilterSet):
     design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
