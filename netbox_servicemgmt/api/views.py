@@ -1,5 +1,5 @@
 from netbox.api.viewsets import NetBoxModelViewSet
-from .. import models 
+from .. import models, filtersets
 from . import serializers 
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
@@ -66,6 +66,7 @@ class SLOViewSet(NetBoxModelViewSet):
 class SLAViewSet(NetBoxModelViewSet):
     queryset = models.SLA.objects.all()
     serializer_class = serializers.SLASerializer
+    filterset_class = filtersets.SLAFilterSet
 
 class SolutionTemplateViewSet(NetBoxModelViewSet):
     queryset = models.SolutionTemplate.objects.all()
