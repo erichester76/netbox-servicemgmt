@@ -16,7 +16,7 @@ class SLATable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = models.SLA 
         default_columns = ('name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
-        fields = ['pk', 'id', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+        fields = ( 'pk', 'id', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
 
 class SolutionRequestTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -27,7 +27,7 @@ class SolutionRequestTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model =models.SolutionRequest
         default_columns = ('name', 'version', 'solution_type', 'business_owner_contact', 'business_owner_tenant', 'design_contact')
-        fields = ['pk', 'id', 'name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements']
+        fields = ('pk', 'id', 'name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements')
         
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -38,7 +38,7 @@ class SolutionTemplateTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = models.SolutionTemplate
         default_columns = ('name', 'version', 'solution_type', 'business_owner_contact', 'business_owner_tenant', 'design_contact')
-        fields = ['pk', 'id', 'name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements']
+        fields = ('pk', 'id', 'name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements')
 
 class FaultToleranceTable(NetBoxTable):
     name = tables.Column(linkify=True)
