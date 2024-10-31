@@ -63,6 +63,10 @@ class SLOViewSet(NetBoxModelViewSet):
     queryset = models.SLO.objects.all()
     serializer_class = serializers.SLOSerializer
 
+class SLAViewSet(NetBoxModelViewSet):
+    queryset = models.SLA.objects.all()
+    serializer_class = serializers.SLASerializer
+
 class SolutionTemplateViewSet(NetBoxModelViewSet):
     queryset = models.SolutionTemplate.objects.all()
     serializer_class = serializers.SolutionTemplateSerializer

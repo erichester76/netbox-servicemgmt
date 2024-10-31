@@ -80,4 +80,15 @@ urlpatterns = [
     path('slos/<int:pk>/delete/', views.SLODeleteView.as_view(), name='slo_delete'),
     path('slos/bulk-import/', views.SLOBulkImportView.as_view(), name='slo_bulk_import'),
     path('slos/<int:pk>/changelog/', views.SLOChangeLogView.as_view(), name='slo_changelog',  kwargs={'model': models.SLO}),
+
+   # Service Level Agreements (SLA) URLs
+    path('slas/', views.SLAListView.as_view(), name='sla_list'),
+    path('slas/<int:pk>/', views.SLADetailView.as_view(), name='sla'),
+    path('slas/add/', views.SLAEditView.as_view(), name='sla_add'),
+    path('slas/<int:pk>/edit/', views.SLAEditView.as_view(), name='sla_edit'),
+    path('slas/<int:pk>/delete/', views.SLADeleteView.as_view(), name='sla_delete'),
+    path('slas/bulk-import/', views.SLABulkImportView.as_view(), name='sla_bulk_import'),
+    path('slas/<int:pk>/changelog/', views.SLAChangeLogView.as_view(), name='sla_changelog',  kwargs={'model': models.SLA}),
+
+
 ]

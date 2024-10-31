@@ -6,6 +6,7 @@ app_name = 'netbox_servicemgmt'
 
 router = NetBoxRouter()
 router.register(r'slo', views.SLOViewSet)
+router.register(r'sla', views.SLAViewSet)
 router.register(r'solution-templates', views.SolutionTemplateViewSet)
 router.register(r'fault-tolerances', views.FaultToleranceViewSet)
 router.register(r'service-templates', views.ServiceTemplateViewSet)

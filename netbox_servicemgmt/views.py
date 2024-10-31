@@ -92,7 +92,27 @@ class SLOBulkImportView(generic.BulkImportView):
 class SLOChangeLogView(base_views.BaseChangeLogView):
     base_model = models.SLO
 
+# SLA Views
+class SLAListView(generic.ObjectListView):
+    queryset = models.SLA.objects.all()
+    table = tables.SLATable
 
+class SLADetailView(base_views.BaseObjectView):
+    queryset = models.SLA.objects.all()
+
+class SLAEditView(generic.ObjectEditView):
+    queryset = models.SLA.objects.all()
+    form = forms.SLAForm
+
+class SLADeleteView(generic.ObjectDeleteView):
+    queryset = models.SLA.objects.all()
+
+class SLABulkImportView(generic.BulkImportView):
+    queryset = models.SLA.objects.all()
+    model_form = forms.SLAImportForm
+
+class SLAChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.SLA
 
 # Fault Tolerence Views
 class SolutionRequestListView(generic.ObjectListView):

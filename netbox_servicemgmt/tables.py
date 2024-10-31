@@ -10,7 +10,14 @@ class SLOTable(NetBoxTable):
         default_columns = ('name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_reponse')
         fields = ('pk', 'id', 'name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_reponse')
     
-    
+class SLATable(NetBoxTable):
+    name = tables.Column(linkify=True)
+
+    class Meta(NetBoxTable.Meta):
+        model = models.SLA 
+        default_columns = ('name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
+        fields = ['pk', 'id', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+
 class SolutionRequestTable(NetBoxTable):
     name = tables.Column(linkify=True)
     design_contact = tables.Column(linkify=True)

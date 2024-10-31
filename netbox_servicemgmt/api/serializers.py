@@ -6,6 +6,12 @@ class SLOSerializer(NetBoxModelSerializer):
         model = models.SLO
         fields = ['id', 'name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response']
 
+class SLASerializer(NetBoxModelSerializer):
+    class Meta:
+        model = models.SLA
+        fields = ['id', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+
+
 class SolutionTemplateSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.SolutionTemplate

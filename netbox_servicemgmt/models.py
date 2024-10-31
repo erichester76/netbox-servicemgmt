@@ -24,6 +24,20 @@ STATUS_CHOICES = [
     (STATUS_DECOMMISSIONED, 'decommissioned'),
 ]
     
+# Status choices
+DATA_PUBLIC = 'public'
+DATA_INTERNAL = 'internal_use'
+DATA_CONFIDENTIAL = 'confidential'
+DATA_RESTRICTED= 'restricted'
+
+DATA_CHOICES = [
+    (DATA_PUBLIC, 'public'),
+    (DATA_INTERNAL, 'internal_use'),
+    (DATA_CONFIDENTIAL, 'confidential'),
+    (DATA_RESTRICTED, 'restricted'),
+]
+    
+
 # Service Level Objective (SLO) Model
 class SLO(NetBoxModel):
     name = models.CharField(max_length=255)
@@ -44,6 +58,21 @@ class SLO(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:slo', kwargs={'pk': self.pk})
+ 
+ # Service Level Objective (SLA) Model
+class SLA(NetBoxModel):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sla_slo',verbose_name='Assigned SLO Profile')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sla_business_owners', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sla_business_owners', verbose_name='Business Owner Contact')
+    technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sla_technical_contacts', verbose_name='Technical Contact')
+    data_classification = models.CharField(
+        max_length=20,
+        choices=DATA_CHOICES,  
+        default=DATA_PUBLIC
+    )
+
    
 # Solution Request Model
 class SolutionRequest(NetBoxModel):

@@ -28,6 +28,17 @@ class SLOImportForm(NetBoxModelImportForm):
         model = models.SLO
         fields = ['name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response']
 
+class SLAForm(NetBoxModelForm):
+    class Meta:
+        model = models.SLA
+        fields = ['name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+
+class SLAImportForm(NetBoxModelImportForm):
+    class Meta:
+        model = models.SLA
+        fields = ['name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+
+
 class SolutionRequestForm(NetBoxModelForm):
     class Meta:
         model = models.SolutionRequest
