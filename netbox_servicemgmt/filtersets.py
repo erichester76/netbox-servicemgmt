@@ -25,6 +25,16 @@ class SolutionTemplateFilterSet(NetBoxModelFilterSet):
         model = SolutionTemplate
         fields = ('name', 'design_contact', 'requirements')
 
+# SolutionRequest FilterSet
+class SolutionRequestFilterSet(NetBoxModelFilterSet):
+    design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
+    business_owner_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
+    business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
+   
+    class Meta:
+        model = SolutionTemplate
+        fields = ('name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements')
+
 # FaultTolerance FilterSet
 class FaultToleranceFilterSet(NetBoxModelFilterSet):
     primary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
@@ -72,4 +82,3 @@ class ServiceComponentFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = ServiceComponent
         fields = ('name', 'service_deployment', 'service_requirement', 'content_object')
- """

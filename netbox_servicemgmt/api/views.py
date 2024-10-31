@@ -62,6 +62,7 @@ def get_object_fields(request, object_type_id):
 class SLOViewSet(NetBoxModelViewSet):
     queryset = models.SLO.objects.all()
     serializer_class = serializers.SLOSerializer
+    filterset_class = filtersets.SLOFilterSet
 
 class SLAViewSet(NetBoxModelViewSet):
     queryset = models.SLA.objects.all()
@@ -71,27 +72,34 @@ class SLAViewSet(NetBoxModelViewSet):
 class SolutionTemplateViewSet(NetBoxModelViewSet):
     queryset = models.SolutionTemplate.objects.all()
     serializer_class = serializers.SolutionTemplateSerializer
+    filterset_class = filtersets.SolutionTemplateFilterSet
 
 class SolutionRequestViewSet(NetBoxModelViewSet):
     queryset = models.SolutionTemplate.objects.all()
     serializer_class = serializers.SolutionRequestSerializer
+    filterset_class = filtersets.SolutionRequestFilterSet
 
 class FaultToleranceViewSet(NetBoxModelViewSet):
     queryset = models.FaultTolerance.objects.all()
     serializer_class = serializers.FaultToleranceSerializer
+    filterset_class = filtersets.FaultToleranceFilterSet
 
 class ServiceTemplateViewSet(NetBoxModelViewSet):
     queryset = models.ServiceTemplate.objects.all()
     serializer_class = serializers.ServiceTemplateSerializer
+    filterset_class = filtersets.ServiceTemplateFilterSet
 
 class ServiceRequirementViewSet(NetBoxModelViewSet):
     queryset = models.ServiceRequirement.objects.all()
     serializer_class = serializers.ServiceRequirementSerializer
-    
+    filterset_class = filtersets.ServiceRequirementFilterSet
+
 class ServiceDeploymentViewSet(NetBoxModelViewSet):
     queryset = models.ServiceDeployment.objects.all()
     serializer_class = serializers.ServiceDeploymentSerializer
+    filterset_class = filtersets.ServiceDeploymentFilterSet
 
 class ServiceComponentViewSet(NetBoxModelViewSet):
     queryset = models.ServiceComponent.objects.all()
     serializer_class = serializers.ServiceComponentSerializer
+    filterset_class = filtersets.ServiceComponentFilterSet
