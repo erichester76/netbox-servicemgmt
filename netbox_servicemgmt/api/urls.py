@@ -2,7 +2,7 @@ from netbox.api.routers import NetBoxRouter
 from django.urls import path
 from . import views
 
-app_name = 'netbox-servicemgmt'
+app_name = 'netboxservicemgmt'
 
 router = NetBoxRouter()
 router.register(r'slos', views.SLOViewSet)
