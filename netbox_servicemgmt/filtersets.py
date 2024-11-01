@@ -15,7 +15,7 @@ class SLOFilterSet(NetBoxModelFilterSet):
 class SLAFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = SLA
-        fields = ('name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
+        fields = ('name', 'uuid', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
         
 # SolutionTemplate FilterSet
 class SolutionTemplateFilterSet(NetBoxModelFilterSet):

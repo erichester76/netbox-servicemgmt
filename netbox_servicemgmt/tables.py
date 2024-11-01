@@ -20,7 +20,7 @@ class SLATable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = models.SLA 
         default_columns = ('name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
-        fields = ( 'pk', 'id', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
+        fields = ( 'pk', 'id', 'uuid', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
 
 class SolutionRequestTable(NetBoxTable):
     name = tables.Column(linkify=True)
