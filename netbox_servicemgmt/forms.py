@@ -3,6 +3,7 @@ from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from dcim.models import Device
+from virtualization.models import VirtualMachine
 
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
@@ -31,7 +32,11 @@ class SLOImportForm(NetBoxModelImportForm):
 class SLAForm(NetBoxModelForm):
     class Meta:
         model = models.SLA
-        fields = ['name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+        virtual_machines = forms.ModelMultipleChoiceField(
+            queryset=VirtualMachine.objects.all(),
+            required=False
+        )
+        fields = ['name', 'uuid', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification', 'virtual_machines' ]
 
 class SLAImportForm(NetBoxModelImportForm):
     class Meta:

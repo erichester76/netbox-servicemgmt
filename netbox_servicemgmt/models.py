@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from tenancy.models import Tenant, Contact
 from dcim.models import Site, Manufacturer
 from taggit.managers import TaggableManager
+from virtualization.models import VirtualMachine
 from django.urls import reverse  # Import reverse
 
 # Status choices
@@ -62,6 +63,7 @@ class SLO(NetBoxModel):
  # Service Level Objective (SLA) Model
 class SLA(NetBoxModel):
     name = models.CharField(max_length=255)
+    uuid = models.CharField(max_length=30, null=True)
     description = models.TextField()
     slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sla_slo',verbose_name='Assigned SLO Profile')
     business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sla_business_owners', verbose_name='Business Owner Department')
@@ -71,6 +73,12 @@ class SLA(NetBoxModel):
         max_length=20,
         choices=DATA_CHOICES,  
     )
+    virtual_machines = models.ManyToManyField(
+        VirtualMachine,
+        related_name='sla',
+        blank=True
+    )
+    
     class Meta:
         ordering = ['name']
         verbose_name = ('Service Level Agreement')
