@@ -9,7 +9,7 @@ class SLOSerializer(NetBoxModelSerializer):
 class SLASerializer(NetBoxModelSerializer):
     class Meta:
         model = models.SLA
-        fields = ['id', 'name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
+        fields = ['id', 'name', 'uuid', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' ]
 
 class SolutionTemplateSerializer(NetBoxModelSerializer):
     class Meta:
