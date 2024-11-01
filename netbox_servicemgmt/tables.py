@@ -12,7 +12,11 @@ class SLOTable(NetBoxTable):
     
 class SLATable(NetBoxTable):
     name = tables.Column(linkify=True)
-
+    slo = tables.Column(linkify=True)
+    business_owner_contact = tables.Column(linkify=True)
+    businss_owner_tenant = tables.Column(linkify=True)
+    technical_contact = tables.Column(linkify=True)
+    
     class Meta(NetBoxTable.Meta):
         model = models.SLA 
         default_columns = ('name', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
