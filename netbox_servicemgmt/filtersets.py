@@ -23,7 +23,7 @@ class SolutionTemplateFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = SolutionTemplate
-        fields = ('name', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
+        fields = ('name', 'version', 'design_contact', 'solution_type')
 
 # SolutionRequest FilterSet
 class SolutionRequestFilterSet(NetBoxModelFilterSet):
@@ -53,7 +53,7 @@ class ServiceTemplateFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceTemplate
-        fields = ('name','version', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo')
+        fields = ('name','version', 'solution_templates', 'design_contact', 'service_type')
 
 # ServiceRequirement FilterSet
 class ServiceRequirementFilterSet(NetBoxModelFilterSet):
@@ -63,11 +63,8 @@ class ServiceRequirementFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceRequirement
-        fields = ('name', 'version', 'service_template', 'requirement_owner', 'service_slo',
-            'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
-            'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
-            'offsite_backup', 'airgap_backup'
-        )
+        fields = ('name', 'version', 'service_template')
+        
 # ServiceDeployment FilterSet
 class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
     business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
@@ -75,8 +72,8 @@ class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceDeployment
-        fields = ('name', 'version', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
-
+        fields = ('name', 'version', 'service_template')
+        
 # ServiceComponent FilterSet
 class ServiceComponentFilterSet(NetBoxModelFilterSet):
     service_deployment = django_filters.ModelChoiceFilter(queryset=ServiceDeployment.objects.all())
