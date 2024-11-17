@@ -105,56 +105,25 @@ class ServiceRequirementForm(NetBoxModelForm):
         model = models.ServiceRequirement
         fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'object_type']
 
-    # Dynamically add requirement fields
-    requirement_fields = [
-        ('requirement1_field', 'requirement1_value'),
-        ('requirement2_field', 'requirement2_value'),
-        ('requirement3_field', 'requirement3_value'),
-        ('requirement4_field', 'requirement4_value'),
-        ('requirement5_field', 'requirement5_value'),
-        ('requirement6_field', 'requirement6_value'),
-        ('requirement7_field', 'requirement7_value'),
-        ('requirement8_field', 'requirement8_value'),
-        ('requirement9_field', 'requirement9_value'),
-        ('requirement10_field', 'requirement10_value'),
-        ('requirement11_field', 'requirement11_value'),
-        ('requirement12_field', 'requirement12_value'),
-        ('requirement13_field', 'requirement13_value'),
-        ('requirement14_field', 'requirement14_value'),
-        ('requirement15_field', 'requirement15_value'),
-        ('requirement16_field', 'requirement16_value'),
-        ('requirement17_field', 'requirement17_value'),
-        ('requirement18_field', 'requirement18_value'),
-        ('requirement19_field', 'requirement19_value'),
-        ('requirement20_field', 'requirement20_value'),
-    ]
 
 class ServiceRequirementImportForm(NetBoxModelImportForm):
     
     class Meta:
         model = models.ServiceRequirement
-        fields = [
-            'name', 'description', 'service_template', 'requirement_owner', 'service_slo',
-            'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
-            'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
-            'offsite_backup', 'airgap_backup', 'object_type'
-        ]
+        fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'object_type']
+
         
 class ServiceDeploymentForm(NetBoxModelForm):
     class Meta:
         model = models.ServiceDeployment
         fields = ['name', 'description', 'version', 'service_template', 'deployment_rfc', 'maintenance_window', 
-                  'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 
-                  'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 
-                  'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
+                  'production_readiness_checklist', 'major_incident_coordinator_contact', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
 class ServiceDeploymentImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.ServiceDeployment
         fields = ['name', 'description', 'version', 'service_template', 'deployment_rfc', 'maintenance_window', 
-                  'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 
-                  'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 
-                  'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact']
+                  'production_readiness_checklist', 'major_incident_coordinator_contact', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
 class ServiceComponentForm(NetBoxModelForm):
     class Meta:
