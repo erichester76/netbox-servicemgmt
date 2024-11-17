@@ -48,7 +48,8 @@ class SolutionRequestForm(NetBoxModelForm):
     class Meta:
         model = models.SolutionRequest
         fields = ['name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
-                  'solution_type', 'requirements']
+                  'solution_type', 'data_classification', 'rfp_status', 'vendor_management_status', 'clustered', 'multi_site', 
+                  'slo', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup','requirements']
         
 class SolutionRequestImportForm(NetBoxModelImportForm):
     class Meta:
