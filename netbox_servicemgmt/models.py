@@ -117,6 +117,37 @@ class SLA(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:sla', kwargs={'pk': self.pk})
 
+
+# High Availability (HA) Model
+class FaultTolerance(NetBoxModel):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True)
+    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='ft_primary_sites')
+    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_secondary_sites')
+    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_tertiary_sites')  
+    instances_per_site = models.IntegerField(null=True)
+    vip_required = models.BooleanField(null=True)
+    offsite_replication = models.BooleanField(null=True)
+    clustered = models.BooleanField(null=True)
+    multi_site = models.BooleanField(null=True)
+    multi_region = models.BooleanField(null=True)
+    snapshots = models.BooleanField(null=True)
+    backup_schedule = models.CharField(max_length=255, null=True)
+    offsite_backup = models.BooleanField(null=True)
+    airgap_backup = models.BooleanField(null=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = ('Fault Tolerence Model')
+        verbose_name_plural = ('Fault Tolerence Models')    
+    
+    def __str__(self):
+        return f'{self.name}'
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_servicemgmt:faulttolerance', kwargs={'pk': self.pk})
+
+
 # Solution Request Model
 class SolutionRequest(NetBoxModel):
     name = models.CharField(max_length=255)
@@ -172,14 +203,17 @@ class SolutionRequest(NetBoxModel):
 class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    solution_request = models.ForeignKey(SolutionRequest, on_delete=models.CASCADE, null=True, related_name='solution_templates',  verbose_name='Solution Request')
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_designers', verbose_name='Architect')
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='solution_business_owners', verbose_name='Business Owner Department')
-    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owners', verbose_name='Business Owner Contact')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sreq_designers', verbose_name='Architect')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
-    requirements = models.TextField()
-    version = models.CharField(max_length=50, null=True, help_text="Version of the solution template")
-    
+    version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
+    vendors = models.ManyToOneRel(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='sreq_vendors', verbose_name='Vendors')
+    sla_number = models.CharField(max_length=50, null=True)
+    slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
+    data_classification = models.CharField(null=True,choices=DATA_CHOICES)
+    fault_tolerance = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
+        
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
@@ -205,35 +239,6 @@ class SolutionTemplate(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:solutiontemplate', kwargs={'pk': self.pk})
-
-# High Availability (HA) Model
-class FaultTolerance(NetBoxModel):
-    name = models.CharField(max_length=255)
-    description = models.TextField(null=True)
-    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='ft_primary_sites')
-    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_secondary_sites')
-    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_tertiary_sites')  
-    instances_per_site = models.IntegerField(null=True)
-    vip_required = models.BooleanField(null=True)
-    offsite_replication = models.BooleanField(null=True)
-    clustered = models.BooleanField(null=True)
-    multi_site = models.BooleanField(null=True)
-    multi_region = models.BooleanField(null=True)
-    snapshots = models.BooleanField(null=True)
-    backup_schedule = models.CharField(max_length=255, null=True)
-    offsite_backup = models.BooleanField(null=True)
-    airgap_backup = models.BooleanField(null=True)
-
-    class Meta:
-        ordering = ['name']
-        verbose_name = ('Fault Tolerence Model')
-        verbose_name_plural = ('Fault Tolerence Models')    
-    
-    def __str__(self):
-        return f'{self.name}'
-    
-    def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:faulttolerance', kwargs={'pk': self.pk})
 
 
 # Service Template Model
