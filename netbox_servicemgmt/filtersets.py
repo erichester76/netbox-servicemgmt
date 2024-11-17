@@ -1,9 +1,6 @@
-import django_filters
 from netbox.filtersets import NetBoxModelFilterSet
 from .models import SLA, SLO, SolutionRequest, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
-from dcim.models import Site
-from tenancy.models import Tenant, Contact
-from taggit.models import Tag
+
 
 # SLO FilterSet
 class SLOFilterSet(NetBoxModelFilterSet):
@@ -19,7 +16,6 @@ class SLAFilterSet(NetBoxModelFilterSet):
         
 # SolutionTemplate FilterSet
 class SolutionTemplateFilterSet(NetBoxModelFilterSet):
-    design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
 
     class Meta:
         model = SolutionTemplate
@@ -27,19 +23,12 @@ class SolutionTemplateFilterSet(NetBoxModelFilterSet):
 
 # SolutionRequest FilterSet
 class SolutionRequestFilterSet(NetBoxModelFilterSet):
-    #design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
-    #business_owner_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
-    #business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
-   
     class Meta:
         model = SolutionRequest
         fields = ('name','version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
 
 # FaultTolerance FilterSet
 class FaultToleranceFilterSet(NetBoxModelFilterSet):
-    primary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-    secondary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-    tertiary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
 
     class Meta:
         model = FaultTolerance
@@ -47,9 +36,6 @@ class FaultToleranceFilterSet(NetBoxModelFilterSet):
 
 # ServiceTemplate FilterSet
 class ServiceTemplateFilterSet(NetBoxModelFilterSet):
-    design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
-    vendor = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
-    tags = django_filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all())
 
     class Meta:
         model = ServiceTemplate
@@ -57,18 +43,12 @@ class ServiceTemplateFilterSet(NetBoxModelFilterSet):
 
 # ServiceRequirement FilterSet
 class ServiceRequirementFilterSet(NetBoxModelFilterSet):
-    primary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-    secondary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-    tertiary_site = django_filters.ModelChoiceFilter(queryset=Site.objects.all())
-
     class Meta:
         model = ServiceRequirement
         fields = ('name', 'version', 'service_template')
         
 # ServiceDeployment FilterSet
 class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
-    business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
-    service_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
 
     class Meta:
         model = ServiceDeployment
@@ -76,8 +56,6 @@ class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
         
 # ServiceComponent FilterSet
 class ServiceComponentFilterSet(NetBoxModelFilterSet):
-    service_deployment = django_filters.ModelChoiceFilter(queryset=ServiceDeployment.objects.all())
-    service_requirement = django_filters.ModelChoiceFilter(queryset=ServiceRequirement.objects.all())
 
     class Meta:
         model = ServiceComponent
