@@ -12,19 +12,46 @@ from django.urls import reverse  # Import reverse
 STATUS_INACTIVE = 'inactive'
 STATUS_ACTIVE = 'active'
 STATUS_STAGED = 'staged'
+STATUS_TESTING = 'testing'
 STATUS_DETECTED = 'detected'
 STATUS_REPLACED = 'replaced'
 STATUS_DECOMMISSIONED = 'decommissioned'
+STATUS_NONE = 'none'
+STATUS_PLANNING = 'planning'
+STATUS_DRAFT = 'draft'
+STATUS_SUBMITTED = 'submitted'
+STATUS_BID = 'outforbid'
+STATUS_AWARDED = 'awarded'
+STATUS_REVIEW = 'awarded'
+STATUS_COMPLETE = 'awarded'
 
 STATUS_CHOICES = [
     (STATUS_INACTIVE, 'inactive'),
     (STATUS_ACTIVE, 'active'),
+    (STATUS_PLANNING, 'planning')
     (STATUS_STAGED, 'staged'),
-    (STATUS_DETECTED, 'detected'),
+    (STATUS_TESTING, 'testing'),
     (STATUS_REPLACED, 'replaced'),
     (STATUS_DECOMMISSIONED, 'decommissioned'),
 ]
-    
+
+REQUEST_CHOICES = [
+    (STATUS_NONE, 'None'),
+    (STATUS_PLANNING, 'Planning'),
+    (STATUS_DRAFT, 'Draft'),
+    (STATUS_SUBMITTED, 'Submitted'),
+    (STATUS_BID, 'Out for Bids'),
+    (STATUS_AWARDED, 'Awarded'),
+]
+
+REVIEW_CHOICES = [
+    (STATUS_NONE, 'None'),
+    (STATUS_DRAFT, 'Draft'),
+    (STATUS_SUBMITTED, 'Submitted'),
+    (STATUS_REVIEW, 'Under Review'),
+    (STATUS_COMPLETE, 'COmplete'),
+]   
+
 # Status choices
 DATA_PUBLIC = 'public'
 DATA_INTERNAL = 'internal_use'
@@ -98,9 +125,19 @@ class SolutionRequest(NetBoxModel):
     business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
-    requirements = models.TextField()
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
-    
+    slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
+    data_classification = models.CharField(null=True,choices=DATA_CHOICES)
+    clustered = models.BooleanField(null=True)
+    multi_site = models.BooleanField(null=True)
+    multi_region = models.BooleanField(null=True)
+    offsite_replication = models.BooleanField(null=True)
+    offsite_backup = models.BooleanField(null=True)
+    airgap_backup = models.BooleanField(null=True)
+    rfp_status = models.TextField(null=True,choices=REQUEST_CHOICES)
+    vendor_managment_status = models.TextField(null=True,choices=REVIEW_CHOICES)
+    requirements = models.TextField(null=True,Blank=True,verbose_name='Additional Requirements')
+
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
