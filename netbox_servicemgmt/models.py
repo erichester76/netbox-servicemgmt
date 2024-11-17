@@ -182,7 +182,7 @@ class SolutionRequest(NetBoxModel):
     offsite_replication = models.BooleanField(null=True)
     offsite_backup = models.BooleanField(null=True)
     airgap_backup = models.BooleanField(null=True)
-    ref_ref = models.TextField(blank=True, null=True)
+    rfp_ref = models.TextField(blank=True, null=True)
     rfp_status = models.TextField(null=True, choices=REQUEST_CHOICES)
 
     requirements = models.TextField(null=True, blank=True, verbose_name='Additional Requirements')
