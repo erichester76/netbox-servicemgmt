@@ -173,7 +173,7 @@ class SolutionRequest(NetBoxModel):
     functional_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_fa_owners', verbose_name='Functional Area Sponsor')
     functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_sfa_owners', verbose_name='Functional Sub-Area Sponsor')
     solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
-    version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
+    version = models.IntegerField(null=True, blank=True)
     slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, blank=True, null=True, related_name='sor_slo',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True, blank=True, choices=DATA_CHOICES)
     clustered = models.BooleanField(blank=True,null=True)
@@ -220,7 +220,7 @@ class SolutionTemplate(NetBoxModel):
     description = models.TextField()
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sot_designers', verbose_name='Architect')
     solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
-    version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
+    version = models.IntegerField(null=True, blank=True)
     vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='sot_vendors', verbose_name='Vendors')
     sla_number = models.CharField(max_length=50, null=True)
     slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sot_slo',verbose_name='Assigned SLO Profile')
@@ -266,7 +266,7 @@ class ServiceTemplate(NetBoxModel):
     )    
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
     service_type = models.CharField(max_length=255)
-    version = models.CharField(max_length=50, null=True, help_text="Version of the service")
+    version = models.IntegerField(null=True, blank=True)
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -313,7 +313,7 @@ class ServiceRequirement(NetBoxModel):
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers', verbose_name='Requirement Owner')
     fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='sr_ft', verbose_name='Assigned Fault Tolerance Profile')
     service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
-    version = models.CharField(max_length=50, null=True, help_text="Version of the solution template")
+    version = models.IntegerField(null=True, blank=True)
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -359,7 +359,7 @@ class ServiceDeployment(NetBoxModel):
     operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_operations', verbose_name='Operations Contact')
     monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring', verbose_name='Monitoring Contact')
     maintenance_window = models.CharField(max_length=255, verbose_name='Maintenance Window Timeframes')
-    version = models.CharField(max_length=50, null=True, help_text="Version of the deployment")
+    version = models.IntegerField(null=True, blank=True)
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -394,7 +394,7 @@ class ServiceComponent(NetBoxModel):
     object_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
-    version = models.CharField(max_length=50, null=True, help_text="Version of the Component")
+    version = models.IntegerField(null=True, blank=True)
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
