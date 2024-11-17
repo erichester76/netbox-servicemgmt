@@ -93,7 +93,7 @@ class SLA(NetBoxModel):
     uuid = models.CharField(max_length=30, null=True)
     description = models.TextField()
     slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sla_slo',verbose_name='Assigned SLO Profile')
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sla_business_owners', verbose_name='Business Owner Department')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='sla_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sla_business_owners', verbose_name='Business Owner Contact')
     technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sla_technical_contacts', verbose_name='Technical Contact')
     data_classification = models.CharField(
@@ -122,9 +122,9 @@ class SLA(NetBoxModel):
 class FaultTolerance(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
-    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, related_name='ft_primary_sites')
-    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_secondary_sites')
-    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='ft_tertiary_sites')  
+    primary_site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, related_name='ft_primary_sites')
+    secondary_site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, blank=True, related_name='ft_secondary_sites')
+    tertiary_site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, blank=True, related_name='ft_tertiary_sites')  
     instances_per_site = models.IntegerField(null=True)
     vip_required = models.BooleanField(null=True)
     offsite_replication = models.BooleanField(null=True)
@@ -153,14 +153,14 @@ class SolutionRequest(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sreq_designers', verbose_name='Architect')
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Department')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
     vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='sreq_vendors', verbose_name='Vendors')
     sla_number = models.CharField(max_length=50, null=True)
     vendor_management_number = models.CharField(max_length=50, null=True)
-    slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
+    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
     clustered = models.BooleanField(null=True)
     multi_site = models.BooleanField(null=True)
@@ -168,9 +168,9 @@ class SolutionRequest(NetBoxModel):
     offsite_replication = models.BooleanField(null=True)
     offsite_backup = models.BooleanField(null=True)
     airgap_backup = models.BooleanField(null=True)
-    rfp_status = models.TextField(null=True,choices=REQUEST_CHOICES)
-    vendor_managment_status = models.TextField(null=True,choices=REVIEW_CHOICES)
-    requirements = models.TextField(null=True,Blank=True,verbose_name='Additional Requirements')
+    rfp_status = models.TextField(null=True, choices=REQUEST_CHOICES)
+    vendor_managment_status = models.TextField(null=True, choices=REVIEW_CHOICES)
+    requirements = models.TextField(null=True, blank=True, verbose_name='Additional Requirements')
 
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -204,15 +204,15 @@ class SolutionTemplate(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sreq_designers', verbose_name='Architect')
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Department')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
     vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='sreq_vendors', verbose_name='Vendors')
     sla_number = models.CharField(max_length=50, null=True)
-    slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
+    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
-    fault_tolerance = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
+    fault_tolerance = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
         
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -253,7 +253,7 @@ class ServiceTemplate(NetBoxModel):
     )    
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
     service_type = models.CharField(max_length=255)
-    vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor', verbose_name='Vendor')
+    vendor = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='st_vendor', verbose_name='Vendor')
     version = models.CharField(max_length=50, null=True, help_text="Version of the service")
     
     # Self-referencing foreign key to track the previous version of the template
