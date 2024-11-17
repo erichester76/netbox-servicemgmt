@@ -222,8 +222,6 @@ class SolutionTemplate(NetBoxModel):
     solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
     vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='sot_vendors', verbose_name='Vendors')
-    vendor_management_status = models.TextField(null=True, choices=REVIEW_CHOICES)
-    vendor_management_number = models.CharField(max_length=50, null=True)
     sla_number = models.CharField(max_length=50, null=True)
     slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sot_slo',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
@@ -268,7 +266,6 @@ class ServiceTemplate(NetBoxModel):
     )    
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
     service_type = models.CharField(max_length=255)
-    vendor = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='st_vendor', verbose_name='Vendor')
     version = models.CharField(max_length=50, null=True, help_text="Version of the service")
     
     # Self-referencing foreign key to track the previous version of the template
@@ -281,17 +278,19 @@ class ServiceTemplate(NetBoxModel):
         help_text="Previous version of this service"
     )
 
+    
+    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
+    service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='st_slo', verbose_name='Assigned Service Level Object Profile')
+    
+    vendor = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='st_vendor', verbose_name='Vendor')
+    vendor_management_status = models.TextField(null=True, choices=REVIEW_CHOICES)
+    vendor_management_number = models.CharField(max_length=50, null=True)
+
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,  
         default=STATUS_INACTIVE,   
     )
-    
-    #fault tolerence defaults, can be overridden at servicerequirement level
-    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
-    #slo defaults, can be overridden at servicerequirement level
-    service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='st_slo', verbose_name='Assigned Service Level Object Profile')
-
     #to fix conflict with ipam service templates
     tags = TaggableManager(related_name='netbox_servicemgmt_servicetemplates')
 
