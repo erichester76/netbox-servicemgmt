@@ -157,7 +157,7 @@ class SolutionRequest(NetBoxModel):
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
-    vendors = models.ManyToManyRel(Manufacturer, null=True, related_name='sreq_vendors', verbose_name='Vendors')
+    vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='sreq_vendors', verbose_name='Vendors')
     sla_number = models.CharField(max_length=50, null=True)
     vendor_management_number = models.CharField(max_length=50, null=True)
     slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
@@ -208,7 +208,7 @@ class SolutionTemplate(NetBoxModel):
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
-    vendors = models.ManyToManyRel(Manufacturer, null=True, related_name='sreq_vendors', verbose_name='Vendors')
+    vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='sreq_vendors', verbose_name='Vendors')
     sla_number = models.CharField(max_length=50, null=True)
     slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
@@ -253,7 +253,6 @@ class ServiceTemplate(NetBoxModel):
     )    
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
     service_type = models.CharField(max_length=255)
-    vendor_management_assessment = models.CharField(max_length=255)
     vendor = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, null=True, related_name='st_vendor', verbose_name='Vendor')
     version = models.CharField(max_length=50, null=True, help_text="Version of the service")
     
@@ -301,22 +300,9 @@ class ServiceRequirement(NetBoxModel):
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers', verbose_name='Requirement Owner')
 
     #overrides for service template slo
+    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.CASCADE, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
     service_slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     
-    #overrides for fault tolerence at service template level
-    primary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='sr_primary_site_overrides')
-    secondary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='sr_secondary_site_overrides')
-    tertiary_site = models.ForeignKey(Site, on_delete=models.CASCADE, null=True, blank=True, related_name='sr_tertiary_site_overrrides')  
-    instances_per_site = models.IntegerField(null=True, blank=True)
-    vip_required = models.BooleanField(null=True, blank=True)
-    offsite_replication = models.BooleanField(null=True, blank=True)
-    clustered = models.BooleanField(null=True, blank=True)
-    multi_site = models.BooleanField(null=True, blank=True)
-    multi_region = models.BooleanField(null=True, blank=True)
-    snapshots = models.BooleanField(null=True, blank=True)
-    backup_schedule = models.CharField(max_length=255, null=True, blank=True)
-    offsite_backup = models.BooleanField(null=True, blank=True)
-    airgap_backup = models.BooleanField(null=True, blank=True)
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution template")
     
     # Self-referencing foreign key to track the previous version of the template
