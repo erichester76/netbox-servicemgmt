@@ -90,7 +90,7 @@ class ServiceTemplateForm(NetBoxModelForm):
     class Meta:
         model = models.ServiceTemplate
         fields = ['name', 'description', 'version', 'solution_templates', 'design_contact', 'service_type', 'vendor', 
-                  'vendor_management_assessment', 'vendor_management_status', 'fault_tolerence', 'service_slo']
+                  'vendor_management_number', 'vendor_management_status', 'fault_tolerence', 'service_slo']
 
 class ServiceTemplateImportForm(NetBoxModelImportForm):
     class Meta:
