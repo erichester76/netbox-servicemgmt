@@ -1,6 +1,6 @@
 import django_filters
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import SLA, SLO, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
+from .models import SLA, SLO, SolutionRequest, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
 from dcim.models import Site
 from tenancy.models import Tenant, Contact
 from taggit.models import Tag
@@ -32,7 +32,7 @@ class SolutionRequestFilterSet(NetBoxModelFilterSet):
     #business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
    
     class Meta:
-        model = SolutionTemplate
+        model = SolutionRequest
         fields = ('name','version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
 
 # FaultTolerance FilterSet
