@@ -48,28 +48,33 @@ class SolutionRequestForm(NetBoxModelForm):
     class Meta:
         model = models.SolutionRequest
         fields = ['name', 'description', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
-                'data_classification', 'sla_number', 'rfp_status', 'vendors', 'vendor_management_status', 'vendor_management_number', 'clustered', 'multi_site', 
-                'slo', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'requirements']
-        
+                'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 
+                'functional_sub_area_sponsor_tenant', 'data_classification', 'rfp_status', 'rfp_ref', 'clustered', 'multi_site', 
+                'slo', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'requirements']        
 class SolutionRequestImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.SolutionRequest
         fields = ['name', 'description', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
-                'data_classification', 'sla_number', 'rfp_status', 'vendors', 'vendor_management_status', 'vendor_management_number', 'clustered', 'multi_site', 
+                'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 
+                'functional_sub_area_sponsor_tenant', 'data_classification', 'rfp_status', 'rfp_ref', 'clustered', 'multi_site', 
                 'slo', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'requirements']
-
 
 class SolutionTemplateForm(NetBoxModelForm):
     class Meta:
         model = models.SolutionTemplate
-        fields = ['name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
-                  'solution_type', 'requirements']
+        fields = ['name', 'description', 'version', 'service_request', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
+                'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 
+                'functional_sub_area_sponsor_tenant', 'slo', 'fault_tolerence', 'data_classification', 'sla_number', 'vendors', 
+                'vendor_management_number', 'vendor_management_status']
+               
         
 class SolutionTemplateImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.SolutionTemplate
-        fields = ['name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant',
-                  'solution_type', 'requirements']
+        fields = ['name', 'description', 'version', 'service_request', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
+                'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 
+                'functional_sub_area_sponsor_tenant', 'slo', 'fault_tolerence', 'data_classification', 'sla_number', 'vendors', 
+                'vendor_management_number', 'vendor_management_status']
         
 class FaultToleranceForm(NetBoxModelForm):
     class Meta:
