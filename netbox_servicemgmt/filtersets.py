@@ -9,13 +9,13 @@ from taggit.models import Tag
 class SLOFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = SLO
-        fields = ('name', 'rpo', 'rto', 'sev1_response', 'sev2_response')
+        fields = ('name', 'rpo', 'rto')
 
 # SLA FilterSet
 class SLAFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = SLA
-        fields = ('name', 'uuid', 'description', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
+        fields = ('name', 'slo', 'business_owner_contact', 'business_owner_tenant', 'technical_contact', 'data_classification' )
         
 # SolutionTemplate FilterSet
 class SolutionTemplateFilterSet(NetBoxModelFilterSet):
@@ -23,17 +23,17 @@ class SolutionTemplateFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = SolutionTemplate
-        fields = ('name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements')
+        fields = ('name', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
 
 # SolutionRequest FilterSet
 class SolutionRequestFilterSet(NetBoxModelFilterSet):
-    design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
-    business_owner_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
-    business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
+    #design_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
+    #business_owner_contact = django_filters.ModelChoiceFilter(queryset=Contact.objects.all())
+    #business_owner_tenant = django_filters.ModelChoiceFilter(queryset=Tenant.objects.all())
    
     class Meta:
         model = SolutionTemplate
-        fields = ('name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type', 'requirements')
+        fields = ('name','version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
 
 # FaultTolerance FilterSet
 class FaultToleranceFilterSet(NetBoxModelFilterSet):
@@ -43,7 +43,7 @@ class FaultToleranceFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = FaultTolerance
-        fields = ('name', 'description', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule')
+        fields = ('name','vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule')
 
 # ServiceTemplate FilterSet
 class ServiceTemplateFilterSet(NetBoxModelFilterSet):
@@ -53,7 +53,7 @@ class ServiceTemplateFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceTemplate
-        fields = ('name', 'description', 'version', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo')
+        fields = ('name','version', 'solution_templates', 'design_contact', 'service_type', 'vendor_management_assessment', 'vendor', 'fault_tolerence', 'service_slo')
 
 # ServiceRequirement FilterSet
 class ServiceRequirementFilterSet(NetBoxModelFilterSet):
@@ -63,10 +63,10 @@ class ServiceRequirementFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceRequirement
-        fields = ('name', 'description', 'version', 'service_template', 'requirement_owner', 'service_slo',
+        fields = ('name', 'version', 'service_template', 'requirement_owner', 'service_slo',
             'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
             'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
-            'offsite_backup', 'airgap_backup', 'object_type'
+            'offsite_backup', 'airgap_backup'
         )
 # ServiceDeployment FilterSet
 class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
@@ -75,7 +75,7 @@ class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceDeployment
-        fields = ('name', 'description', 'version', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
+        fields = ('name', 'version', 'service_template', 'production_readiness_checklist', 'business_owner_tenant', 'business_owner_contact', 'service_owner_tenant', 'service_owner_contact', 'major_incident_coordinator_contact', 'functional_area_sponsor_tenant', 'functional_sub_area_sponsor_tenant', 'engineering_contact', 'operations_contact', 'monitoring_contact')
 
 # ServiceComponent FilterSet
 class ServiceComponentFilterSet(NetBoxModelFilterSet):
@@ -84,4 +84,4 @@ class ServiceComponentFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ServiceComponent
-        fields = ( 'name', 'description', 'version', 'service_deployment', 'service_requirement', 'object_type', 'object_id')
+        fields = ( 'name', 'version', 'service_deployment', 'service_requirement')
