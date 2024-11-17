@@ -310,14 +310,10 @@ class ServiceTemplate(NetBoxModel):
 class ServiceRequirement(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    
     service_template = models.ForeignKey(ServiceTemplate, on_delete=models.SET_NULL, related_name='service_requirements', verbose_name='Service Template')
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers', verbose_name='Requirement Owner')
-
-    #overrides for service template slo
     fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
     service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
-    
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution template")
     
     # Self-referencing foreign key to track the previous version of the template
