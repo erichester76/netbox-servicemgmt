@@ -28,7 +28,7 @@ STATUS_COMPLETE = 'awarded'
 STATUS_CHOICES = [
     (STATUS_INACTIVE, 'inactive'),
     (STATUS_ACTIVE, 'active'),
-    (STATUS_PLANNING, 'planning')
+    (STATUS_PLANNING, 'planning'),
     (STATUS_STAGED, 'staged'),
     (STATUS_TESTING, 'testing'),
     (STATUS_REPLACED, 'replaced'),
@@ -126,6 +126,9 @@ class SolutionRequest(NetBoxModel):
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sreq_business_owners', verbose_name='Business Owner Contact')
     solution_type = models.CharField(max_length=255, null=True)
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution request")
+    vendors = models.ManyToOneRel(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='sreq_vendors', verbose_name='Vendors')
+    sla_number = models.CharField(max_length=50, null=True)
+    vendor_management_number = models.CharField(max_length=50, null=True)
     slo = models.ForeignKey(SLO, on_delete=models.CASCADE, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
     clustered = models.BooleanField(null=True)
