@@ -47,15 +47,16 @@ class SLAImportForm(NetBoxModelImportForm):
 class SolutionRequestForm(NetBoxModelForm):
     class Meta:
         model = models.SolutionRequest
-        fields = ['name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
-                  'solution_type', 'data_classification', 'rfp_status', 'vendor_management_status', 'clustered', 'multi_site', 
-                  'slo', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup','requirements']
+        fields = ['name', 'description', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
+                'data_classification', 'sla_number', 'rfp_status', 'vendors', 'vendor_management_status', 'vendor_management_number', 'clustered', 'multi_site', 
+                'slo', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'requirements']
         
 class SolutionRequestImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.SolutionRequest
-        fields = ['name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
-                  'solution_type', 'requirements']
+        fields = ['name', 'description', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
+                'data_classification', 'sla_number', 'rfp_status', 'vendors', 'vendor_management_status', 'vendor_management_number', 'clustered', 'multi_site', 
+                'slo', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'requirements']
 
 
 class SolutionTemplateForm(NetBoxModelForm):
