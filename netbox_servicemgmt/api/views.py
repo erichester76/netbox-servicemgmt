@@ -75,7 +75,7 @@ class SolutionTemplateViewSet(NetBoxModelViewSet):
     filterset_class = filtersets.SolutionTemplateFilterSet
 
 class SolutionRequestViewSet(NetBoxModelViewSet):
-    queryset = models.SolutionTemplate.objects.all()
+    queryset = models.SolutionRequest.objects.all()
     serializer_class = serializers.SolutionRequestSerializer
     filterset_class = filtersets.SolutionRequestFilterSet
 

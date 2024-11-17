@@ -14,7 +14,6 @@ urlpatterns = [
     path('solution-requests/bulk-import/', views.SolutionRequestBulkImportView.as_view(), name='solutionrequest_bulk_import'),
     path('solution-requests/<int:pk>/changelog/', views.SolutionRequestChangeLogView.as_view(), name='solutionrequest_changelog', kwargs={'model': models.SolutionRequest}),
    
-
     # Solution Template URLs
     path('solution-templates/', views.SolutionTemplateListView.as_view(), name='solutiontemplate_list'),
     path('solution-templates/<int:pk>/', views.SolutionTemplateDetailView.as_view(), name='solutiontemplate'),
