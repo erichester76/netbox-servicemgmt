@@ -279,7 +279,7 @@ class ServiceTemplate(NetBoxModel):
     )
 
     
-    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
     service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='st_slo', verbose_name='Assigned Service Level Object Profile')
     
     vendor = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='st_vendor', verbose_name='Vendor')
@@ -309,9 +309,9 @@ class ServiceTemplate(NetBoxModel):
 class ServiceRequirement(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_template = models.ForeignKey(ServiceTemplate, on_delete=models.SET_NULL, related_name='service_requirements', verbose_name='Service Template')
+    service_template = models.ForeignKey(ServiceTemplate, null=True, on_delete=models.SET_NULL, related_name='service_requirements', verbose_name='Service Template')
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers', verbose_name='Requirement Owner')
-    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, related_name='sr_ft', verbose_name='Assigned Fault Tolerance Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='sr_ft', verbose_name='Assigned Fault Tolerance Profile')
     service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
     version = models.CharField(max_length=50, null=True, help_text="Version of the solution template")
     
@@ -334,6 +334,7 @@ class ServiceRequirement(NetBoxModel):
     # Object Type field to link to any NetBox object type
     object_type = models.ForeignKey(
         ContentType, 
+        null=True,
         on_delete=models.SET_NULL, 
         limit_choices_to={'model__in': ['device', 'virtualmachine', 'softwareproduct', 'ipaddress', 'hostname', 'certificate', 'lbvirtualserver', 'container']},  # Filter by model names
         verbose_name="Attached Component Type"
@@ -350,7 +351,7 @@ class ServiceRequirement(NetBoxModel):
 class ServiceDeployment(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_template = models.ForeignKey(ServiceTemplate, on_delete=models.SET_NULL, related_name='service_deployments',  verbose_name='Service Template')
+    service_template = models.ForeignKey(ServiceTemplate, null=True, on_delete=models.SET_NULL, related_name='service_deployments',  verbose_name='Service Template')
     production_readiness_checklist = models.CharField(max_length=255, null=True, blank=True, verbose_name='Production Readiness Checklist')   
     deployment_rfc = models.CharField(max_length=255, verbose_name='Associated RFC for Deployment')
     major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_mi_owners', verbose_name='Major Incident Contact')
@@ -387,8 +388,8 @@ class ServiceDeployment(NetBoxModel):
 class ServiceComponent(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_requirement = models.ForeignKey(ServiceRequirement, on_delete=models.SET_NULL, related_name='sc_components', verbose_name='Service Requirement')
-    service_deployment = models.ForeignKey(ServiceDeployment, on_delete=models.SET_NULL, related_name='sc_deployments', verbose_name='Service Deployment')
+    service_requirement = models.ForeignKey(ServiceRequirement, null=True, on_delete=models.SET_NULL, related_name='sc_components', verbose_name='Service Requirement')
+    service_deployment = models.ForeignKey(ServiceDeployment, null=True, on_delete=models.SET_NULL, related_name='sc_deployments', verbose_name='Service Deployment')
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     object_id = models.PositiveIntegerField()
