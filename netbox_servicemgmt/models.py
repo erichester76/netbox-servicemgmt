@@ -225,7 +225,7 @@ class SolutionTemplate(NetBoxModel):
     sla_number = models.CharField(max_length=50, null=True)
     slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sot_slo',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
-    fault_tolerance = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, null=True, related_name='sot_slo',verbose_name='Assigned SLO Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, null=True, related_name='sot_slo',verbose_name='Assigned SLO Profile')
     solution_request = models.ForeignKey(SolutionRequest, on_delete=models.SET_NULL, null=True, related_name='sot_sr',verbose_name='Assigned SLO Profile')
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(

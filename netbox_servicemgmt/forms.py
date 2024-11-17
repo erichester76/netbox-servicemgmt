@@ -63,13 +63,13 @@ class SolutionRequestImportForm(NetBoxModelImportForm):
 class SolutionTemplateForm(NetBoxModelForm):
     class Meta:
         model = models.SolutionTemplate
-        fields = ['name', 'description', 'version', 'service_request', 'solution_type', 'design_contact', 
+        fields = ['name', 'description', 'version', 'solution_request', 'solution_type', 'design_contact', 
                 'slo', 'fault_tolerence', 'data_classification', 'sla_number', 'vendors'] 
         
 class SolutionTemplateImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.SolutionTemplate
-        fields = ['name', 'description', 'version', 'service_request', 'solution_type', 'design_contact', 
+        fields = ['name', 'description', 'version', 'solution_request', 'solution_type', 'design_contact', 
                 'slo', 'fault_tolerence', 'data_classification', 'sla_number', 'vendors']  
               
 class FaultToleranceForm(NetBoxModelForm):
