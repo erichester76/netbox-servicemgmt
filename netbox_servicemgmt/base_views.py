@@ -296,18 +296,29 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-       mermaid_source = f"graph LR\n{generate_mermaid_code(instance)}"
-       color_map = {
-            'solutiontemplate': '#16a2b8',  # Darker Teal 
-            'servicetemplate': '#184990',   # Teal 
+        mermaid_source = f"graph LR\n{generate_mermaid_code(instance)}"
+        color_map = {
+            'solutiontemplate': '#16a2b8',  # Darker Teal
+            'servicetemplate': '#184990',   # Teal
             'servicerequirement': '#02252f',  # GreenBlue
             'servicedeployment': '#f76706',  # Orange2
-            'servicecomponent': '#d63a39',  # Red 
+            'servicecomponent': '#d63a39',  # Red
+            'virtualmachine': '#9b59b6',  # Purple
+            'device': '#2ecc71',  # Green
+            'cluster': '#3498db',  # Light Blue
+            'virtual_chassis': '#34495e',  # Purple (matches Virtual Machine)
+            'rack': '#9b59b6',  # Gray-Blue
+            'location': '#f39c12',  # Yellow
+            'site': '#e74c3c',  # Red-Orange
+            'tenant': '#1abc9c',  # Turquoise
+            'contact': '#e67e22',  # Orange
+            'certificate': '#8e44ad',  # Dark Purple
+            'hostname': '#2980b9',  # Sky Blue
         }
-       for obj_type, color in color_map.items():
+        for obj_type, color in color_map.items():
           mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
 
-       return {
+        return {
           'mermaid_source': mermaid_source,
        }
 
