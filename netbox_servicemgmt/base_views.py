@@ -204,7 +204,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 if hasattr(related_obj, 'get_absolute_url'):
                     mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
                     if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
         except AttributeError:
             continue
@@ -231,7 +231,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         if hasattr(related_obj, 'get_absolute_url'):
                             mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
                             if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                        mermaid_code += f"{related_obj_id} --> {obj_id}\n"
+                        mermaid_code += f"{obj_id} --> {related_obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
             except AttributeError:
                 # Skip if the reverse relationship cannot be resolved
