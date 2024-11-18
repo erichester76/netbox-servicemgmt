@@ -25,22 +25,6 @@ STATUS_AWARDED = 'awarded'
 STATUS_REVIEW = 'awarded'
 STATUS_COMPLETE = 'awarded'
 
-SOLUTION_APP_PREMISE = 'applicationpremise'
-SOLUTION_APP_CLOUD = 'applicationcloud'
-SOLUTION_APP_SASS = 'applicationsaas'
-SOLUTION_APP_HYBRID = 'applicationhybrid'
-SOLUTION_INFRA = 'infrastructure'
-SOLUTION_SERVICE = 'service'
-
-SOLUTION_CHOICES = [
-    {SOLUTION_APP_PREMISE, 'On Premise Application'},
-    {SOLUTION_APP_CLOUD, 'Cloud Hosted Application'},
-    {SOLUTION_APP_SASS, 'SaaS Application'},
-    {SOLUTION_APP_HYBRID, 'Hybrid Application'},
-    {SOLUTION_INFRA,  'Infrastructure'},
-    {SOLUTION_SERVICE, 'Contracted Service'}
-]
-
 STATUS_CHOICES = [
     (STATUS_INACTIVE, 'inactive'),
     (STATUS_ACTIVE, 'active'),
@@ -163,6 +147,23 @@ class FaultTolerance(NetBoxModel):
 
 # Solution Request Model
 class SolutionRequest(NetBoxModel):
+    
+    SOLUTION_APP_PREMISE = 'applicationpremise'
+    SOLUTION_APP_CLOUD = 'applicationcloud'
+    SOLUTION_APP_SASS = 'applicationsaas'
+    SOLUTION_APP_HYBRID = 'applicationhybrid'
+    SOLUTION_INFRA = 'infrastructure'
+    SOLUTION_SERVICE = 'service'
+
+    SOLUTION_CHOICES = [
+        {SOLUTION_APP_PREMISE, 'On Premise Application'},
+        {SOLUTION_APP_CLOUD, 'Cloud Hosted Application'},
+        {SOLUTION_APP_SASS, 'SaaS Application'},
+        {SOLUTION_APP_HYBRID, 'Hybrid Application'},
+        {SOLUTION_INFRA,  'Infrastructure'},
+        {SOLUTION_SERVICE, 'Contracted Service'}
+    ]
+    
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sor_designers', verbose_name='Architect')
@@ -216,6 +217,23 @@ class SolutionRequest(NetBoxModel):
  
 # Solution Template Model
 class SolutionTemplate(NetBoxModel):
+    
+    SOLUTION_APP_PREMISE = 'applicationpremise'
+    SOLUTION_APP_CLOUD = 'applicationcloud'
+    SOLUTION_APP_SASS = 'applicationsaas'
+    SOLUTION_APP_HYBRID = 'applicationhybrid'
+    SOLUTION_INFRA = 'infrastructure'
+    SOLUTION_SERVICE = 'service'
+
+    SOLUTION_CHOICES = [
+        {SOLUTION_APP_PREMISE, 'On Premise Application'},
+        {SOLUTION_APP_CLOUD, 'Cloud Hosted Application'},
+        {SOLUTION_APP_SASS, 'SaaS Application'},
+        {SOLUTION_APP_HYBRID, 'Hybrid Application'},
+        {SOLUTION_INFRA,  'Infrastructure'},
+        {SOLUTION_SERVICE, 'Contracted Service'}
+    ]
+    
     name = models.CharField(max_length=255)
     description = models.TextField()
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sot_designers', verbose_name='Architect')

@@ -25,7 +25,7 @@ class SolutionTemplateFilterSet(NetBoxModelFilterSet):
 class SolutionRequestFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = SolutionRequest
-        fields = ('name','version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
+        fields = ('name', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
 
 # FaultTolerance FilterSet
 class FaultToleranceFilterSet(NetBoxModelFilterSet):
