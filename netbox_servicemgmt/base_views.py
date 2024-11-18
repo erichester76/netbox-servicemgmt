@@ -176,7 +176,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments',  ],
-        'servicecomponent': [ 'content_object' ],    
+        'servicecomponent': [ 'virtualmachine' ],    
     }
 
 
@@ -187,6 +187,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         if hasattr(obj, 'get_absolute_url'):
             mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}" "{tooltip}"\n' \
             if tooltip else f'click {obj_id} "{obj.get_absolute_url()}"\n'
+            
     # Traverse forward relationships based on relationships_to_follow
     for field_name in relationships_to_follow.get(obj._meta.model_name, []):
         try:
