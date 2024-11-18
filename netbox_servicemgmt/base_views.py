@@ -188,7 +188,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if obj_id in visited:
         return mermaid_code  # Stop if this object was already visited
 
-    if 'service_requirement' not in obj._meta.model_name: visited.add(obj_id) # Mark the object as visited *before* recursion
+    visited.add(obj_id) # Mark the object as visited *before* recursion
 
     # Add the object to the diagram
     obj_name = sanitize_name(str(obj))  # Sanitize the related object name
@@ -203,7 +203,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         if field.name in excluded_fields:
             continue
 
-        """# Handle ForeignKey and OneToOneField relationships
+        # Handle ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
@@ -217,7 +217,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                 mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1) 
-        """
+      
 
         # Handle GenericForeignKey
         if isinstance(field, GenericForeignKey):
