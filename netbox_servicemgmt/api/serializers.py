@@ -14,13 +14,13 @@ class SLASerializer(NetBoxModelSerializer):
 class SolutionTemplateSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.SolutionTemplate
-        fields = ['name', 'description', 'version', 'solution_request', 'solution_type', 'design_contact', 
+        fields = ['id', 'name', 'description', 'version', 'solution_request', 'solution_type', 'design_contact', 
                 'slo', 'fault_tolerence', 'data_classification', 'sla_number', 'vendors']
         
 class SolutionRequestSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.SolutionRequest
-        fields = ['name', 'description', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
+        fields = ['id', 'name', 'description', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
                 'service_owner_tenant', 'service_owner_contact', 'functional_area_sponsor_tenant', 
                 'functional_sub_area_sponsor_tenant', 'rfp_status', 'rfp_ref', 'slo', 'data_classification', 'clustered', 'multi_site', 
                 'multi_region', 'offsite_backup', 'airgap_backup', 'requirements']
@@ -28,14 +28,14 @@ class SolutionRequestSerializer(NetBoxModelSerializer):
 class FaultToleranceSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.FaultTolerance
-        fields = ['name', 'description', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 
+        fields = ['id', 'name', 'description', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 
                   'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 
                   'tertiary_site', 'instances_per_site', 'backup_schedule']
 
 class ServiceTemplateSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.ServiceTemplate
-        fields = ['name', 'description', 'version', 'solution_templates', 'design_contact', 'service_type', 'vendor', 
+        fields = ['id', 'name', 'description', 'version', 'solution_templates', 'design_contact', 'service_type', 'vendor', 
                   'vendor_management_number', 'vendor_management_status', 'fault_tolerence', 'service_slo']
         
 class ServiceRequirementSerializer(NetBoxModelSerializer):
@@ -50,7 +50,7 @@ class ServiceRequirementSerializer(NetBoxModelSerializer):
 class ServiceDeploymentSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.ServiceDeployment
-        fields = ['name', 'description', 'version', 'service_template', 'deployment_rfc', 'maintenance_window', 
+        fields = ['id', 'name', 'description', 'version', 'service_template', 'deployment_rfc', 'maintenance_window', 
                   'production_readiness_checklist', 'major_incident_coordinator_contact', 'engineering_contact', 
                   'operations_contact', 'monitoring_contact' ]
 
