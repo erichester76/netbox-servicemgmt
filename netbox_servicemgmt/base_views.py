@@ -135,6 +135,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     relationships_to_follow = {
         # Virtualization/Networking models
+        'content_object': [ 'virtualmachine', 'device' ],
         'virtualmachine': [ 'host' ], 
         'device': [ 'cluster', 'virtual_chassis', 'rack' ],
         'rack': [ 'location' ],
