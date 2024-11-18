@@ -20,7 +20,7 @@ class SolutionTemplateSerializer(NetBoxModelSerializer):
 class SolutionRequestSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.SolutionRequest
-        fields = ['id', 'name', 'description', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
+        fields = ['id', 'name', 'description', 'status', 'version', 'solution_type', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
                 'service_owner_tenant', 'service_owner_contact', 'functional_area_sponsor_tenant', 
                 'functional_sub_area_sponsor_tenant', 'rfp_status', 'rfp_ref', 'slo', 'data_classification', 'clustered', 'multi_site', 
                 'multi_region', 'offsite_backup', 'airgap_backup', 'requirements']
