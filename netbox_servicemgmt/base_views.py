@@ -152,14 +152,18 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'solutiontemplate': [ 'service_templates'],
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
-        'servicedeployment': [ 'sc_deployments' ],
+        'servicedeployment': [ 'sc_deployments',  ],
         'servicecomponent': [ 'content_object' ],    
     }
 
-
-
-  
-
+    # Dynamic tooltip content based on object type
+    tooltip_fields = {
+        'device': [ 'device_type', 'serial', 'primary_ip4', 'interfaces' ],
+        'virtualmachine': [ 'name', 'status', 'interfaces', 'vmdisks' ],
+        'contact': [ 'name', 'email', 'phone' ],
+        'location': [ 'name', 'site', 'physical_address' ],
+        'site': [ 'name', 'region', 'physical_address '],
+    }
 
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
@@ -173,6 +177,24 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Add the object to the diagram
     obj_name = sanitize_name(str(obj))
+    tooltip_content = []
+    #Generate tooltip based on fields
+    for field_name in tooltip_fields.get(obj._meta.model_name, []):
+        try:
+            value = getattr(obj, field_name, None)
+            if callable(value):
+                value = value()  # Call methods if necessary
+            tooltip_content.append(f"{field_name}: {value}")
+        except AttributeError:
+            continue
+
+    tooltip = " | ".join(tooltip_content)
+    tooltip = sanitize_name(tooltip)  # Sanitize the tooltip content to avoid invalid characters
+    
+    # Add the node with the tooltip
+    mermaid_code += f"{obj_id}({obj_name}):::tooltipClass\n"
+    mermaid_code += f'classDef tooltipClass title="{tooltip}";\n'
+
     if depth == 0:
         mermaid_code += f"{indent}{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
         if hasattr(obj, 'get_absolute_url'):
