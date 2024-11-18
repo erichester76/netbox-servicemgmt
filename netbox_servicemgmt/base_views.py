@@ -148,6 +148,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'virtualmachine': ['name', 'status', 'interfaces'],
         'contact': ['name', 'email', 'phone'],
         'site': ['name', 'physical_address', 'region', 'tenant'],
+        'rack': ['name', 'location', 'site', 'tenant', ],
         'location': ['name', 'physical_address', 'site', 'tenant'],
         'solutiontemplate': ['name', 'status', 'version'],
         'servicetemplate': ['name', 'status', 'vendor'],
@@ -212,29 +213,38 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         except AttributeError:
             continue
 
-    # Traverse reverse relationships if they match the relationships_to_follow keys
+    # Traverse reverse relationships
     for rel in obj._meta.get_fields():
         if rel.is_relation and rel.auto_created and not rel.concrete:
             relationship_name = rel.get_accessor_name()
-            related_objects = getattr(obj, relationship_name, None)
+            try:
+                related_objects_manager = getattr(obj, relationship_name, None)
 
-            if hasattr(related_objects, 'all'):
-                for related_obj in related_objects.all():
-                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    if (related_obj_id, relationship_name) in visited:
-                        continue  # Skip if this relationship has already been traversed
+                # Ensure it's a valid related manager
+                if related_objects_manager and hasattr(related_objects_manager, 'all'):
+                    for related_obj in related_objects_manager.all():
+                        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                        if (related_obj_id, relationship_name) in visited:
+                            continue  # Skip if this relationship has already been traversed
 
-                    # Add the reverse relationship and recurse
-                    visited.add((related_obj_id, relationship_name))
-                    related_obj_name = sanitize_name(str(related_obj))
-                    tooltip = _generate_tooltip(related_obj, tooltip_fields)
-                    mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                    if tooltip:
-                        mermaid_code += f'classDef color_{related_obj._meta.model_name.lower()} title="{tooltip}";\n'
-                    if hasattr(related_obj, 'get_absolute_url'):
-                        mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{related_obj_id} --> {obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                        # Add the reverse relationship and recurse
+                        visited.add((related_obj_id, relationship_name))
+                        related_obj_name = sanitize_name(str(related_obj))
+                        tooltip = _generate_tooltip(related_obj, tooltip_fields)
+                        mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
+                        if tooltip:
+                            mermaid_code += f'classDef color_{related_obj._meta.model_name.lower()} title="{tooltip}";\n'
+                        if hasattr(related_obj, 'get_absolute_url'):
+                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                        mermaid_code += f"{related_obj_id} --> {obj_id}\n"
+                        mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+            except AttributeError:
+                # Skip if the reverse relationship cannot be resolved
+                continue
+            except TypeError as e:
+                # Handle issues like missing 'manager' argument
+                print(f"Error processing reverse relationship {relationship_name}: {e}")
+                continue
 
     return mermaid_code
 
