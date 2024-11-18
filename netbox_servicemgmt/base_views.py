@@ -158,7 +158,6 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     relationships_to_follow = {
         # Virtualization/Networking models
-        'content_object': [ 'virtualmachine', 'device' ],
         'virtualmachine': [ 'host' ], 
         'device': [ 'cluster', 'virtual_chassis', 'rack' ],
         'rack': [ 'location' ],
@@ -176,7 +175,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments',  ],
-        'servicecomponent': [ 'virtualmachine' ],    
+        'servicecomponent': [ 'virtualmachine', 'device', 'hostname', 'certificate', 'contact', 'tenant', 'vip' ],    
     }
 
 
