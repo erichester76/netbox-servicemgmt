@@ -203,10 +203,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 related_obj_name = sanitize_name(str(related_obj))
                 tooltip = _generate_tooltip(related_obj, tooltip_fields)
                 mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                if tooltip:
-                    mermaid_code += f'classDef color_{related_obj._meta.model_name.lower()} title="{tooltip}";\n'
                 if hasattr(related_obj, 'get_absolute_url'):
-                    mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                     mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n'
                 mermaid_code += f"{obj_id} --> {related_obj_id}\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
         except AttributeError:
@@ -231,10 +229,9 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         related_obj_name = sanitize_name(str(related_obj))
                         tooltip = _generate_tooltip(related_obj, tooltip_fields)
                         mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                        if tooltip:
-                            mermaid_code += f'classDef color_{related_obj._meta.model_name.lower()} title="{tooltip}";\n'
                         if hasattr(related_obj, 'get_absolute_url'):
-                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
+                            if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                         mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
             except AttributeError:
