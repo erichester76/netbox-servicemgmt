@@ -135,21 +135,27 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     relationships_to_follow = {
         # Virtualization/Networking models
-        'virtualmachine': ['host', 'interfaces'],  # Follow the VM host and its interfaces
-        'device': ['cluster', 'virtual_chassis'],
-        'cluster': ['site'], 
-        #'interface': ['connected_interface', 'device'],  # Follow connected interface and device
-        'site': [],  # Stop recursion at Site
-
+        'virtualmachine': [ 'host' ], 
+        'device': [ 'cluster', 'virtual_chassis', 'rack' ],
+        'rack': [ 'location' ],
+        'location': [ 'site' ],
+        'site': [],  
+        'tenant': [],  
+        'contact': [], 
+        
         # Service Management (servicemgmt) models
-        'solutionrequest': ['solutiontemplte'],
-        'solutiontemplate': ['servicetemplates'],  # Follow Service Templates from Solution Template
-        'servicetemplate': ['solutiontemplate', 'servicerequirements'],  # Link back to SolutionTemplate and forward to ServiceRequirements
-        'servicerequirement': ['servicetemplate', 'servicecomponents'],  # Link back to ServiceTemplate and forward to ServiceComponents
-        'servicedeployment': ['solutiondeployment', 'servicecomponents'],  # Link back to SolutionDeployment and forward to ServiceComponents
-        'servicecomponent': ['servicedeployment', 'servicerequirement'],  # Link to ServiceDeployment and ServiceRequirement
-        'solutiondeployment': ['servicedeployments'],  # Follow Service Deployments from SolutionDeployment
+        'solutionrequest': [ 'design_contact', 'business_owner_tenant', 'slo', 'previous_version' ],
+        'solutiontemplate': [ 'solution_request', 'service_templates'],
+        'servicetemplate': [ 'solution_templates', 'service_requirements', 'service_deployments' ],
+        'servicerequirement': [ 'service_template', 'sc_components' ],
+        'servicedeployment': [ 'service_template', 'sc_deployments' ],
+        'servicecomponent': [ 'service_requirement', 'service_deployment', 'content_object' ],    
     }
+
+
+
+  
+
 
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
