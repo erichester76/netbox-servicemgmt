@@ -174,8 +174,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'solutiontemplate': [ 'service_templates'],
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
-        'servicedeployment': [ 'sc_deployments'  ],
-        'servicecomponent': [ 'content_object' ],
+        'servicedeployment': [ 'sc_deployments' ],
+        'servicecomponent': [ 'service_deployment' ],
     }
 
     # Add the root object to the diagram
@@ -320,6 +320,6 @@ class BaseDiagramView(generic.ObjectView):
 
         return {
           'mermaid_source': mermaid_source,
-       }
+    }
 
 
