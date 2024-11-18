@@ -227,7 +227,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         # Add the reverse relationship and recurse
                         visited.add((related_obj_id, relationship_name))
                         related_obj_name = sanitize_name(str(related_obj))
-                        tooltip = _generate_tooltip(related_obj, tooltip_fields)
+                        tooltip = sanitize_name(_generate_tooltip(related_obj, tooltip_fields))
                         mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
                         if hasattr(related_obj, 'get_absolute_url'):
                             mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
