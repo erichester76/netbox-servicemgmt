@@ -43,9 +43,7 @@ class ServiceRequirementSerializer(NetBoxModelSerializer):
         model = models.ServiceRequirement
         fields = [
             'id', 'name', 'description', 'status', 'service_template', 'requirement_owner', 'service_slo',
-            'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'vip_required',
-            'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'backup_schedule',
-            'offsite_backup', 'airgap_backup', 'object_type' ]
+            'object_type' ]
         
 class ServiceDeploymentSerializer(NetBoxModelSerializer):
     class Meta:
