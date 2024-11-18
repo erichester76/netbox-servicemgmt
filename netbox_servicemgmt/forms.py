@@ -103,14 +103,14 @@ class ServiceRequirementForm(NetBoxModelForm):
     
     class Meta:
         model = models.ServiceRequirement
-        fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'object_type']
+        fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo']
 
 
 class ServiceRequirementImportForm(NetBoxModelImportForm):
     
     class Meta:
         model = models.ServiceRequirement
-        fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo', 'object_type']
+        fields = ['name', 'description', 'service_template', 'requirement_owner', 'service_slo']
 
         
 class ServiceDeploymentForm(NetBoxModelForm):

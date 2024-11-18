@@ -353,15 +353,7 @@ class ServiceRequirement(NetBoxModel):
         choices=STATUS_CHOICES,  
         default=STATUS_INACTIVE,   
     )
-    
-    # Object Type field to link to any NetBox object type
-    object_type = models.ForeignKey(
-        ContentType, 
-        null=True,
-        on_delete=models.SET_NULL, 
-        limit_choices_to={'model__in': ['device', 'virtualmachine', 'softwareproduct', 'ipaddress', 'hostname', 'certificate', 'lbvirtualserver', 'container']},  # Filter by model names
-        verbose_name="Attached Component Type"
-    )
+
    
     def __str__(self):
         return f'{self.name}'
