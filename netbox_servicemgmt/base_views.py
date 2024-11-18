@@ -9,15 +9,6 @@ import re
 
 
 
-def sanitize_name(name):
-    """
-    Cleans up the name by removing or replacing characters not allowed in Mermaid diagrams.
-    Currently removes parentheses and other special characters.
-    """
-    # Remove parentheses and replace other characters if needed
-    clean_name = re.sub(r'[^\w\s]', '', name)  # Remove all non-alphanumeric characters except spaces
-    #clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
-    return clean_name
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
     base_template = 'netbox_servicemgmt/default-detail.html'
@@ -124,9 +115,17 @@ class BaseObjectView(generic.ObjectView):
             'field_data': field_data,
             'related_tables': related_tables,
         }
-        
+    
 
-   
+def sanitize_name(name):
+    """
+    Cleans up the name by removing or replacing characters not allowed in Mermaid diagrams.
+    Currently removes parentheses and other special characters.
+    """
+    # Remove parentheses and replace other characters if needed
+    clean_name = re.sub(r'[^\w\s]', '', name)  # Remove all non-alphanumeric characters except spaces
+    #clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
+    return clean_name
 
 
 def generate_mermaid_code(obj, visited=None, depth=0):
@@ -264,15 +263,6 @@ def _generate_tooltip(obj, tooltip_fields):
         except AttributeError:
             continue
     return sanitize_name(" | ".join(tooltip))
-
-
-def sanitize_name(name):
-    """
-    Sanitizes a name for use in Mermaid diagrams.
-    Replaces or removes characters that may break Mermaid syntax.
-    """
-    return name.replace('"', '').replace("'", '').replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace('|', '').replace('\n', '')
-
 
 class BaseDiagramView(generic.ObjectView):    
     """
