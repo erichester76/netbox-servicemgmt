@@ -24,6 +24,10 @@ STATUS_BID = 'outforbid'
 STATUS_AWARDED = 'awarded'
 STATUS_REVIEW = 'awarded'
 STATUS_COMPLETE = 'awarded'
+DATA_PUBLIC = 'public'
+DATA_INTERNAL = 'internal_use'
+DATA_CONFIDENTIAL = 'confidential'
+DATA_RESTRICTED= 'restricted'
 
 STATUS_CHOICES = [
     (STATUS_INACTIVE, 'inactive'),
@@ -34,37 +38,6 @@ STATUS_CHOICES = [
     (STATUS_REPLACED, 'replaced'),
     (STATUS_DECOMMISSIONED, 'decommissioned'),
 ]
-
-REQUEST_CHOICES = [
-    (STATUS_NONE, 'None'),
-    (STATUS_PLANNING, 'Planning'),
-    (STATUS_DRAFT, 'Draft'),
-    (STATUS_SUBMITTED, 'Submitted'),
-    (STATUS_BID, 'Out for Bids'),
-    (STATUS_AWARDED, 'Awarded'),
-]
-
-REVIEW_CHOICES = [
-    (STATUS_NONE, 'None'),
-    (STATUS_DRAFT, 'Draft'),
-    (STATUS_SUBMITTED, 'Submitted'),
-    (STATUS_REVIEW, 'Under Review'),
-    (STATUS_COMPLETE, 'COmplete'),
-]   
-
-# Status choices
-DATA_PUBLIC = 'public'
-DATA_INTERNAL = 'internal_use'
-DATA_CONFIDENTIAL = 'confidential'
-DATA_RESTRICTED= 'restricted'
-
-DATA_CHOICES = [
-    (DATA_PUBLIC, 'Public'),
-    (DATA_INTERNAL, 'Internal Use'),
-    (DATA_CONFIDENTIAL, 'Confidential'),
-    (DATA_RESTRICTED, 'Restricted'),
-]
-    
 
 # Service Level Objective (SLO) Model
 class SLO(NetBoxModel):
@@ -89,6 +62,12 @@ class SLO(NetBoxModel):
  
  # Service Level Objective (SLA) Model
 class SLA(NetBoxModel):
+    DATA_CHOICES = [
+        (DATA_PUBLIC, 'Public'),
+        (DATA_INTERNAL, 'Internal Use'),
+        (DATA_CONFIDENTIAL, 'Confidential'),
+        (DATA_RESTRICTED, 'Restricted'),
+    ]   
     name = models.CharField(max_length=255)
     uuid = models.CharField(max_length=30, null=True)
     description = models.TextField()
@@ -164,6 +143,22 @@ class SolutionRequest(NetBoxModel):
         {SOLUTION_SERVICE, 'Contracted Service'}
     ]
     
+    DATA_CHOICES = [
+        (DATA_PUBLIC, 'Public'),
+        (DATA_INTERNAL, 'Internal Use'),
+        (DATA_CONFIDENTIAL, 'Confidential'),
+        (DATA_RESTRICTED, 'Restricted'),
+    ]
+    
+    REQUEST_CHOICES = [
+        (STATUS_NONE, 'None'),
+        (STATUS_PLANNING, 'Planning'),
+        (STATUS_DRAFT, 'Draft'),
+        (STATUS_SUBMITTED, 'Submitted'),
+        (STATUS_BID, 'Out for Bids'),
+        (STATUS_AWARDED, 'Awarded'),
+    ]
+    
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sor_designers', verbose_name='Architect')
@@ -234,6 +229,13 @@ class SolutionTemplate(NetBoxModel):
         {SOLUTION_SERVICE, 'Contracted Service'}
     ]
     
+    DATA_CHOICES = [
+        (DATA_PUBLIC, 'Public'),
+        (DATA_INTERNAL, 'Internal Use'),
+        (DATA_CONFIDENTIAL, 'Confidential'),
+        (DATA_RESTRICTED, 'Restricted'),
+    ]
+    
     name = models.CharField(max_length=255)
     description = models.TextField()
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sot_designers', verbose_name='Architect')
@@ -274,7 +276,13 @@ class SolutionTemplate(NetBoxModel):
 
 # Service Template Model
 class ServiceTemplate(NetBoxModel):
-    
+    REVIEW_CHOICES = [
+        (STATUS_NONE, 'None'),
+        (STATUS_DRAFT, 'Draft'),
+        (STATUS_SUBMITTED, 'Submitted'),
+        (STATUS_REVIEW, 'Under Review'),
+        (STATUS_COMPLETE, 'Complete'),
+]   
     name = models.CharField(max_length=255)
     description = models.TextField()
     solution_templates = models.ManyToManyField(
