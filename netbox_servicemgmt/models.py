@@ -171,7 +171,7 @@ class SolutionRequest(NetBoxModel):
     functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_sfa_owners', verbose_name='Functional Sub-Area Sponsor')
     solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
     version = models.IntegerField(null=True, blank=True)
-    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, blank=True, null=True, related_name='sor_slo',verbose_name='Assigned SLO Profile')
+    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, blank=True, null=True, related_name='sor_slo',verbose_name='Service Level')
     data_classification = models.CharField(null=True, blank=True, choices=DATA_CHOICES)
     clustered = models.BooleanField(blank=True,null=True)
     multi_site = models.BooleanField(blank=True,null=True)
@@ -179,8 +179,8 @@ class SolutionRequest(NetBoxModel):
     offsite_replication = models.BooleanField(blank=True,null=True)
     offsite_backup = models.BooleanField(blank=True,null=True)
     airgap_backup = models.BooleanField(blank=True,null=True)
-    rfp_ref = models.TextField(blank=True, null=True)
-    rfp_status = models.TextField(blank=True, null=True, choices=REQUEST_CHOICES)
+    rfp_ref = models.TextField(blank=True, null=True, verbose_name="RFP Reference #")
+    rfp_status = models.TextField(blank=True, null=True, choices=REQUEST_CHOICES,verbose_name="RFP Status")
 
     requirements = models.TextField(null=True, blank=True, verbose_name='Additional Requirements')
 
