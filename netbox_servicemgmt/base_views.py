@@ -144,8 +144,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'contact': [], 
         
         # Service Management (servicemgmt) models
-        'solutionrequest': [ 'design_contact', 'business_owner_tenant', 'slo', 'previous_version' ],
-        'solutiontemplate': [ 'solution_request', 'service_templates'],
+        'solutionrequest': [ 'sot_sr' ],
+        'solutiontemplate': [ 'service_templates'],
         'servicetemplate': [ 'solution_templates', 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'service_template', 'sc_components' ],
         'servicedeployment': [ 'service_template', 'sc_deployments' ],
