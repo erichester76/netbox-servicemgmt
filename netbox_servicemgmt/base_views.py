@@ -133,135 +133,83 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if visited is None:
         visited = set()
 
-    excluded_fields = {
-        'id', 
-        'custom_field_data',
-        'custom_fields', 
-        'tags',
-        'bookmarks', 
-        'journal_entries', 
-        'subscriptions', 
-        'tagged_items', 
-        'device_type',
-        'device',
-        'role',
-        'ipaddress',
-        'depends_on',
-        'dependencies',
-        'created',
-        'last_updated',
-        'object_id',
-        'primary_ip4',
-        'primary_ip6',
-        'ipaddresses',
-        'cluster_group',
-        'cluster_type',
-        'fault_tolerence',
-        'service_slo',
-        'vendor',
-        'business_owner_contact',
-        'business_owner_tenant',
-        'service_owner_contact',
-        'service_owner_tenant',
-        'design_contact',
-        'requirement_owner',
-    }
+    relationships_to_follow = {
+        # Virtualization/Networking models
+        'virtualmachine': ['host', 'interfaces'],  # Follow the VM host and its interfaces
+        'device': ['cluster', 'virtual_chassis'],
+        'cluster': ['site'], 
+        #'interface': ['connected_interface', 'device'],  # Follow connected interface and device
+        'site': [],  # Stop recursion at Site
 
-    models_to_skip_reverse_relations = {
-        'Site', 
-        'Tenant',
-        'Contact',
-        'Site',
-        'FaultTolerence',
-        'SLO',
-        'IPAddress',
-        'Interface',
-        'Manufacturer', 
-        'Tag',       
+        # Service Management (servicemgmt) models
+        'solutionrequest': ['solutiontemplte'],
+        'solutiontemplate': ['servicetemplates'],  # Follow Service Templates from Solution Template
+        'servicetemplate': ['solutiontemplate', 'servicerequirements'],  # Link back to SolutionTemplate and forward to ServiceRequirements
+        'servicerequirement': ['servicetemplate', 'servicecomponents'],  # Link back to ServiceTemplate and forward to ServiceComponents
+        'servicedeployment': ['solutiondeployment', 'servicecomponents'],  # Link back to SolutionDeployment and forward to ServiceComponents
+        'servicecomponent': ['servicedeployment', 'servicerequirement'],  # Link to ServiceDeployment and ServiceRequirement
+        'solutiondeployment': ['servicedeployments'],  # Follow Service Deployments from SolutionDeployment
     }
 
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
 
-    # Get object identifier and mark the object as visited to avoid revisiting it
+    # Get object identifier and mark it as visited
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
     if obj_id in visited:
-        return mermaid_code  # Stop if this object was already visited
+        return mermaid_code  # Stop if already visited
 
-    visited.add(obj_id) # Mark the object as visited *before* recursion
+    visited.add(obj_id)  # Mark visited
 
     # Add the object to the diagram
-    obj_name = sanitize_name(str(obj))  # Sanitize the related object name
-    if depth == 0: 
+    obj_name = sanitize_name(str(obj))
+    if depth == 0:
         mermaid_code += f"{indent}{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
         if hasattr(obj, 'get_absolute_url'):
             mermaid_code += f'{indent}click {obj_id} "{obj.get_absolute_url()}"\n'
 
-    # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
+    # Get allowed relationships for this object
+    allowed_relationships = relationships_to_follow.get(obj._meta.model_name, [])
+
+    # Traverse forward relationships
     for field in obj._meta.get_fields():
-        # Skip excluded fields like 'tags'
-        if field.name in excluded_fields:
+        if field.name not in allowed_relationships:
             continue
 
         # Handle ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
-            # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
                 related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
+                related_obj_name = sanitize_name(str(related_obj))
                 if related_obj_id in visited:
-                     continue  # Skip if already visited
-                # Add relationship and recurse with indent for readability
-                indent = "    " * (depth+1)
+                    continue  # Skip if already visited
+                indent = "    " * (depth + 1)
                 mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                 mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1) 
-      
-
-        # Handle GenericForeignKey
-        if isinstance(field, GenericForeignKey):
-            content_type = getattr(obj, field.ct_field, None)
-            object_id = getattr(obj, field.fk_field, None)
-            if content_type and object_id:
-                related_model = content_type.model_class()
-                try:
-                    related_obj = related_model.objects.get(pk=object_id)
-                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
-                    if related_obj_id in visited:
-                        continue  # Skip if already visited
-                    # Add relationship and recurse with indent for readability
-                    indent = "    " * (depth+1)
-                    mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
-                    if hasattr(related_obj, 'get_absolute_url'):
-                        mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-                except related_model.DoesNotExist:
-                    continue  # If the related object doesn't exist, skip it
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
 
     # Traverse reverse relationships (many-to-one, many-to-many)
-    if obj._meta.model_name not in models_to_skip_reverse_relations:
-        for rel in obj._meta.get_fields():
-            if rel.is_relation and rel.auto_created and not rel.concrete:
-                related_objects = getattr(obj, rel.get_accessor_name(), None)
-                if hasattr(related_objects, 'all'):
-                    for related_obj in related_objects.all():
-                        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                        related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
-                        # Check if the related object was already visited to avoid loops
-                        if related_obj_id in visited:
-                            continue  # Skip if already visited
-                        # Add reverse relationship and recurse with indent for readability
-                        indent = "    " * (depth+1)
-                        mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
-                        if hasattr(related_obj, 'get_absolute_url'):
-                            mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                        mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                        mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-    
+    for rel in obj._meta.get_fields():
+        if not rel.is_relation or not rel.auto_created or rel.concrete:
+            continue
+
+        related_objects = getattr(obj, rel.get_accessor_name(), None)
+        if hasattr(related_objects, 'all') and rel.get_accessor_name() in allowed_relationships:
+            for related_obj in related_objects.all():
+                related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                related_obj_name = sanitize_name(str(related_obj))
+                if related_obj_id in visited:
+                    continue  # Skip if already visited
+                indent = "    " * (depth + 1)
+                mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
+                if hasattr(related_obj, 'get_absolute_url'):
+                    mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+
     return mermaid_code
+
 
 class BaseDiagramView(generic.ObjectView):    
     """
