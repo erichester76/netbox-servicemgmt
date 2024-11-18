@@ -80,7 +80,7 @@ class ServiceRequirementTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = models.ServiceRequirement
         default_columns = ('name', 'description', 'version', 'service_template', 'requirement_owner', 'service_slo')
-        fields = ('name', 'description', 'version', 'service_template', 'requirement_owner', 'service_slo')
+        fields = ('pk', 'id', 'name', 'description', 'version', 'service_template', 'requirement_owner', 'service_slo')
 
         
 class ServiceDeploymentTable(NetBoxTable):
