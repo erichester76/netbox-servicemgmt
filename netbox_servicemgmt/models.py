@@ -24,10 +24,18 @@ STATUS_BID = 'outforbid'
 STATUS_AWARDED = 'awarded'
 STATUS_REVIEW = 'awarded'
 STATUS_COMPLETE = 'awarded'
+
 DATA_PUBLIC = 'public'
 DATA_INTERNAL = 'internal_use'
 DATA_CONFIDENTIAL = 'confidential'
 DATA_RESTRICTED= 'restricted'
+
+SOLUTION_APP_PREMISE = 'applicationpremise'
+SOLUTION_APP_CLOUD = 'applicationcloud'
+SOLUTION_APP_SASS = 'applicationsaas'
+SOLUTION_APP_HYBRID = 'applicationhybrid'
+SOLUTION_INFRA = 'infrastructure'
+SOLUTION_SERVICE = 'service'
 
 STATUS_CHOICES = [
     (STATUS_INACTIVE, 'inactive'),
@@ -126,21 +134,14 @@ class FaultTolerance(NetBoxModel):
 
 # Solution Request Model
 class SolutionRequest(NetBoxModel):
-    
-    SOLUTION_APP_PREMISE = 'applicationpremise'
-    SOLUTION_APP_CLOUD = 'applicationcloud'
-    SOLUTION_APP_SASS = 'applicationsaas'
-    SOLUTION_APP_HYBRID = 'applicationhybrid'
-    SOLUTION_INFRA = 'infrastructure'
-    SOLUTION_SERVICE = 'service'
 
     SOLUTION_CHOICES = [
-        {SOLUTION_APP_PREMISE, 'On Premise Application'},
-        {SOLUTION_APP_CLOUD, 'Cloud Hosted Application'},
-        {SOLUTION_APP_SASS, 'SaaS Application'},
-        {SOLUTION_APP_HYBRID, 'Hybrid Application'},
-        {SOLUTION_INFRA,  'Infrastructure'},
-        {SOLUTION_SERVICE, 'Contracted Service'}
+        (SOLUTION_APP_PREMISE, 'On Premise Application'),
+        (SOLUTION_APP_CLOUD, 'Cloud Hosted Application'),
+        (SOLUTION_APP_SASS, 'SaaS Application'),
+        (SOLUTION_APP_HYBRID, 'Hybrid Application'),
+        (SOLUTION_INFRA,  'Infrastructure'),
+        (SOLUTION_SERVICE, 'Contracted Service')
     ]
     
     DATA_CHOICES = [
@@ -212,21 +213,15 @@ class SolutionRequest(NetBoxModel):
  
 # Solution Template Model
 class SolutionTemplate(NetBoxModel):
-    
-    SOLUTION_APP_PREMISE = 'applicationpremise'
-    SOLUTION_APP_CLOUD = 'applicationcloud'
-    SOLUTION_APP_SASS = 'applicationsaas'
-    SOLUTION_APP_HYBRID = 'applicationhybrid'
-    SOLUTION_INFRA = 'infrastructure'
-    SOLUTION_SERVICE = 'service'
+
 
     SOLUTION_CHOICES = [
-        {SOLUTION_APP_PREMISE, 'On Premise Application'},
-        {SOLUTION_APP_CLOUD, 'Cloud Hosted Application'},
-        {SOLUTION_APP_SASS, 'SaaS Application'},
-        {SOLUTION_APP_HYBRID, 'Hybrid Application'},
-        {SOLUTION_INFRA,  'Infrastructure'},
-        {SOLUTION_SERVICE, 'Contracted Service'}
+        (SOLUTION_APP_PREMISE, 'On Premise Application'),
+        (SOLUTION_APP_CLOUD, 'Cloud Hosted Application'),
+        (SOLUTION_APP_SASS, 'SaaS Application'),
+        (SOLUTION_APP_HYBRID, 'Hybrid Application'),
+        (SOLUTION_INFRA,  'Infrastructure'),
+        (SOLUTION_SERVICE, 'Contracted Service')
     ]
     
     DATA_CHOICES = [
@@ -276,13 +271,15 @@ class SolutionTemplate(NetBoxModel):
 
 # Service Template Model
 class ServiceTemplate(NetBoxModel):
+
     REVIEW_CHOICES = [
         (STATUS_NONE, 'None'),
         (STATUS_DRAFT, 'Draft'),
         (STATUS_SUBMITTED, 'Submitted'),
         (STATUS_REVIEW, 'Under Review'),
         (STATUS_COMPLETE, 'Complete'),
-]   
+    ]   
+    
     name = models.CharField(max_length=255)
     description = models.TextField()
     solution_templates = models.ManyToManyField(
