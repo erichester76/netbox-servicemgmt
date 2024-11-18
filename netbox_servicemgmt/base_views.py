@@ -152,7 +152,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'solutiontemplate': ['name', 'status', 'version'],
         'servicetemplate': ['name', 'status', 'vendor'],
         'servicerequirement': ['name', 'status', 'requirement_owner'],
-        'servicecomponent': ['name', 'content_object_verbose_name'],
+        'servicecomponent': ['name', 'content_object'],
         'servicedeployment': ['name', 'status', 'engineering_contact'],
     }
 
@@ -175,7 +175,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments',  ],
-        'servicecomponent': [ 'virtualmachine', 'device', 'hostname', 'certificate', 'contact', 'tenant', 'vip' ],    
+        'servicecomponent': [ 'content_object' ],
+        'content_object': [ 'virtualmachine', 'device', 'hostname', 'certificate', 'contact', 'tenant', 'vip' ]    
     }
 
 
