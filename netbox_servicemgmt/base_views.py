@@ -188,7 +188,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if obj_id in visited:
         return mermaid_code  # Stop if this object was already visited
 
-    visited.add(obj_id)  # Mark the object as visited *before* recursion
+    visited.add(obj_id) if 'service_requirement' not in obj._meta.model_name  # Mark the object as visited *before* recursion
 
     # Add the object to the diagram
     obj_name = sanitize_name(str(obj))  # Sanitize the related object name
