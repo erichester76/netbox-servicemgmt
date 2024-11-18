@@ -184,11 +184,9 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if depth == 0:
         tooltip = _generate_tooltip(obj, tooltip_fields)
         mermaid_code += f"{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
-        if tooltip:
-            mermaid_code += f'classDef color_{obj._meta.model_name.lower()} title="{tooltip}";\n'
         if hasattr(obj, 'get_absolute_url'):
-            mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}"\n'
-
+            mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}" "{tooltip}"\n' \
+            if tooltip else f'click {obj_id} "{obj.get_absolute_url()}"\n'
     # Traverse forward relationships based on relationships_to_follow
     for field_name in relationships_to_follow.get(obj._meta.model_name, []):
         try:
@@ -204,7 +202,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 tooltip = _generate_tooltip(related_obj, tooltip_fields)
                 mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
                 if hasattr(related_obj, 'get_absolute_url'):
-                     mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n'
+                    mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
+                    if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                 mermaid_code += f"{obj_id} --> {related_obj_id}\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
         except AttributeError:
