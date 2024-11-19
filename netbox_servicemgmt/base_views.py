@@ -8,8 +8,6 @@ from . import tables
 import re
 
 
-
-
 class BaseChangeLogView(generic.ObjectChangeLogView):
     base_template = 'netbox_servicemgmt/default-detail.html'
     
@@ -127,21 +125,6 @@ def sanitize_name(name):
     #clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
     return clean_name
 
-def _generate_tooltip(obj, tooltip_fields):
-    """
-    Generates a tooltip for the given object based on its type.
-    """
-    fields = tooltip_fields.get(obj._meta.model_name, [])
-    tooltip = []
-    for field in fields:
-        try:
-            value = getattr(obj, field, None)
-            if callable(value):
-                value = value()
-            tooltip.append(f"{field}: {value}")
-        except AttributeError:
-            continue
-    return sanitize_name(" | ".join(tooltip))
 
 def generate_mermaid_code(obj, visited=None, depth=0):
     """
@@ -162,43 +145,47 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'virtualmachine': ['name', 'status', 'interfaces'],
         'contact': ['name', 'email', 'phone'],
         'site': ['name', 'physical_address', 'region', 'tenant'],
-        'rack': ['name', 'location', 'site', 'tenant'],
+        'rack': ['name', 'location', 'site', 'tenant', ],
         'location': ['name', 'physical_address', 'site', 'tenant'],
         'solutiontemplate': ['name', 'status', 'version'],
         'servicetemplate': ['name', 'status', 'vendor'],
         'servicerequirement': ['name', 'status', 'requirement_owner'],
-        'servicecomponent': ['name', 'content_object'],
+        'servicecomponent': ['name', 'content_object_verbose_name'],
         'servicedeployment': ['name', 'status', 'engineering_contact'],
     }
 
     relationships_to_follow = {
-        'virtualmachine': ['device'],
-        'device': ['cluster', 'virtual_chassis', 'rack'],
-        'rack': ['location'],
-        'location': ['site'],
-        'site': [],
-        'tenant': [],
-        'contact': [],
-        'certificate': ['hostnames'],
-        'hostname': ['certificates'],
-
+        # Virtualization/Networking models
+        'virtualmachine': [ 'host' ], 
+        'device': [ 'cluster', 'virtual_chassis', 'rack' ],
+        'rack': [ 'location' ],
+        'location': [ 'site' ],
+        'site': [],  
+        'tenant': [],  
+        'contact': [], 
+        'certificate': [ 'hostnames' ],
+        'hostname': [ 'cerfticiates' ],
+        
+        
         # Service Management (servicemgmt) models
-        'solutionrequest': ['sot_sr'],
-        'solutiontemplate': ['service_templates'],
-        'servicetemplate': ['service_requirements', 'service_deployments'],
-        'servicerequirement': ['sc_components'],
-        'servicedeployment': ['sc_deployments'],
-        'servicecomponent': ['service_deployment', 'content_object'],
+        'solutionrequest': [ 'sot_sr' ],
+        'solutiontemplate': [ 'service_templates'],
+        'servicetemplate': [ 'service_requirements', 'service_deployments' ],
+        'servicerequirement': [ 'sc_components' ],
+        'servicedeployment': [ 'sc_deployments',  ],
+        'servicecomponent': [ 'virtualmachine', 'device', 'hostname', 'certificate', 'contact', 'tenant', 'vip' ],    
     }
+
 
     # Add the root object to the diagram
     if depth == 0:
         tooltip = _generate_tooltip(obj, tooltip_fields)
         mermaid_code += f"{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
         if hasattr(obj, 'get_absolute_url'):
-            mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}"\n'
-
-    # Traverse forward relationships
+            mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}" "{tooltip}"\n' \
+            if tooltip else f'click {obj_id} "{obj.get_absolute_url()}"\n'
+            
+    # Traverse forward relationships based on relationships_to_follow
     for field_name in relationships_to_follow.get(obj._meta.model_name, []):
         try:
             related_obj = getattr(obj, field_name, None)
@@ -213,65 +200,63 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 tooltip = _generate_tooltip(related_obj, tooltip_fields)
                 mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
                 if hasattr(related_obj, 'get_absolute_url'):
-                    mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
+                    if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
         except AttributeError:
             continue
 
-    # Traverse reverse relationships generic content_type first then direct
+    # Traverse reverse relationships
     for rel in obj._meta.get_fields():
-        if isinstance(rel, GenericForeignKey):
-            content_type = getattr(obj, rel.ct_field, None)
-            object_id = getattr(obj, rel.fk_field, None)
-            if content_type and object_id:
-                try:
-                    related_model = content_type.model_class()
-                    related_obj = related_model.objects.get(pk=object_id)
-                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    if (related_obj_id, 'content_object') in visited:
-                        continue  # Skip if already visited
-
-                    # Add the relationship and recurse
-                    visited.add((related_obj_id, 'content_object'))
-                    related_obj_name = sanitize_name(str(related_obj))
-                    tooltip = _generate_tooltip(related_obj, tooltip_fields)
-                    mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                    if hasattr(related_obj, 'get_absolute_url'):
-                        mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-                except related_model.DoesNotExist:
-                    continue
-
         if rel.is_relation and rel.auto_created and not rel.concrete:
             relationship_name = rel.get_accessor_name()
             try:
                 related_objects_manager = getattr(obj, relationship_name, None)
 
+                # Ensure it's a valid related manager
                 if related_objects_manager and hasattr(related_objects_manager, 'all'):
                     for related_obj in related_objects_manager.all():
                         related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                         if (related_obj_id, relationship_name) in visited:
-                            continue  # Skip if already visited
+                            continue  # Skip if this relationship has already been traversed
 
+                        # Add the reverse relationship and recurse
                         visited.add((related_obj_id, relationship_name))
                         related_obj_name = sanitize_name(str(related_obj))
                         tooltip = sanitize_name(_generate_tooltip(related_obj, tooltip_fields))
                         mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
                         if hasattr(related_obj, 'get_absolute_url'):
-                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
+                            if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                         mermaid_code += f"{obj_id} --> {related_obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
             except AttributeError:
+                # Skip if the reverse relationship cannot be resolved
                 continue
             except TypeError as e:
+                # Handle issues like missing 'manager' argument
                 print(f"Error processing reverse relationship {relationship_name}: {e}")
                 continue
 
     return mermaid_code
 
 
+def _generate_tooltip(obj, tooltip_fields):
+    """
+    Generates a tooltip for the given object based on its type.
+    """
+    fields = tooltip_fields.get(obj._meta.model_name, [])
+    tooltip = []
+    for field in fields:
+        try:
+            value = getattr(obj, field, None)
+            if callable(value):
+                value = value()
+            tooltip.append(f"{field}: {value}")
+        except AttributeError:
+            continue
+    return sanitize_name(" | ".join(tooltip))
 
 class BaseDiagramView(generic.ObjectView):    
     """
