@@ -206,13 +206,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                     # recurse recurse!
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-        except AttributeError:
-            # Skip if the reverse relationship cannot be resolved
-            continue
         
-        # Reverse Relationships
-        try:         
-            if field.is_relation and field.auto_created and not field.concrete:
+            elif field.is_relation and field.auto_created and not field.concrete:
                 relationship_name = field.get_accessor_name()    
             related_objects_manager = getattr(obj, relationship_name, None)
             if related_objects_manager and hasattr(related_objects_manager, 'all'):
@@ -235,7 +230,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             continue
         except TypeError as e:
             # Handle issues like missing 'manager' argument
-            print(f"Error processing reverse relationship {relationship_name}: {e}")
+            print(f"Error processing relationship {field}: {e}")
             continue
 
     return mermaid_code
