@@ -54,4 +54,4 @@ class ServiceDeploymentSerializer(NetBoxModelSerializer):
 class ServiceComponentSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.ServiceComponent
-        fields = ['pk', 'id', 'name', 'description', 'status', 'version', 'service_deployment', 'service_requirement', 'content_type', 'object_id', 'content_object' ]
+        fields = ['pk', 'id', 'name', 'description', 'status', 'version', 'service_deployment', 'service_requirement', 'object_type', 'object_id', 'content_object' ]
