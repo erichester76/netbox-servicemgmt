@@ -160,7 +160,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments' ],
-        'servicecomponent': [ 'service_deployment', 'content_object' ],  
+        'servicecomponent': [ 'content_object' ],
+        'content_object': [ 'virtualmachine' ],  
         
         'virtualmachine': [ 'device' ], 
         'device': [ 'cluster', 'virtualchassis', 'rack' ],
@@ -178,18 +179,14 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         tooltip = _generate_tooltip(obj, tooltip_fields)
         mermaid_code += f"{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
         if hasattr(obj, 'get_absolute_url'):
-            mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}" "{tooltip}"\n' \
-            if tooltip else f'click {obj_id} "{obj.get_absolute_url()}"\n'
+            mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}"\n'
             
     # Traverse relationships dynamically based on relationships_to_follow
     for field in obj._meta.get_fields():
-
         # Skip fields not in relationships_to_follow for this model
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
-    
         try:
-
             # Traverse forward relationships
             if isinstance(field, (models.ForeignKey, GenericForeignKey, models.OneToOneField)):
                 related_obj = getattr(obj, field.name, None)
@@ -206,8 +203,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                     # recurse recurse!
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-
-            # Traverse forward relationships
+            # Traverse reverse relationships
             elif field.is_relation and field.auto_created and not field.concrete:
                 relationship_name = field.get_accessor_name()    
                 related_objects_manager = getattr(obj, relationship_name, None)
@@ -221,14 +217,13 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         tooltip = sanitize_name(_generate_tooltip(related_obj, tooltip_fields))
                         mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
                         if hasattr(related_obj, 'get_absolute_url'):
-                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
-                            if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                         mermaid_code += f"{obj_id} --> {related_obj_id}\n"
                         # recurse recurse!
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                         
         except AttributeError:
-            # Skip if the reverse relationship cannot be resolved
+            # Skip if the relationship cannot be resolved
             continue
         except TypeError as e:
             # Handle issues like missing 'manager' argument
