@@ -188,7 +188,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         related_obj=""
         try:
             
-            if field.is_relation and field.name not in relationships_to_follow.get(obj._meta.model_name, []):
+            if field.is_relation and field.name in relationships_to_follow.get(obj._meta.model_name, []):
                 if not field.auto_created:     
                     # Traverse forward relationships
                     
