@@ -188,7 +188,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             continue
         try:
             # Traverse forward relationships
-            if field.is_relation and not field.auto_created:
+            if (field.is_relation and not field.auto_created) or isinstance(field, GenericForeignKey):
                 related_obj = getattr(obj, field.name, None)
                 if related_obj and hasattr(related_obj, 'pk'):
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
