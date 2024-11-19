@@ -186,8 +186,6 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     # Traverse relationships dynamically based on relationships_to_follow
     for field in obj._meta.get_fields():
         # Skip fields not in relationships_to_follow for this model
-        print(f"Processing relationship {field.name} from {obj._meta.model_name}")
-
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             print(f"Skipping relationship {field.name} from {obj._meta.model_name}")
             continue
@@ -201,6 +199,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                     if (related_obj_id, field.name) in visited:
                         continue  # Skip if already traversed
+                    print(f"Processing forward relationship {field.name} from {obj._meta.model_name}")
                     visited.add((related_obj_id, field.name))
                     related_obj_name = sanitize_name(str(related_obj))
                     tooltip = _generate_tooltip(related_obj, tooltip_fields)
@@ -212,7 +211,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
             # Traverse reverse relationships
             elif field.is_relation and field.auto_created and not field.concrete:
-                relationship_name = field.get_accessor_name()    
+                relationship_name = field.get_accessor_name()  
+                print(f"Processing reverse relationship {field.name} {relationship_name} from {obj._meta.model_name}")
                 related_objects_manager = getattr(obj, relationship_name, None)
                 if related_objects_manager and hasattr(related_objects_manager, 'all'):
                     for related_obj in related_objects_manager.all():
