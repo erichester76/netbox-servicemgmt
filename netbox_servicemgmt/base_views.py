@@ -219,7 +219,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         except AttributeError:
             continue
 
-    # Traverse reverse relationships
+    # Traverse reverse relationships generic content_type first then direct
     for rel in obj._meta.get_fields():
         if isinstance(rel, GenericForeignKey):
             content_type = getattr(obj, rel.ct_field, None)
