@@ -175,7 +175,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments' ],
-        'servicecomponent': [ 'service_deployment' ],
+        'servicecomponent': [ 'service_deployment', 'content_object' ],
     }
 
     # Add the root object to the diagram
@@ -210,6 +210,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Traverse reverse relationships
     for rel in obj._meta.get_fields():
+        
         if isinstance(rel, GenericForeignKey):
             content_type = getattr(obj, rel.ct_field, None)
             object_id = getattr(obj, rel.fk_field, None)
