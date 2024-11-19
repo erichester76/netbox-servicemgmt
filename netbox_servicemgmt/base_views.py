@@ -6,6 +6,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
 import re
+import logging
+
+logger = logging.getLogger('netbox.plugins.netbox_servicemgmt')
 
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
@@ -184,6 +187,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     # Traverse relationships dynamically based on relationships_to_follow
     for field in obj._meta.get_fields():
         # Skip fields not in relationships_to_follow for this model
+        logger.info(f"Processing relationship {field.name} from {obj._meta.model_name}")
+
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []) or not isinstance(field, GenericForeignKey):
             continue
         related_obj=""
@@ -191,6 +196,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             # Traverse forward relationships
             if (field.is_relation and not field.auto_created) or isinstance(field, GenericForeignKey):
                 if isinstance(field, GenericForeignKey):
+                    logger.info(f"Processing generic key {field.name} from {obj._meta.model_name}")
                     content_type = getattr(obj, field.ct_field, None)
                     object_id = getattr(obj, field.fk_field, None)
                     if content_type and object_id:
