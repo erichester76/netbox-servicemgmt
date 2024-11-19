@@ -160,8 +160,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments' ],
-        'servicecomponent': [ 'content_object' ],
-        'content_object': [ 'virtualmachine', 'device', 'hostname', 'rack', 'hostname', 'certificate', 'vip' ],  
+        'servicecomponent': [ 'content_object' ],  
         
         'virtualmachine': [ 'device' ], 
         'device': [ 'cluster', 'virtualchassis', 'rack' ],
@@ -189,7 +188,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             continue
         try:
             # Traverse forward relationships
-            if isinstance(field, (models.ForeignKey, GenericForeignKey, models.OneToOneField)):
+            if field.is_relation and not field.auto_created:
                 related_obj = getattr(obj, field.name, None)
                 if related_obj and hasattr(related_obj, 'pk'):
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
