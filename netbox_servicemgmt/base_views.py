@@ -160,7 +160,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments' ],
-        'servicecomponent': [ 'content_object', 'object_type', 'object_id' ],  
+        'servicecomponent': [ 'content_object' ],  
         
         'virtualmachine': [ 'device' ], 
         'device': [ 'cluster', 'virtualchassis', 'rack' ],
@@ -184,7 +184,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     # Traverse relationships dynamically based on relationships_to_follow
     for field in obj._meta.get_fields():
         # Skip fields not in relationships_to_follow for this model
-        if field.name not in relationships_to_follow.get(obj._meta.model_name, []) and not isinstance(field, GenericForeignKey):
+        if field.name not in relationships_to_follow.get(obj._meta.model_name, []) or not isinstance(field, GenericForeignKey):
             continue
         related_obj=""
         try:
