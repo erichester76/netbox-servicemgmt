@@ -209,7 +209,30 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Traverse reverse relationships
     for rel in obj._meta.get_fields():
-        if rel.is_relation and rel.auto_created and not rel.concrete:
+        if isinstance(rel, GenericForeignKey):
+            content_type = getattr(obj, rel.ct_field, None)
+            object_id = getattr(obj, rel.fk_field, None)
+            if content_type and object_id:
+                try:
+                    related_model = content_type.model_class()
+                    related_obj = related_model.objects.get(pk=object_id)
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    if (related_obj_id, 'content_object') in visited:
+                        continue  # Skip if already visited
+
+                    # Add the relationship and recurse
+                    visited.add((related_obj_id, 'content_object'))
+                    related_obj_name = sanitize_name(str(related_obj))
+                    tooltip = _generate_tooltip(related_obj, tooltip_fields)
+                    mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
+                    if hasattr(related_obj, 'get_absolute_url'):
+                        mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                    mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                except related_model.DoesNotExist:
+                    continue
+                
+        elif rel.is_relation and rel.auto_created and not rel.concrete:
             relationship_name = rel.get_accessor_name()
             try:
                 related_objects_manager = getattr(obj, relationship_name, None)
