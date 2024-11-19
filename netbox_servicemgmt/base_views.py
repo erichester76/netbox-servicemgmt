@@ -183,21 +183,21 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             
     # Traverse relationships dynamically based on relationships_to_follow
     for field in obj._meta.get_fields():
-        field_name = field.name
 
         # Skip fields not in relationships_to_follow for this model
-        if field_name not in relationships_to_follow.get(obj._meta.model_name, []):
+        if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
     
-       # Traverse forward relationships
         try:
+
+            # Traverse forward relationships
             if isinstance(field, (models.ForeignKey, GenericForeignKey, models.OneToOneField)):
                 related_obj = getattr(obj, field.name, None)
                 if related_obj and hasattr(related_obj, 'pk'):
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    if (related_obj_id, field_name) in visited:
+                    if (related_obj_id, field.name) in visited:
                         continue  # Skip if already traversed
-                    visited.add((related_obj_id, field_name))
+                    visited.add((related_obj_id, field.name))
                     related_obj_name = sanitize_name(str(related_obj))
                     tooltip = _generate_tooltip(related_obj, tooltip_fields)
                     mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
@@ -206,7 +206,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                     # recurse recurse!
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-        
+
+            # Traverse forward relationships
             elif field.is_relation and field.auto_created and not field.concrete:
                 relationship_name = field.get_accessor_name()    
                 related_objects_manager = getattr(obj, relationship_name, None)
@@ -225,6 +226,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         mermaid_code += f"{obj_id} --> {related_obj_id}\n"
                         # recurse recurse!
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                        
         except AttributeError:
             # Skip if the reverse relationship cannot be resolved
             continue
