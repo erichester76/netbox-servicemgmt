@@ -191,7 +191,19 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             if field.is_relation and field.name not in relationships_to_follow.get(obj._meta.model_name, []):
                 if not field.auto_created:     
                     # Traverse forward relationships
-                    related_obj = getattr(obj, field.name, None)
+                    
+                    if isinstance(field, GenericForeignKey):
+                        content_type = getattr(obj, field.ct_field, None)
+                        object_id = getattr(obj, field.fk_field, None)
+                        if content_type and object_id:
+                            related_model = content_type.model_class()
+                            try:
+                                related_obj = related_model.objects.get(pk=object_id)
+                                print(f"GenericForeignKey points to: {related_obj}")
+                            except related_model.DoesNotExist:
+                                print(f"GenericForeignKey points to a non-existing object: {content_type} with ID {object_id}")
+                    else: related_obj = getattr(obj, field.name, None)
+                    
                     if related_obj and hasattr(related_obj, 'pk'):
                         related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                         if (related_obj_id, field.name) in visited:
