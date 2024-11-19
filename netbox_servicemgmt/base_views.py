@@ -10,7 +10,6 @@ import logging
 
 logger = logging.getLogger('netbox.plugins.netbox_servicemgmt')
 
-
 class BaseChangeLogView(generic.ObjectChangeLogView):
     base_template = 'netbox_servicemgmt/default-detail.html'
     
