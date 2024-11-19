@@ -191,9 +191,9 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         # Skip fields not in `relationships_to_follow` for this model
         if field_name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
-
+    
+       # Traverse forward relationships
         try:
-            # Handle ForeignKey and OneToOneField relationships
             if isinstance(field, (models.ForeignKey, GenericForeignKey, models.OneToOneField)):
                 related_obj = getattr(obj, field.name, None)
                 if related_obj and hasattr(related_obj, 'pk'):
@@ -213,6 +213,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         except AttributeError:
             continue
         
+        # everse Relationships
         try:         
         
             if field.is_relation and field.auto_created and not field.concrete:
@@ -235,7 +236,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
                         if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
         except AttributeError:
             # Skip if the reverse relationship cannot be resolved
