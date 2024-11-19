@@ -191,6 +191,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []) and not isinstance(field, GenericForeignKey):
             logger.info(f"Skipping relationship {field.name} from {obj._meta.model_name}")
             continue
+        
         related_obj=""
         try:
             # Traverse forward relationships
