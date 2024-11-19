@@ -209,22 +209,22 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         
             elif field.is_relation and field.auto_created and not field.concrete:
                 relationship_name = field.get_accessor_name()    
-            related_objects_manager = getattr(obj, relationship_name, None)
-            if related_objects_manager and hasattr(related_objects_manager, 'all'):
-                for related_obj in related_objects_manager.all():
-                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    if (related_obj_id, relationship_name) in visited:
-                        continue  # Skip if this relationship has already been traversed
-                    visited.add((related_obj_id, relationship_name))
-                    related_obj_name = sanitize_name(str(related_obj))
-                    tooltip = sanitize_name(_generate_tooltip(related_obj, tooltip_fields))
-                    mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                    if hasattr(related_obj, 'get_absolute_url'):
-                        mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
-                        if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{obj_id} --> {related_obj_id}\n"
-                    # recurse recurse!
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                related_objects_manager = getattr(obj, relationship_name, None)
+                if related_objects_manager and hasattr(related_objects_manager, 'all'):
+                    for related_obj in related_objects_manager.all():
+                        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                        if (related_obj_id, relationship_name) in visited:
+                            continue  # Skip if this relationship has already been traversed
+                        visited.add((related_obj_id, relationship_name))
+                        related_obj_name = sanitize_name(str(related_obj))
+                        tooltip = sanitize_name(_generate_tooltip(related_obj, tooltip_fields))
+                        mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
+                        if hasattr(related_obj, 'get_absolute_url'):
+                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
+                            if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                        mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                        # recurse recurse!
+                        mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
         except AttributeError:
             # Skip if the reverse relationship cannot be resolved
             continue
