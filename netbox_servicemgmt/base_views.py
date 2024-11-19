@@ -156,7 +156,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicedeployment': ['name', 'status', 'engineering_contact'],
     }
 
-    relationships_to_follow = {\
+    relationships_to_follow = {
         'solutionrequest': [ 'sot_sr' ],
         'solutiontemplate': [ 'service_templates'],
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
@@ -183,7 +183,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             
     # Traverse relationships dynamically based on relationships_to_follow
     for field in obj._meta.get_fields():
-        related_obj=""
+        related_obj=None
         try:
             
             if field.is_relation and field.name in relationships_to_follow.get(obj._meta.model_name, []):
@@ -200,7 +200,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                                 print(f"GenericForeignKey points to: {related_obj}")
                             except related_model.DoesNotExist:
                                 print(f"GenericForeignKey points to a non-existing object: {content_type} with ID {object_id}")
-                    else: related_obj = getattr(obj, field.name, None)
+                    elif isinstance(field, (models.ForeignKey, models.OneToOneField)):
+                        related_obj = getattr(obj, field.name, None)
                     
                     if related_obj and hasattr(related_obj, 'pk'):
                         related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
