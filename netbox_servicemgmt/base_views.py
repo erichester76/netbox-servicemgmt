@@ -159,11 +159,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'solutiontemplate': [ 'service_templates'],
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
-        'servicedeployment': [ 'sc_deployments'  ],
-        'servicecomponent': [ 'service_deployments', 'content_object' ],  
+        'servicedeployment': [ 'sc_deployments' ],
+        'servicecomponent': [ 'service_deployment', 'content_object' ],  
         
         'virtualmachine': [ 'device' ], 
-        'device': [ 'cluster', 'virtual_chassis', 'rack' ],
+        'device': [ 'cluster', 'virtualchassis', 'rack' ],
         'rack': [ 'location' ],
         'location': [ 'site' ],
         'site': [],  
@@ -280,7 +280,7 @@ class BaseDiagramView(generic.ObjectView):
             'virtualmachine': '#9b59b6',  # Purple
             'device': '#2ecc71',  # Green
             'cluster': '#3498db',  # Light Blue
-            'virtual_chassis': '#34495e', # Gray-Blue
+            'virtualchassis': '#34495e', # Gray-Blue
             'rack': '#9b59b6',  # Purple 
             'location': '#f39c12',  # Yellow
             'site': '#e74c3c',  # Red-Orange
