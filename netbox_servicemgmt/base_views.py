@@ -160,7 +160,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments'  ],
-        'servicecomponent': [ 'service_deplotments', 'content_object' ],  
+        'servicecomponent': [ 'service_deployments', 'content_object' ],  
         
         'virtualmachine': [ 'device' ], 
         'device': [ 'cluster', 'virtual_chassis', 'rack' ],
