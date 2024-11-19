@@ -165,15 +165,13 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicecomponent': [ 'content_object' ],  
         
         'virtualmachine': [ 'device' ], 
-        'device': [ 'cluster', 'virtualchassis', 'rack' ],
-        'rack': [ 'location' ],
+        'device': [ 'cluster', 'virtual_chassis', 'rack' ],
+        'cluster': [ 'cluster_type' ],
+        'rack': [ 'location', 'site' ],
         'location': [ 'site' ],
         'site': [],  
         'tenant': [],  
         'contact': [], 
-        'vip': [],
-        'certificate': [ 'hostnames' ],
-        'hostname': [ 'cerfticiates' ],
     }
 
     # Add the root object to the diagram
