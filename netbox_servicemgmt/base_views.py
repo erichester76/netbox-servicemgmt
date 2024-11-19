@@ -172,7 +172,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': [ 'service_requirements', 'service_deployments' ],
         'servicerequirement': [ 'sc_components' ],
         'servicedeployment': [ 'sc_deployments'  ],
-        'servicecomponent': [ 'content_object' ],    
+        'servicecomponent': [ 'service_deplotments', 'content_object' ],    
     }
 
 
@@ -184,60 +184,66 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}" "{tooltip}"\n' \
             if tooltip else f'click {obj_id} "{obj.get_absolute_url()}"\n'
             
-    # Traverse forward relationships, including GenericForeignKey
-    for field_name in relationships_to_follow.get(obj._meta.model_name, []):
-        try:
-            related_obj = getattr(obj, field_name, None)
-            if related_obj and hasattr(related_obj, 'pk'):
-                related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                if (related_obj_id, field_name) in visited:
-                    continue  # Skip if this relationship has already been traversed
+    # Traverse forward relationships dynamically based on `relationships_to_follow`
+    for field in obj._meta.get_fields():
+        field_name = field.name
 
-                # Add the relationship and recurse
-                visited.add((related_obj_id, field_name))
-                related_obj_name = sanitize_name(str(related_obj))
-                tooltip = _generate_tooltip(related_obj, tooltip_fields)
-                mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                if hasattr(related_obj, 'get_absolute_url'):
-                    mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                mermaid_code += f"{obj_id} --> {related_obj_id}\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-
-        except AttributeError:
+        # Skip fields not in `relationships_to_follow` for this model
+        if field_name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
 
-    # Traverse reverse relationships
-    for rel in obj._meta.get_fields():
-                
-        if rel.is_relation and rel.auto_created and not rel.concrete:
-            relationship_name = rel.get_accessor_name()
-            try:
-                related_objects_manager = getattr(obj, relationship_name, None)
+        try:
+            # Handle ForeignKey and OneToOneField relationships
+            if isinstance(field, (models.ForeignKey, GenericForeignKey, models.OneToOneField)):
+                related_obj = getattr(obj, field.name, None)
+                if related_obj and hasattr(related_obj, 'pk'):
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    if (related_obj_id, field_name) in visited:
+                        continue  # Skip if already traversed
 
-                # Ensure it's a valid related manager
-                if related_objects_manager and hasattr(related_objects_manager, 'all'):
-                    for related_obj in related_objects_manager.all():
-                        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                        if (related_obj_id, relationship_name) in visited:
-                            continue  # Skip if this relationship has already been traversed
+                    # Add relationship and recurse
+                    visited.add((related_obj_id, field_name))
+                    related_obj_name = sanitize_name(str(related_obj))
+                    tooltip = _generate_tooltip(related_obj, tooltip_fields)
+                    mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
+                    if hasattr(related_obj, 'get_absolute_url'):
+                        mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                    mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+        except AttributeError:
+            continue
+        
+        try:         
+        
+            if field.is_relation and field.auto_created and not field.concrete:
+                relationship_name = field.get_accessor_name()
+    
+            related_objects_manager = getattr(obj, relationship_name, None)
 
-                        # Add the reverse relationship and recurse
-                        visited.add((related_obj_id, relationship_name))
-                        related_obj_name = sanitize_name(str(related_obj))
-                        tooltip = sanitize_name(_generate_tooltip(related_obj, tooltip_fields))
-                        mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                        if hasattr(related_obj, 'get_absolute_url'):
-                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
-                            if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                        mermaid_code += f"{obj_id} --> {related_obj_id}\n"
-                        mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-            except AttributeError:
-                # Skip if the reverse relationship cannot be resolved
-                continue
-            except TypeError as e:
-                # Handle issues like missing 'manager' argument
-                print(f"Error processing reverse relationship {relationship_name}: {e}")
-                continue
+            # Ensure it's a valid related manager
+            if related_objects_manager and hasattr(related_objects_manager, 'all'):
+                for related_obj in related_objects_manager.all():
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    if (related_obj_id, relationship_name) in visited:
+                        continue  # Skip if this relationship has already been traversed
+
+                    # Add the reverse relationship and recurse
+                    visited.add((related_obj_id, relationship_name))
+                    related_obj_name = sanitize_name(str(related_obj))
+                    tooltip = sanitize_name(_generate_tooltip(related_obj, tooltip_fields))
+                    mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
+                    if hasattr(related_obj, 'get_absolute_url'):
+                        mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}" "{tooltip}"\n' \
+                        if tooltip else f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                    mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+        except AttributeError:
+            # Skip if the reverse relationship cannot be resolved
+            continue
+        except TypeError as e:
+            # Handle issues like missing 'manager' argument
+            print(f"Error processing reverse relationship {relationship_name}: {e}")
+            continue
 
     return mermaid_code
 
