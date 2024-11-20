@@ -167,7 +167,7 @@ def generate_mermaid_code(obj, depth=0):
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
 
-        # Handle ForeignKey and OneToOneField relationships
+        """ # Handle ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
             # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
@@ -178,7 +178,7 @@ def generate_mermaid_code(obj, depth=0):
                 indent = "    " * (depth+1)
                 mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                 mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                mermaid_code += generate_mermaid_code(related_obj, depth + 1) 
+                mermaid_code += generate_mermaid_code(related_obj, depth + 1)  """
       
 
         # Handle GenericForeignKey
