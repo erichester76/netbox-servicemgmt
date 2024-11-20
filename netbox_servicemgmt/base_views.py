@@ -16,7 +16,7 @@ def sanitize_name(name):
     """
     # Remove parentheses and replace other characters if needed
     clean_name = re.sub(r'[^\w\s\-]', '', name)  # Remove all non-alphanumeric characters except spaces
-    clean_name = re.sub(r'\-', '\_', clean_name)  # Replace spaces with underscores
+    #clean_name = re.sub(r'\-', '_', clean_name)  # Replace spaces with underscores
     return clean_name
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
@@ -184,7 +184,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                     related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
                     indent = "    " * (depth+1)
-                    mermaid_code += f"{indent}{related_obj_id}({field.name} {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
+                    mermaid_code += f"{indent}{related_obj_id}({related_obj._meta.model_name} {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
