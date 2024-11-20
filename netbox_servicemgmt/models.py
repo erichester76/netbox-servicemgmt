@@ -284,7 +284,7 @@ class ServiceTemplate(NetBoxModel):
     description = models.TextField()
     solution_templates = models.ManyToManyField(
         'SolutionTemplate', 
-        related_name='soltem_servtems', 
+        related_name='servtem_soltems', 
         verbose_name='Solution Templates'
     )    
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
