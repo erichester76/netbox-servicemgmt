@@ -125,7 +125,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, visited=None, depth=0):
+def generate_mermaid_code(obj, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
@@ -150,11 +150,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'tenant': [],
         'contact': [],
     }
-    
-    if visited is None:
-        visited = set()
 
-   
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
 
@@ -204,37 +200,30 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     related_obj = related_model.objects.get(pk=object_id)
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
                     related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
-                    if related_obj_id in visited:
-                        continue  # Skip if already visited
-                    # Add relationship and recurse with indent for readability
                     indent = "    " * (depth+1)
                     mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                    mermaid_code += generate_mermaid_code(related_obj depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
 
     # Traverse reverse relationships (many-to-one, many-to-many)
-    if obj._meta.model_name not in models_to_skip_reverse_relations:
-        for rel in obj._meta.get_fields():
-            if rel.is_relation and rel.auto_created and not rel.concrete:
-                related_objects = getattr(obj, rel.get_accessor_name(), None)
-                if hasattr(related_objects, 'all'):
-                    for related_obj in related_objects.all():
-                        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                        related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
-                        # Check if the related object was already visited to avoid loops
-                        if related_obj_id in visited:
-                            continue  # Skip if already visited
-                        # Add reverse relationship and recurse with indent for readability
-                        indent = "    " * (depth+1)
-                        mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
-                        if hasattr(related_obj, 'get_absolute_url'):
-                            mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                        mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                        mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+    for rel in obj._meta.get_fields():
+        if rel.is_relation and rel.auto_created and not rel.concrete:
+            related_objects = getattr(obj, rel.get_accessor_name(), None)
+            if hasattr(related_objects, 'all'):
+                for related_obj in related_objects.all():
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
+                    # Add reverse relationship and recurse with indent for readability
+                    indent = "    " * (depth+1)
+                    mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
+                    if hasattr(related_obj, 'get_absolute_url'):
+                        mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += generate_mermaid_code(related_obj depth + 1)
     
     return mermaid_code
 
