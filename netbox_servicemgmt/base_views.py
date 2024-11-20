@@ -137,7 +137,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'solutiontemplate': ['servtem_soltems'],
         'servicetemplate': ['servreq_servtems', 'servdep_servtems'],
         'servicerequirement': ['servcom_servreqs'],
-        'servicedeployment': ['servcom_servdeps'],
+        'servicedeployment': ['servcom_servdeps', 'servreq_servdeps'],
         'servicecomponent': [ 'content_object'],
         'virtualmachine': ['device'],
         'device': ['virtual_chassis', 'cluster', 'rack'],
