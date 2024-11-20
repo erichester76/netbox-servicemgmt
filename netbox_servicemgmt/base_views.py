@@ -125,7 +125,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, depth=0):
+def generate_mermaid_code(obj, visited=None, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
@@ -141,7 +141,7 @@ def generate_mermaid_code(obj, depth=0):
         'servicecomponent': [ 'content_object'],
         'virtualmachine': ['device'],
         'device': ['virtual_chassis', 'cluster', 'rack'],
-        'cluster': ['location'],
+        'cluster': ['site'],
         'rack': ['location'],
         'location': ['site'],
         'site': [],
@@ -151,6 +151,8 @@ def generate_mermaid_code(obj, depth=0):
 
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
+    if visited == None:
+        visited=set()
 
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
     obj_name = sanitize_name(str(obj))  # Sanitize the related object name
@@ -162,11 +164,14 @@ def generate_mermaid_code(obj, depth=0):
 
     # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
     for field in obj._meta.get_fields():
+        # Skip visited relationships
+        if (obj_name,object_id,field.name) in visited:
+            continue
         # Skip excluded relationships
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             #print(f"skipping {obj} -> {field.name}")
             continue
-        
+        visited.add((obj_name,object_id,field.name))
         # Handle GenericForeignKey
         if isinstance(field, GenericForeignKey):
             print(f"processing {obj} -> {field.name} generic")
