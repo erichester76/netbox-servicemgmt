@@ -6,9 +6,18 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
 import re
-import logging
 
-logger = logging.getLogger('netbox.plugins.netbox_servicemgmt')
+
+
+def sanitize_name(name):
+    """
+    Cleans up the name by removing or replacing characters not allowed in Mermaid diagrams.
+    Currently removes parentheses and other special characters.
+    """
+    # Remove parentheses and replace other characters if needed
+    clean_name = re.sub(r'[^\w\s]', '', name)  # Remove all non-alphanumeric characters except spaces
+    #clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
+    return clean_name
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
     base_template = 'netbox_servicemgmt/default-detail.html'
@@ -70,10 +79,10 @@ class BaseObjectView(generic.ObjectView):
 
         # Find reverse relations dynamically and add them to related_tables
         related_tables = []
-        for field in instance._meta.get_fields():
-            if field.is_relation and field.auto_created and not field.concrete:
-                related_model = field.related_model
-                related_objects = getattr(instance, field.get_accessor_name()).all()
+        for rel in instance._meta.get_fields():
+            if rel.is_relation and rel.auto_created and not rel.concrete:
+                related_model = rel.related_model
+                related_objects = getattr(instance, rel.get_accessor_name()).all()
          
                 # Create the URL for adding a new related object
                 add_url = None
@@ -108,60 +117,182 @@ class BaseObjectView(generic.ObjectView):
                     'add_url': add_url,
                     'attach_url': attach_url,
                 })
+
                     
         return {
             'object_name': object_name,
             'field_data': field_data,
             'related_tables': related_tables,
         }
-    
-
-def sanitize_name(name):
-    """
-    Cleans up the name by removing or replacing characters not allowed in Mermaid diagrams.
-    Currently removes parentheses and other special characters.
-    """
-    # Remove parentheses and replace other characters if needed
-    clean_name = re.sub(r'[^\w\s-]', '', name)  # Remove all non-alphanumeric characters except spaces
-    clean_name = re.sub(r'-', '_', clean_name)  # Replace spaces with underscores
-    return clean_name
-
-
-def process_related_object(related_obj, parent_obj, visited, mermaid_code):
-
-    print(f"Processing {related_obj} from {parent_obj}")
-
-    try:
-        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-        parent_obj_id = f"{parent_obj._meta.model_name}_{parent_obj.pk}"
-        if (related_obj_id, parent_obj_id) in visited:
-            return
-        visited.add((related_obj_id, parent_obj_id))
-        related_obj_name = sanitize_name(str(related_obj))
-        mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-        if hasattr(related_obj, "get_absolute_url"):
-            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-        mermaid_code += f"{parent_obj_id} --> {related_obj_id}\n"
-        mermaid_code += generate_mermaid_code(related_obj, visited)
         
-        print(f"Finished Processing {related_obj} from {parent_obj}")
-
-    except Exception as e:
-        print(f"Error processing related object {related_obj}: {e}")
-
 def generate_mermaid_code(obj, visited=None, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
-    Tracks visited objects and relationships to avoid infinite loops.
+    Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
     """
     if visited is None:
         visited = set()
 
-    mermaid_code = ""
-    obj_id = f"{obj._meta.model_name}_{obj.pk}"
-    obj_name = sanitize_name(str(obj))
+    excluded_fields = {
+        'id', 
+        'custom_field_data',
+        'custom_fields', 
+        'tags',
+        'bookmarks', 
+        'journal_entries', 
+        'subscriptions', 
+        'tagged_items', 
+        'device_type',
+        'device',
+        'role',
+        'ipaddress',
+        'depends_on',
+        'dependencies',
+        'created',
+        'last_updated',
+        'object_id',
+        'primary_ip4',
+        'primary_ip6',
+        'ipaddresses',
+        'cluster_group',
+        'cluster_type',
+        'fault_tolerence',
+        'service_slo',
+        'vendor',
+        'business_owner_contact',
+        'business_owner_tenant',
+        'service_owner_contact',
+        'service_owner_tenant',
+        'design_contact',
+        'requirement_owner',
+    }
 
-    # Relationships to follow for each model
+    models_to_skip_reverse_relations = {
+        'Site', 
+        'Tenant',
+        'Contact',
+        'Site',
+        'FaultTolerence',
+        'SLO',
+        'IPAddress',
+        'Interface',
+        'Manufacturer', 
+        'Tag',       
+    }
+
+    mermaid_code = ""
+    indent = "    " * depth  # Indentation for readability
+
+    # Get object identifier and mark the object as visited to avoid revisiting it
+    obj_id = f"{obj._meta.model_name}_{obj.pk}"
+    if obj_id in visited:
+        return mermaid_code  # Stop if this object was already visited
+
+    visited.add(obj_id)  # Mark the object as visited *before* recursion
+
+    # Add the object to the diagram
+    obj_name = sanitize_name(str(obj))  # Sanitize the related object name
+    if depth == 0: 
+        mermaid_code += f"{indent}{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
+        if hasattr(obj, 'get_absolute_url'):
+            mermaid_code += f'{indent}click {obj_id} "{obj.get_absolute_url()}"\n'
+
+    # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
+    for field in obj._meta.get_fields():
+        # Skip excluded fields like 'tags'
+        if field.name in excluded_fields:
+            continue
+
+        """# Handle ForeignKey and OneToOneField relationships
+        if isinstance(field, (models.ForeignKey, models.OneToOneField)):
+            # Check if the related object exists
+            related_obj = getattr(obj, field.name, None)
+            if related_obj and related_obj.pk:
+                related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
+                if related_obj_id in visited:
+                     continue  # Skip if already visited
+                # Add relationship and recurse with indent for readability
+                indent = "    " * (depth+1)
+                mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
+                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1) 
+        """
+
+        # Handle GenericForeignKey
+        if isinstance(field, GenericForeignKey):
+            content_type = getattr(obj, field.ct_field, None)
+            object_id = getattr(obj, field.fk_field, None)
+            if content_type and object_id:
+                related_model = content_type.model_class()
+                try:
+                    related_obj = related_model.objects.get(pk=object_id)
+                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                    related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
+                    if related_obj_id in visited:
+                        continue  # Skip if already visited
+                    # Add relationship and recurse with indent for readability
+                    indent = "    " * (depth+1)
+                    mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
+                    if hasattr(related_obj, 'get_absolute_url'):
+                        mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                except related_model.DoesNotExist:
+                    continue  # If the related object doesn't exist, skip it
+
+    # Traverse reverse relationships (many-to-one, many-to-many)
+    if obj._meta.model_name not in models_to_skip_reverse_relations:
+        for rel in obj._meta.get_fields():
+            if rel.is_relation and rel.auto_created and not rel.concrete:
+                related_objects = getattr(obj, rel.get_accessor_name(), None)
+                if hasattr(related_objects, 'all'):
+                    for related_obj in related_objects.all():
+                        related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                        related_obj_name = sanitize_name(str(related_obj))  # Sanitize the related object name
+                        # Check if the related object was already visited to avoid loops
+                        if related_obj_id in visited:
+                            continue  # Skip if already visited
+                        # Add reverse relationship and recurse with indent for readability
+                        indent = "    " * (depth+1)
+                        mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
+                        if hasattr(related_obj, 'get_absolute_url'):
+                            mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                        mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                        mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+    
+    return mermaid_code
+
+class BaseDiagramView(generic.ObjectView):    
+    """
+    Diagram tab View to show mermiad diagram of relationships of object
+    """
+    
+    template_name = "netbox_servicemgmt/default-diagram.html"  
+    
+    tab = ViewTab(
+        label='Diagram',
+        badge=lambda obj: 1, 
+    )
+    
+    def get_extra_context(self, request, instance):
+       mermaid_source = f"graph LR\n{generate_mermaid_code(instance)}"
+       color_map = {
+            'solutiontemplate': '#16a2b8',  # Darker Teal 
+            'servicetemplate': '#184990',   # Teal 
+            'servicerequirement': '#02252f',  # GreenBlue
+            'servicedeployment': '#f76706',  # Orange2
+            'servicecomponent': '#d63a39',  # Red 
+        }
+       for obj_type, color in color_map.items():
+          mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
+
+       return {
+          'mermaid_source': mermaid_source,
+       }
+
+
+"""  # Relationships to follow for each model
     relationships_to_follow = {
         'solutionrequest': ['sot_sr'],
         'solutiontemplate': ['service_templates'],
@@ -180,67 +311,4 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'tenant': [],
         'contact': [],
     }
-
-    if depth == 0:
-        mermaid_code += f"{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
-
-    for field in obj._meta.get_fields():
-        try:
-             for field in obj._meta.get_fields():
-                if field.is_relation and field.name in relationships_to_follow.get(obj._meta.model_name, []):
-                    if field.auto_created and not field.concrete:
-                        print(f'found {field.name} {related_obj} {field.related_model}')
-                        related_objects = getattr(obj, field.get_accessor_name()).all()
-                        for related_obj in related_objects:
-                            print(f'found {field.name} {related_obj} {field.related_model}')
-                            logging.info(f'found {field.name} {related_obj} {field.related_model}')
-                            process_related_object(obj,related_obj,visited,mermaid_code)
-                    elif not field.auto_created:
-                        related_obj = getattr(obj, field.name)
-                        process_related_object(obj,related_obj,visited,mermaid_code)
-                       
-        except Exception as e:
-            print(f"Error processing field {field.name}: {e}")
-                
-        return mermaid_code
-
-
-class BaseDiagramView(generic.ObjectView):    
-    """
-    Diagram tab View to show mermiad diagram of relationships of object
-    """
-    template_name = "netbox_servicemgmt/default-diagram.html"  
-    
-    tab = ViewTab(
-        label='Diagram',
-        badge=lambda obj: 1, 
-    )
-    
-    def get_extra_context(self, request, instance):
-        mermaid_source = f"graph LR\n{generate_mermaid_code(instance)}"
-        color_map = {
-            'solutiontemplate': '#16a2b8',  # Darker Teal
-            'servicetemplate': '#184990',   # Teal
-            'servicerequirement': '#02252f',  # GreenBlue
-            'servicedeployment': '#f76706',  # Orange2
-            'servicecomponent': '#d63a39',  # Red
-            'virtualmachine': '#9b59b6',  # Purple
-            'device': '#2ecc71',  # Green
-            'cluster': '#3498db',  # Light Blue
-            'virtualchassis': '#34495e', # Gray-Blue
-            'rack': '#9b59b6',  # Purple 
-            'location': '#f39c12',  # Yellow
-            'site': '#e74c3c',  # Red-Orange
-            'tenant': '#1abc9c',  # Turquoise
-            'contact': '#e67e22',  # Orange
-            'certificate': '#8e44ad',  # Dark Purple
-            'hostname': '#2980b9',  # Sky Blue
-        }
-        for obj_type, color in color_map.items():
-          mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
-
-        return {
-          'mermaid_source': mermaid_source,
-    }
-
-
+ """
