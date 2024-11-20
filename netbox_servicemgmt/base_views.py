@@ -151,7 +151,6 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'contact': [],
     }
     
-    
     if visited is None:
         visited = set()
 
