@@ -202,7 +202,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         related_objects_manager = getattr(obj, relationship_name, None)
                         if related_objects_manager and hasattr(related_objects_manager, 'all'):
                             for related_obj in related_objects_manager.all():
-                                process_related_object(related_obj, obj, visited, mermaid_code)
+                                process_related_object(obj, related_obj, visited, mermaid_code)
                                 
                     else: 
                         related_obj = getattr(obj, field.name, None)
