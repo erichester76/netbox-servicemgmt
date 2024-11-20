@@ -145,12 +145,10 @@ def process_related_object(related_obj, parent_obj, visited, mermaid_code):
         mermaid_code += f"{parent_obj_id} --> {related_obj_id}\n"
         mermaid_code += generate_mermaid_code(related_obj, visited)
         
-        print(f"Finished Processed {related_obj} from {parent_obj}")
+        print(f"Finished Processing {related_obj} from {parent_obj}")
 
     except Exception as e:
         print(f"Error processing related object {related_obj}: {e}")
-
-
 
 def generate_mermaid_code(obj, visited=None, depth=0):
     """
@@ -184,37 +182,22 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'contact': [],
     }
 
-    # Add root node
     if depth == 0:
         mermaid_code += f"{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
 
     for field in obj._meta.get_fields():
         try:
-            if field.is_relation and field.name in relationships_to_follow.get(obj._meta.model_name, []):
-                related_obj=None
-                if 'content_object' in field.name:
-                        content_type = getattr(obj, field.ct_field, None)
-                        object_id = getattr(obj, field.fk_field, None)
-                        if content_type and object_id:
-                            related_model = content_type.model_class()
-                            related_obj = related_model.objects.get(pk=object_id)
-                            print(f"Found {obj} Generic FK = {related_obj}")
-                            process_related_object(related_obj, obj, visited, mermaid_code)
-                            
-                elif field.auto_created and not field.concrete:  
-                    relationship_name = field.get_accessor_name()
-                    related_objects_manager = getattr(obj, relationship_name, None)
-                    if related_objects_manager and hasattr(related_objects_manager, 'all'):
-                        for related_obj in related_objects_manager.all():
-                            print(f"Found {obj} Reverse FK = {related_obj}")
-                            process_related_object(obj, related_obj, visited, mermaid_code)
-                            
-                else: 
-                    related_obj = getattr(obj, field.name, None)
-                    if related_obj:
-                        print(f"Found {obj} FK = {related_obj}")
-                        process_related_object(related_obj, obj, visited, mermaid_code)
-
+             for field in obj._meta.get_fields():
+                if field.is_relation and field.name in relationships_to_follow.get(obj._meta.model_name, []):
+                    if field.auto_created and not field.concrete:
+                        related_model = field.related_model
+                        related_objects = getattr(obj, field.get_accessor_name()).all()
+                        for related_obj in related_objects:
+                            process_related_object(obj,related_obj,visited,mermaid_code)
+                    elif field.is_relation and not field.auto_created:
+                        related_obj = getattr(obj, field.name)
+                        process_related_object(obj,related_obj,visited,mermaid_code)
+                       
         except Exception as e:
             print(f"Error processing field {field.name}: {e}")
                 
