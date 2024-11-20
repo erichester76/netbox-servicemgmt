@@ -135,10 +135,10 @@ def generate_mermaid_code(obj, depth=0):
     relationships_to_follow = {
         'solutionrequest': ['soltem_solreqs'],
         'solutiontemplate': ['servtem_soltems'],
-        'servicetemplate': ['servreq_servtems'],
+        'servicetemplate': ['servreq_servtems', 'servdep_servtems'],
         'servicerequirement': ['servcom_servreqs'],
         'servicedeployment': ['servcom_servdeps'],
-        'servicecomponent': [ 'servdep_servcom', 'content_object'],
+        'servicecomponent': [ 'content_object'],
         'virtualmachine': ['device','virtualdisks','interfaces'],
         'device': ['virtual_chassis', 'cluster', 'rack'],
         'cluster': ['location'],
