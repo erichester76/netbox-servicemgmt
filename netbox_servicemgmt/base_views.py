@@ -138,7 +138,7 @@ def generate_mermaid_code(obj, depth=0):
         'servicetemplate': ['service_requirements', 'service_deployments'],
         'servicerequirement': ['sc_components'],
         'servicedeployment': ['sc_deployments'],
-        'servicecomponent': [ 'content_object'],
+        'servicecomponent': ['content_object'],
         'virtualmachine': ['device'],
         'device': ['virtual_chassis', 'cluster', 'rack', 'location'],
         'cluster': [],
@@ -154,14 +154,7 @@ def generate_mermaid_code(obj, depth=0):
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
 
-    # Get object identifier and mark the object as visited to avoid revisiting it
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
-    if obj_id in visited:
-        return mermaid_code  # Stop if this object was already visited
-
-    visited.add(obj_id)  # Mark the object as visited *before* recursion
-
-    # Add the object to the diagram
     obj_name = sanitize_name(str(obj))  # Sanitize the related object name
     if depth == 0: 
         mermaid_code += f"{indent}{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
@@ -187,7 +180,7 @@ def generate_mermaid_code(obj, depth=0):
                 indent = "    " * (depth+1)
                 mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                 mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1) 
+                mermaid_code += generate_mermaid_code(related_obj, depth + 1) 
         """
 
         # Handle GenericForeignKey
@@ -205,7 +198,7 @@ def generate_mermaid_code(obj, depth=0):
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj depth + 1)
+                    mermaid_code += generate_mermaid_code(related_obj, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
 
@@ -223,7 +216,7 @@ def generate_mermaid_code(obj, depth=0):
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj depth + 1)
+                    mermaid_code += generate_mermaid_code(related_obj, depth + 1)
     
     return mermaid_code
 
