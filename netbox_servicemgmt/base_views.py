@@ -166,13 +166,15 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Relationships to follow for each model
     relationships_to_follow = {
+        'solutionrequest': ['sot_sr'],
         'solutiontemplate': ['service_templates'],
         'servicetemplate': ['service_requirements', 'service_deployments'],
         'servicerequirement': ['sc_components'],
         'servicedeployment': ['sc_deployments'],
         'servicecomponent': ['content_object'],
         'virtualmachine': ['device'],
-        'device': ['virtual_chassis', 'rack', 'location'],
+        'device': ['virtual_chassis', 'cluster', 'rack', 'location'],
+        'cluster': [],
         'rack': ['location'],
         'location': ['site'],
         'site': [],
