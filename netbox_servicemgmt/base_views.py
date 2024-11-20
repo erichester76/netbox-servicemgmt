@@ -138,7 +138,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': ['service_requirements', 'service_deployments'],
         'servicerequirement': ['sc_components'],
         'servicedeployment': ['sc_deployments'],
-        'servicecomponent': [],
+        'servicecomponent': [ 'content_object'],
         'virtualmachine': ['device'],
         'device': ['virtual_chassis', 'cluster', 'rack', 'location'],
         'cluster': [],
