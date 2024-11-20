@@ -167,9 +167,9 @@ def generate_mermaid_code(obj, depth=0):
         # Skip excluded relationships
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
-
         # Handle ForeignKey and OneToOneField relationships
         if isinstance(field, (models.ForeignKey, models.OneToOneField)):
+            print(f"processing {obj} -> {field.name} fk/1-2-1")
             # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
@@ -184,6 +184,7 @@ def generate_mermaid_code(obj, depth=0):
 
         # Handle GenericForeignKey
         if isinstance(field, GenericForeignKey):
+            print(f"processing {obj} -> {field.name} generic")
             content_type = getattr(obj, field.ct_field, None)
             object_id = getattr(obj, field.fk_field, None)
             if content_type and object_id:
@@ -207,6 +208,7 @@ def generate_mermaid_code(obj, depth=0):
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
         if field.is_relation and field.auto_created and not field.concrete:
+            print(f"processing {obj} -> {field.name} rev")
             related_objects = getattr(obj, field.get_accessor_name(), None)
             if hasattr(related_objects, 'all'):
                 for related_obj in related_objects.all():
