@@ -139,16 +139,14 @@ def generate_mermaid_code(obj, depth=0):
         'servicerequirement': ['servcom_servreqs'],
         'servicedeployment': ['servcom_servdeps'],
         'servicecomponent': [ 'servdep_servcom', 'content_object'],
-        'virtualmachine': ['device', 'virtualdisks', 'interfaces'],
-        'device': ['virtual_chassis', 'cluster', 'rack' ],
-        'cluster': [],
+        'virtualmachine': ['cluster'],
+        'device': ['virtual_chassis', 'cluster', 'rack'],
+        'cluster': ['location'],
         'rack': ['location'],
         'location': ['site'],
         'site': [],
         'certificate': ['hostnames'],
         'hostname': ['certificates'],
-        'tenant': [],
-        'contact': [],
     }
 
     mermaid_code = ""
