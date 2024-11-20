@@ -129,16 +129,11 @@ def sanitize_name(name):
 
 
 def generate_mermaid_code(obj, visited=None, depth=0):
-    """
-    Generates the Mermaid code for the given object and its relationships.
-    Traverses forward and reverse relationships based on a predefined filter.
-    Handles `GenericForeignKey` relationships robustly.
-    """
     if visited is None:
         visited = set()
 
+    # Define relationships to follow
     relationships_to_follow = {
-        # Add relationships for each model
         'solutiontemplate': ['service_templates'],
         'servicetemplate': ['service_requirements', 'service_deployments'],
         'servicerequirement': ['sc_components'],
@@ -156,81 +151,53 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
     obj_name = str(obj)
 
-    # Add root node
+    # Add the root object
     if depth == 0:
         mermaid_code += f"{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
-        if hasattr(obj, 'get_absolute_url'):
-            mermaid_code += f'click {obj_id} "{obj.get_absolute_url()}"\n'
 
-    # Traverse forward relationships
+    # Traverse relationships
     for field in obj._meta.get_fields():
         try:
-            if field.name in relationships_to_follow.get(obj._meta.model_name, []):
-                related_obj = None
-
-                # Handle `GenericForeignKey`
-                if isinstance(field, GenericForeignKey):
-                    content_type = getattr(obj, field.ct_field, None)
-                    object_id = getattr(obj, field.fk_field, None)
-                    if content_type and object_id:
-                        try:
-                            related_model = content_type.model_class()
-                            related_obj = related_model.objects.get(pk=object_id)
-                            print(f"GenericForeignKey points to: {related_obj}")
-                        except related_model.DoesNotExist:
-                            print(f"GenericForeignKey points to non-existent object: {content_type} with ID {object_id}")
-                            continue
-
-                # Handle regular forward relationships
-                elif isinstance(field, (models.ForeignKey, models.OneToOneField)):
+            related_obj = None
+            # Forward relationships
+            if field.is_relation and not field.auto_created:
+                if field.name in relationships_to_follow.get(obj._meta.model_name, []):
                     related_obj = getattr(obj, field.name, None)
 
-                if related_obj and hasattr(related_obj, 'pk'):
-                    related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                    if (related_obj_id, field.name) in visited:
-                        continue
-
-                    # Add to Mermaid code
-                    visited.add((related_obj_id, field.name))
-                    related_obj_name = str(related_obj)
-                    mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                    if hasattr(related_obj, 'get_absolute_url'):
-                        mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{related_obj_id} --> {obj_id}\n"
-                    # Recurse
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-
-        except AttributeError as e:
-            print(f"Error processing forward relationship {field.name}: {e}")
-            continue
-
-    # Traverse reverse relationships
-    for rel in obj._meta.get_fields():
-        if rel.is_relation and rel.auto_created and not rel.concrete:
-            relationship_name = rel.get_accessor_name()
-            try:
-                related_objects_manager = getattr(obj, relationship_name, None)
-                if related_objects_manager and hasattr(related_objects_manager, 'all'):
-                    for related_obj in related_objects_manager.all():
+            # Reverse relationships
+            elif field.is_relation and field.auto_created and not field.concrete:
+                related_objects = getattr(obj, field.get_accessor_name(), None)
+                if related_objects and hasattr(related_objects, 'all'):
+                    for related_obj in related_objects.all():
                         related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
-                        if (related_obj_id, relationship_name) in visited:
+                        if (related_obj_id, field.name) in visited:
                             continue
-                        visited.add((related_obj_id, relationship_name))
+                        visited.add((related_obj_id, field.name))
                         related_obj_name = str(related_obj)
                         mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
-                        if hasattr(related_obj, 'get_absolute_url'):
-                            mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                        mermaid_code += f"{obj_id} --> {related_obj_id}\n"
-                        # Recurse
+                        mermaid_code += f"{related_obj_id} --> {obj_id}\n"
                         mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
-            except AttributeError as e:
-                print(f"Error processing reverse relationship {relationship_name}: {e}")
-                continue
-            except TypeError as e:
-                print(f"TypeError processing reverse relationship {relationship_name}: {e}")
-                continue
+
+            # Add forward relationships to Mermaid code
+            if related_obj and hasattr(related_obj, 'pk'):
+                related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
+                if (related_obj_id, field.name) in visited:
+                    continue
+                visited.add((related_obj_id, field.name))
+                related_obj_name = str(related_obj)
+                mermaid_code += f"{related_obj_id}[{related_obj_name}]:::color_{related_obj._meta.model_name.lower()}\n"
+                mermaid_code += f"{obj_id} --> {related_obj_id}\n"
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+
+        except AttributeError as e:
+            print(f"Error processing {field.name}: {e}")
+            continue
+        except TypeError as e:
+            print(f"Error processing {field.name}: {e}")
+            continue
 
     return mermaid_code
+
 
 class BaseDiagramView(generic.ObjectView):    
     """
