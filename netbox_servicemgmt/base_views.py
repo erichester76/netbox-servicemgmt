@@ -189,7 +189,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     for field in obj._meta.get_fields():
         try:
             if field.is_relation and field.name in relationships_to_follow.get(obj._meta.model_name, []):
-                                    
+                related_obj=None
                 if 'content_object' in field.name:
                         content_type = getattr(obj, field.ct_field, None)
                         object_id = getattr(obj, field.fk_field, None)
@@ -223,7 +223,6 @@ class BaseDiagramView(generic.ObjectView):
     """
     Diagram tab View to show mermiad diagram of relationships of object
     """
-    
     template_name = "netbox_servicemgmt/default-diagram.html"  
     
     tab = ViewTab(
