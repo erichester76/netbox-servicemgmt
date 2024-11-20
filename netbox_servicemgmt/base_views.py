@@ -142,6 +142,7 @@ def process_related_object(related_obj, parent_obj, visited, mermaid_code):
             mermaid_code += f'click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
         mermaid_code += f"{parent_obj_id} --> {related_obj_id}\n"
         mermaid_code += generate_mermaid_code(related_obj, visited)
+        print(f"Processed {related_obj} from {parent_obj}")
 
     except Exception as e:
         print(f"Error processing related object {related_obj}: {e}")
@@ -184,28 +185,33 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     for field in obj._meta.get_fields():
         try:
-            if field.is_relation:
-                if 'content_object' in field.name:
-                        content_type = getattr(obj, field.ct_field, None)
-                        object_id = getattr(obj, field.fk_field, None)
-                        if content_type and object_id:
-                            related_model = content_type.model_class()
-                            related_obj = related_model.objects.get(pk=object_id)
+            if field.name in relationships_to_follow.get(obj._meta.model_name, []):
+                
+                if field.is_relation:
+                    
+                    if 'content_object' in field.name:
+                            content_type = getattr(obj, field.ct_field, None)
+                            object_id = getattr(obj, field.fk_field, None)
+                            if content_type and object_id:
+                                related_model = content_type.model_class()
+                                related_obj = related_model.objects.get(pk=object_id)
+                                process_related_object(related_obj, obj, visited, mermaid_code)
+                                
+                    elif field.auto_created and not field.concrete:  
+                        relationship_name = field.get_accessor_name()
+                        related_objects_manager = getattr(obj, relationship_name, None)
+                        if related_objects_manager and hasattr(related_objects_manager, 'all'):
+                            for related_obj in related_objects_manager.all():
+                                process_related_object(related_obj, obj, visited, mermaid_code)
+                                
+                    else: 
+                        related_obj = getattr(obj, field.name, None)
+                        if related_obj:
                             process_related_object(related_obj, obj, visited, mermaid_code)
-                elif field.auto_created and not field.concrete:  
-                    relationship_name = field.get_accessor_name()
-                    related_objects_manager = getattr(obj, relationship_name, None)
-                    if related_objects_manager and hasattr(related_objects_manager, 'all'):
-                        for related_obj in related_objects_manager.all():
-                            process_related_object(related_obj, obj, visited, mermaid_code)
-                else: 
-                    related_obj = getattr(obj, field.name, None)
-                    if related_obj:
-                        process_related_object(related_obj, obj, visited, mermaid_code)
 
         except Exception as e:
             print(f"Error processing field {field.name}: {e}")
-            
+                
         return mermaid_code
 
 
