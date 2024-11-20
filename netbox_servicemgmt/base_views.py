@@ -156,6 +156,7 @@ def generate_mermaid_code(obj, depth=0):
 
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
     obj_name = sanitize_name(str(obj))  # Sanitize the related object name
+    
     if depth == 0: 
         mermaid_code += f"{indent}{obj_id}[{obj_name}]:::color_{obj._meta.model_name.lower()}\n"
         if hasattr(obj, 'get_absolute_url'):
@@ -201,9 +202,12 @@ def generate_mermaid_code(obj, depth=0):
                     continue  # If the related object doesn't exist, skip it
 
     # Traverse reverse relationships (many-to-one, many-to-many)
-    for rel in obj._meta.get_fields():
-        if rel.is_relation and rel.auto_created and not rel.concrete:
-            related_objects = getattr(obj, rel.get_accessor_name(), None)
+    for field in obj._meta.get_fields():
+        # Skip excluded relationships
+        if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
+            continue
+        if field.is_relation and field.auto_created and not field.concrete:
+            related_objects = getattr(obj, field.get_accessor_name(), None)
             if hasattr(related_objects, 'all'):
                 for related_obj in related_objects.all():
                     related_obj_id = f"{related_obj._meta.model_name}_{related_obj.pk}"
