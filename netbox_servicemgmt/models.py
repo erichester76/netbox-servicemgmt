@@ -79,7 +79,7 @@ class SLA(NetBoxModel):
     name = models.CharField(max_length=255)
     uuid = models.CharField(max_length=30, null=True)
     description = models.TextField()
-    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sla_slo',verbose_name='Assigned SLO Profile')
+    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sla_slos',verbose_name='Assigned SLO Profile')
     business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='sla_business_owners', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sla_business_owners', verbose_name='Business Owner Contact')
     technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sla_technical_contacts', verbose_name='Technical Contact')
@@ -162,16 +162,16 @@ class SolutionRequest(NetBoxModel):
     
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sor_designers', verbose_name='Architect')
-    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_business_owners', verbose_name='Business Owner Department')
-    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_business_owners', verbose_name='Business Owner Contact')
-    service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_service_owners', verbose_name='Service Owner Department')
-    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_service_owners', verbose_name='Service Owner Contact')
-    functional_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_fa_owners', verbose_name='Functional Area Sponsor')
-    functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='sor_sfa_owners', verbose_name='Functional Sub-Area Sponsor')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solreq_designers', verbose_name='Architect')
+    business_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='solreq_business_owners', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True,related_name='solreq_business_owners', verbose_name='Business Owner Contact')
+    service_owner_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='solreq_service_owners', verbose_name='Service Owner Department')
+    service_owner_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True,related_name='solrea_service_owners', verbose_name='Service Owner Contact')
+    functional_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='solreq_fa_owners', verbose_name='Functional Area Sponsor')
+    functional_sub_area_sponsor_tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, blank=True, null=True,related_name='solreq_sfa_owners', verbose_name='Functional Sub-Area Sponsor')
     solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
     version = models.IntegerField(null=True, blank=True)
-    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, blank=True, null=True, related_name='sor_slo',verbose_name='Service Level')
+    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, blank=True, null=True, related_name='solreq_slso',verbose_name='Service Level')
     data_classification = models.CharField(null=True, blank=True, choices=DATA_CHOICES)
     clustered = models.BooleanField(blank=True,null=True)
     multi_site = models.BooleanField(blank=True,null=True)
@@ -233,15 +233,15 @@ class SolutionTemplate(NetBoxModel):
     
     name = models.CharField(max_length=255)
     description = models.TextField()
-    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sot_designers', verbose_name='Architect')
+    design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='designer_soltems', verbose_name='Architect')
     solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
     version = models.IntegerField(null=True, blank=True)
-    vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='sot_vendors', verbose_name='Vendors')
+    vendors = models.ManyToManyField(Manufacturer, blank=True, null=True, related_name='vendors_soltems', verbose_name='Vendors')
     sla_number = models.CharField(max_length=50, null=True)
-    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sot_slo',verbose_name='Assigned SLO Profile')
+    slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='slo_soltems',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
-    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, null=True, related_name='sot_slo',verbose_name='Fault Tolerence Profile')
-    solution_request = models.ForeignKey(SolutionRequest, on_delete=models.SET_NULL, null=True, related_name='sot_sr',verbose_name='Solution Request')
+    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, null=True, related_name='ft_soltems',verbose_name='Fault Tolerence Profile')
+    solution_request = models.ForeignKey(SolutionRequest, on_delete=models.SET_NULL, null=True, related_name='solreq_soltems',verbose_name='Solution Request')
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
@@ -284,7 +284,7 @@ class ServiceTemplate(NetBoxModel):
     description = models.TextField()
     solution_templates = models.ManyToManyField(
         'SolutionTemplate', 
-        related_name='service_templates', 
+        related_name='soltem_servtems', 
         verbose_name='Solution Templates'
     )    
     design_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='service_designers', verbose_name='Architect')
@@ -302,10 +302,10 @@ class ServiceTemplate(NetBoxModel):
     )
 
     
-    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='st_ft', verbose_name='Assigned Fault Tolerance Profile')
-    service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='st_slo', verbose_name='Assigned Service Level Object Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='servtem_fts', verbose_name='Assigned Fault Tolerance Profile')
+    service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='servtem_slos', verbose_name='Assigned Service Level Object Profile')
     
-    vendor = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='st_vendor', verbose_name='Vendor')
+    vendor = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='servtem_vendors', verbose_name='Vendor')
     vendor_management_status = models.TextField(null=True, choices=REVIEW_CHOICES)
     vendor_management_number = models.CharField(max_length=50, null=True)
 
@@ -332,10 +332,10 @@ class ServiceTemplate(NetBoxModel):
 class ServiceRequirement(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_template = models.ForeignKey(ServiceTemplate, null=True, on_delete=models.SET_NULL, related_name='service_requirements', verbose_name='Service Template')
-    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sr_designers', verbose_name='Requirement Owner')
-    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='sr_ft', verbose_name='Assigned Fault Tolerance Profile')
-    service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='sr_slo',verbose_name='Assigned SLO Profile')
+    service_template = models.ForeignKey(ServiceTemplate, null=True, on_delete=models.SET_NULL, related_name='servreq_servtems', verbose_name='Service Template')
+    requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='servreq_designers', verbose_name='Requirement Owner')
+    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='servreq_fts', verbose_name='Assigned Fault Tolerance Profile')
+    service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='servreq_slos',verbose_name='Assigned SLO Profile')
     version = models.IntegerField(null=True, blank=True)
     
     # Self-referencing foreign key to track the previous version of the template
@@ -366,13 +366,13 @@ class ServiceRequirement(NetBoxModel):
 class ServiceDeployment(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_template = models.ForeignKey(ServiceTemplate, null=True, on_delete=models.SET_NULL, related_name='service_deployments',  verbose_name='Service Template')
+    service_template = models.ForeignKey(ServiceTemplate, null=True, on_delete=models.SET_NULL, related_name='servdep_servtems',  verbose_name='Service Template')
     production_readiness_checklist = models.CharField(max_length=255, null=True, blank=True, verbose_name='Production Readiness Checklist')   
     deployment_rfc = models.CharField(max_length=255, verbose_name='Associated RFC for Deployment')
-    major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='sd_mi_owners', verbose_name='Major Incident Contact')
-    engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_deployment', verbose_name='Deployment Contact')
-    operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_operations', verbose_name='Operations Contact')
-    monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='sd_responsible_monitoring', verbose_name='Monitoring Contact')
+    major_incident_coordinator_contact  = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='servdep_mi_owners', verbose_name='Major Incident Contact')
+    engineering_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='servdep_engineers', verbose_name='Deployment Contact')
+    operations_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='servdep_operators', verbose_name='Operations Contact')
+    monitoring_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='servdep_monitorors', verbose_name='Monitoring Contact')
     maintenance_window = models.CharField(max_length=255, verbose_name='Maintenance Window Timeframes')
     version = models.IntegerField(null=True, blank=True)
     
@@ -403,8 +403,8 @@ class ServiceDeployment(NetBoxModel):
 class ServiceComponent(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    service_requirement = models.ForeignKey(ServiceRequirement, null=True, on_delete=models.SET_NULL, related_name='sc_components', verbose_name='Service Requirement')
-    service_deployment = models.ForeignKey(ServiceDeployment, null=True, on_delete=models.SET_NULL, related_name='sc_deployments', verbose_name='Service Deployment')
+    service_requirement = models.ForeignKey(ServiceRequirement, null=True, on_delete=models.SET_NULL, related_name='servcom_servreqs', verbose_name='Service Requirement')
+    service_deployment = models.ForeignKey(ServiceDeployment, null=True, on_delete=models.SET_NULL, related_name='servcom_servdeps', verbose_name='Service Deployment')
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     object_id = models.PositiveIntegerField()
