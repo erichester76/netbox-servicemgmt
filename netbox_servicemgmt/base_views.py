@@ -166,6 +166,7 @@ def generate_mermaid_code(obj, depth=0):
     for field in obj._meta.get_fields():
         # Skip excluded relationships
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
+            print(f"skipping {obj} -> {field.name}")
             continue
         
         # Handle GenericForeignKey
