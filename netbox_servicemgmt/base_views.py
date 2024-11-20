@@ -108,7 +108,6 @@ class BaseObjectView(generic.ObjectView):
                     'add_url': add_url,
                     'attach_url': attach_url,
                 })
-
                     
         return {
             'object_name': object_name,
@@ -169,7 +168,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicetemplate': ['service_requirements', 'service_deployments'],
         'servicerequirement': ['sc_components'],
         'servicedeployment': ['sc_deployments'],
-        'servicecomponent': ['content_object'],
+        'servicecomponent': [],
         'virtualmachine': ['device'],
         'device': ['virtual_chassis', 'cluster', 'rack', 'location'],
         'cluster': [],
@@ -190,9 +189,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
              for field in obj._meta.get_fields():
                 if field.is_relation and field.name in relationships_to_follow.get(obj._meta.model_name, []):
                     if field.auto_created and not field.concrete:
-                        related_model = field.related_model
+                        print(f'found {field.name} {related_obj} {field.related_model}')
                         related_objects = getattr(obj, field.get_accessor_name()).all()
                         for related_obj in related_objects:
+                            print(f'found {field.name} {related_obj} {field.related_model}')
+                            logging.info(f'found {field.name} {related_obj} {field.related_model}')
                             process_related_object(obj,related_obj,visited,mermaid_code)
                     elif not field.auto_created:
                         related_obj = getattr(obj, field.name)
