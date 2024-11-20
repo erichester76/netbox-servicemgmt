@@ -16,7 +16,7 @@ def sanitize_name(name):
     """
     # Remove parentheses and replace other characters if needed
     clean_name = re.sub(r'[^\w\s\-]', '', name)  # Remove all non-alphanumeric characters except spaces
-    #clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
+    clean_name = re.sub(r'\-', '\_', clean_name)  # Replace spaces with underscores
     return clean_name
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
@@ -165,13 +165,13 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
     for field in obj._meta.get_fields():
         # Skip visited relationships
-        if (obj_name,object_id,field.name) in visited:
+        if (obj_name,obj_id,field.name) in visited:
             continue
         # Skip excluded relationships
         if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             #print(f"skipping {obj} -> {field.name}")
             continue
-        visited.add((obj_name,object_id,field.name))
+        visited.add((obj_name,obj_id,field.name))
         # Handle GenericForeignKey
         if isinstance(field, GenericForeignKey):
             print(f"processing {obj} -> {field.name} generic")
