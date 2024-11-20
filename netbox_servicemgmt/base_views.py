@@ -15,7 +15,7 @@ def sanitize_name(name):
     Currently removes parentheses and other special characters.
     """
     # Remove parentheses and replace other characters if needed
-    clean_name = re.sub(r'[^\w\s]', '', name)  # Remove all non-alphanumeric characters except spaces
+    clean_name = re.sub(r'[^\w\s\-]', '', name)  # Remove all non-alphanumeric characters except spaces
     #clean_name = re.sub(r'\s+', '_', clean_name)  # Replace spaces with underscores
     return clean_name
 
