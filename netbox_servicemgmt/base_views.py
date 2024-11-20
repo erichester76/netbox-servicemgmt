@@ -138,7 +138,7 @@ def generate_mermaid_code(obj, depth=0):
         'servicetemplate': ['servreq_servtems'],
         'servicerequirement': ['servcom_servreqs'],
         'servicedeployment': ['servcom_servdeps'],
-        'servicecomponent': ['content_object'],
+        'servicecomponent': [ 'servdep_servcom', 'content_object'],
         'virtualmachine': ['device'],
         'device': ['virtual_chassis', 'cluster', 'rack', 'location'],
         'cluster': [],
@@ -215,7 +215,7 @@ def generate_mermaid_code(obj, depth=0):
                     mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                    mermaid_code += f"{indent}{related_obj_id} --> {obj_id}\n"
                     mermaid_code += generate_mermaid_code(related_obj, depth + 1)
     
     return mermaid_code
