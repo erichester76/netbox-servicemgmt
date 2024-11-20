@@ -194,7 +194,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                         related_objects = getattr(obj, field.get_accessor_name()).all()
                         for related_obj in related_objects:
                             process_related_object(obj,related_obj,visited,mermaid_code)
-                    elif field.is_relation and not field.auto_created:
+                    elif not field.auto_created:
                         related_obj = getattr(obj, field.name)
                         process_related_object(obj,related_obj,visited,mermaid_code)
                        
