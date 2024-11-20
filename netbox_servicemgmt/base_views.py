@@ -7,7 +7,24 @@ from django.contrib.contenttypes.models import ContentType
 from . import tables 
 import re
 
-
+color_map = {
+            'solutiontemplate': '#16a2b8',  # Darker Teal
+            'servicetemplate': '#184990',   # Teal
+            'servicerequirement': '#02252f',  # GreenBlue
+            'servicedeployment': '#f76706',  # Orange2
+            'servicecomponent': '#d63a39',  # Red
+            'virtualmachine': '#9b59b6',  # Purple
+            'device': '#2ecc71',  # Green
+            'cluster': '#3498db',  # Light Blue
+            'virtualchassis': '#34495e', # Gray-Blue
+            'rack': '#9b59b6',  # Purple 
+            'location': '#f39c12',  # Yellow
+            'site': '#e74c3c',  # Red-Orange
+            'tenant': '#1abc9c',  # Turquoise
+            'contact': '#e67e22',  # Orange
+            'certificate': '#8e44ad',  # Dark Purple
+            'hostname': '#2980b9',  # Sky Blue
+        }
 
 def sanitize_name(name):
     """
@@ -125,7 +142,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, visited=None, depth=0):
+def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles=None, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
@@ -187,8 +204,10 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     mermaid_code += f"{indent}{related_obj_id}({related_obj._meta.model_name}: {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                    link_styles[link_counter] = color_map.get(obj._meta.model_name.lower(), '#000000')
+                    link_counter += 1
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                    mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
 
@@ -204,7 +223,9 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 indent = "    " * (depth+1)
                 mermaid_code += f"{indent}{related_obj_id}({field.name}: {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                 mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                link_styles[link_counter] = color_map.get(obj._meta.model_name.lower(), '#000000')
+                link_counter += 1
+                mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
       
         elif field.is_relation and field.auto_created and not field.concrete:
             print(f"processing {obj} -> {field.name} rev")
@@ -219,9 +240,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
+                    link_styles[link_counter] = color_map.get(related_obj._meta.model_name.lower(), '#000000')
+                    link_counter += 1
+                    mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
     
-    return mermaid_code
+    return mermaid_code, link_styles, link_counter
 
 class BaseDiagramView(generic.ObjectView):    
     """
@@ -236,27 +259,15 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-        mermaid_source = f"%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\ngraph LR\n{generate_mermaid_code(instance)}"
-        color_map = {
-            'solutiontemplate': '#16a2b8',  # Darker Teal
-            'servicetemplate': '#184990',   # Teal
-            'servicerequirement': '#02252f',  # GreenBlue
-            'servicedeployment': '#f76706',  # Orange2
-            'servicecomponent': '#d63a39',  # Red
-            'virtualmachine': '#9b59b6',  # Purple
-            'device': '#2ecc71',  # Green
-            'cluster': '#3498db',  # Light Blue
-            'virtualchassis': '#34495e', # Gray-Blue
-            'rack': '#9b59b6',  # Purple 
-            'location': '#f39c12',  # Yellow
-            'site': '#e74c3c',  # Red-Orange
-            'tenant': '#1abc9c',  # Turquoise
-            'contact': '#e67e22',  # Orange
-            'certificate': '#8e44ad',  # Dark Purple
-            'hostname': '#2980b9',  # Sky Blue
-        }
+        mermaid_source = f"%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\ngraph LR\n"
+        mermaid_code, link_styles, link_counter = generate_mermaid_code(instance)
+        mermaid_source += mermaid_code
         for obj_type, color in color_map.items():
-          mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
+            mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
+        link_style_code = ""
+        for link_idx, color in link_styles.items():
+            link_style_code += f"linkStyle {link_idx} stroke:{color},stroke-width:2px;\n"
+        mermaid_source += link_style_code
 
         return {
           'mermaid_source': mermaid_source,
