@@ -130,56 +130,32 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
     """
+    
+    # Relationships to follow for each model
+    relationships_to_follow = {
+        'solutionrequest': ['sot_sr'],
+        'solutiontemplate': ['service_templates'],
+        'servicetemplate': ['service_requirements', 'service_deployments'],
+        'servicerequirement': ['sc_components'],
+        'servicedeployment': ['sc_deployments'],
+        'servicecomponent': [],
+        'virtualmachine': ['device'],
+        'device': ['virtual_chassis', 'cluster', 'rack', 'location'],
+        'cluster': [],
+        'rack': ['location'],
+        'location': ['site'],
+        'site': [],
+        'certificate': ['hostnames'],
+        'hostname': ['certificates'],
+        'tenant': [],
+        'contact': [],
+    }
+    
+    
     if visited is None:
         visited = set()
 
-    excluded_fields = {
-        'id', 
-        'custom_field_data',
-        'custom_fields', 
-        'tags',
-        'bookmarks', 
-        'journal_entries', 
-        'subscriptions', 
-        'tagged_items', 
-        'device_type',
-        'device',
-        'role',
-        'ipaddress',
-        'depends_on',
-        'dependencies',
-        'created',
-        'last_updated',
-        'object_id',
-        'primary_ip4',
-        'primary_ip6',
-        'ipaddresses',
-        'cluster_group',
-        'cluster_type',
-        'fault_tolerence',
-        'service_slo',
-        'vendor',
-        'business_owner_contact',
-        'business_owner_tenant',
-        'service_owner_contact',
-        'service_owner_tenant',
-        'design_contact',
-        'requirement_owner',
-    }
-
-    models_to_skip_reverse_relations = {
-        'Site', 
-        'Tenant',
-        'Contact',
-        'Site',
-        'FaultTolerence',
-        'SLO',
-        'IPAddress',
-        'Interface',
-        'Manufacturer', 
-        'Tag',       
-    }
-
+   
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
 
@@ -199,8 +175,8 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
     # Traverse forward relationships (ForeignKey, OneToOneField, GenericForeignKey)
     for field in obj._meta.get_fields():
-        # Skip excluded fields like 'tags'
-        if field.name in excluded_fields:
+        # Skip excluded relationships
+        if field.name not in relationships_to_follow.get(obj._meta.model_name, []):
             continue
 
         """# Handle ForeignKey and OneToOneField relationships
@@ -301,25 +277,3 @@ class BaseDiagramView(generic.ObjectView):
         return {
           'mermaid_source': mermaid_source,
     }
-
-
-"""  # Relationships to follow for each model
-    relationships_to_follow = {
-        'solutionrequest': ['sot_sr'],
-        'solutiontemplate': ['service_templates'],
-        'servicetemplate': ['service_requirements', 'service_deployments'],
-        'servicerequirement': ['sc_components'],
-        'servicedeployment': ['sc_deployments'],
-        'servicecomponent': [],
-        'virtualmachine': ['device'],
-        'device': ['virtual_chassis', 'cluster', 'rack', 'location'],
-        'cluster': [],
-        'rack': ['location'],
-        'location': ['site'],
-        'site': [],
-        'certificate': ['hostnames'],
-        'hostname': ['certificates'],
-        'tenant': [],
-        'contact': [],
-    }
- """
