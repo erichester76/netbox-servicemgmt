@@ -142,7 +142,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles=[], depth=0):
+def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
@@ -264,7 +264,8 @@ class BaseDiagramView(generic.ObjectView):
         mermaid_source += mermaid_code
         for obj_type, color in color_map.items():
             mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
-            mermaid_source += f"linkStyle {link_styles[obj_type]} stroke:{color},stroke-width:2px;\n"
+            mermaid_source += f"linkStyle {link_styles.get(obj_type)} stroke:{color},stroke-width:2px;\n"
+
         return {
           'mermaid_source': mermaid_source,
     }
