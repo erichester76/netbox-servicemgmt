@@ -204,10 +204,9 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                     mermaid_code += f"{indent}{related_obj_id}({related_obj._meta.model_name}: {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{indent}{obj_id} ----- {related_obj_id}\n"
                     link_counter += 1
-                    if obj._meta.model_name.lower() in color_map:
-                        mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                    mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
+                    mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
@@ -223,9 +222,9 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                 # Add relationship and recurse with indent for readability
                 indent = "    " * (depth+1)
                 mermaid_code += f"{indent}{related_obj_id}({field.name}: {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
-                mermaid_code += f"{indent}{obj_id} ----- {related_obj_id}\n"
+                mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
+                mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                 link_counter += 1
-                mermaid_code += f"{indent}linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                 mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
       
         elif field.is_relation and field.auto_created and not field.concrete:
@@ -240,9 +239,9 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                     mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{indent}{obj_id} ----- {related_obj_id}\n"
+                    mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
+                    mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                     link_counter += 1
-                    mermaid_code += f"{indent}linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
     
     return mermaid_code
