@@ -61,40 +61,31 @@
 </div>  -->
 
 <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true });
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true });
 </script>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
   let currentLayout = "LR"; // Initial layout direction
   const mermaidContainer = document.getElementById("mermaid-diagram");
-  let originalMermaidCode = mermaidContainer.innerText; // Save original Mermaid code
-  const objectTypes = {}; // Object types and whether they are hidden
+  const originalMermaidCode = mermaidContainer.innerText; // Save original Mermaid code
+  const objectTypes = {}; // Object types and their visibility states
 
-  // Render the updated Mermaid diagram
-  function renderMermaid(code) {
-    console.log(mermaidContainer.innerHTML)
-    mermaidContainer.innerHTML = code;
-    mermaidContainer.removeAttr('data-processed');
-    mermaid.initialize({ startOnLoad: true })
-  }
-
-  // Parse the object types from the original Mermaid code
+  // Parse object types from the original Mermaid code
   function initializeObjectTypes() {
-    const regex = /^([a-z]+)_.+$/; // Matches object IDs like servicetemplate_1[
-    const matches = originalMermaidCode.matchAll(regex);
+    const regex = /\b([a-zA-Z]+)_\d+\[/g; // Matches object IDs like servicetemplate_1[
+    const matches = [...originalMermaidCode.matchAll(regex)];
     matches.forEach(match => {
       const objType = match[1];
-      console.log(objType)
       if (!objectTypes.hasOwnProperty(objType)) {
-        objectTypes[objType] = true;
+        objectTypes[objType] = true; // Initially visible
         addObjectTypeToMenu(objType);
       }
     });
   }
 
-  // Add object types to the menu dynamically
+  // Add object types to the dropdown menu
   function addObjectTypeToMenu(objType) {
     const menu = document.getElementById("object-type-menu");
     const item = document.createElement("div");
@@ -113,7 +104,7 @@
     });
   }
 
-  // Update the Mermaid code based on the current layout and hidden object types
+  // Update the Mermaid code and re-render the diagram
   function updateMermaidCode() {
     let updatedCode = originalMermaidCode.replace(
       /graph (LR|TD)/,
@@ -123,14 +114,26 @@
     // Remove hidden object types and their links
     Object.keys(objectTypes).forEach(objType => {
       if (!objectTypes[objType]) {
-        const regexNode = new RegExp("^("+objType+"_\d+[.*?]\n)", "g");
-        updatedCode = updatedCode.replace(regexNode, "#\\1")
-      } else {
-        const regexNode = new RegExp("^#("+objType+"_\d+[.*?]\n)", "g");
-        updatedCode = updatedCode.replace(regexNode, "\\1")
+        const regexNode = new RegExp(`\\b${objType}_\\d+\\[.*?\\]\\n`, "g");
+        const regexLink = new RegExp(
+          `.*?(\\b${objType}_\\d+|\\b_\\d+${objType})\\s.*\\n`,
+          "g"
+        );
+        updatedCode = updatedCode.replace(regexNode, "").replace(regexLink, "");
       }
     });
+
     renderMermaid(updatedCode);
+  }
+
+  // Render the Mermaid diagram
+  function renderMermaid(code) {
+    mermaidContainer.innerText = code; // Update the container with new code
+    try {
+      mermaid.init(undefined, mermaidContainer); // Re-initialize the Mermaid diagram
+    } catch (error) {
+      console.error("Mermaid rendering error:", error);
+    }
   }
 
   // Event listener for toggling layout
@@ -139,8 +142,9 @@
     updateMermaidCode();
   });
 
-  // Initialize the object types and render the diagram
+  // Initialize object types and render the initial diagram
   initializeObjectTypes();
+  renderMermaid(originalMermaidCode);
 });
 
 </script>
