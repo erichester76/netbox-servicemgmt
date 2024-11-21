@@ -5,13 +5,28 @@ from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.urls import reverse  # Import reverse
-
+from dcim.models import Device
+from virtualization.models import VirtualMachine
 from . import models, tables, views, forms
 
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView
 
+
+@register_model_view(Device, 'diagram', path='diagram')
+class DeviceDiagramView(base_views.BaseDiagramView):
+    """
+    Diagram tab for ServiceDeployment model.
+    """  
+    queryset = Device.objects.all()
+
+@register_model_view(VirtualMachine, 'diagram', path='diagram')
+class VMDiagramView(base_views.BaseDiagramView):
+    """
+    Diagram tab for ServiceDeployment model.
+    """  
+    queryset = VirtualMachine.objects.all()
 
 def get_model_class(app_label, model_name):
     # Use ContentType to get the model class
@@ -227,7 +242,12 @@ class ServiceRequirementListView(generic.ObjectListView):
     queryset = models.ServiceRequirement.objects.all()
     table = tables.ServiceRequirementTable
 
+@register_model_view(models.ServiceRequirement)
 class ServiceRequirementDetailView(base_views.BaseObjectView):
+    queryset = models.ServiceRequirement.objects.all()
+
+@register_model_view(models.ServiceRequirement, 'diagram', path='diagram')
+class ServiceRequirementDiagramView(base_views.base_views.BaseDiagramView):
     queryset = models.ServiceRequirement.objects.all()
 
 class ServiceRequirementEditView(generic.ObjectEditView):
@@ -255,13 +275,20 @@ class ServiceDeploymentListView(generic.ObjectListView):
 class ServiceDeploymentDetailView(base_views.BaseObjectView):
     queryset = models.ServiceDeployment.objects.all()
 
-@register_model_view(models.ServiceDeployment, 'diagram', path='diagram')
+@register_model_view(models.ServiceDeployment)
 class ServiceDeploymentDiagramView(base_views.BaseDiagramView):
     """
     Diagram tab for ServiceDeployment model.
     """  
     queryset = models.ServiceDeployment.objects.all()
 
+@register_model_view(models.ServiceComponent, 'diagram', path='diagram')
+class ServiceComponentDiagramView(base_views.BaseDiagramView):
+    """
+    Diagram tab for ServiceDeployment model.
+    """  
+    queryset = models.ServiceDeployment.objects.all()
+    
 class ServiceDeploymentEditView(generic.ObjectEditView):
     queryset = models.ServiceDeployment.objects.all()
     form = forms.ServiceDeploymentForm
@@ -281,7 +308,8 @@ class ServiceDeploymentChangeLogView(base_views.BaseChangeLogView):
 class ServiceComponentListView(generic.ObjectListView):
     queryset = models.ServiceComponent.objects.all()
     table = tables.ServiceComponentTable
-
+    
+@register_model_view(models.ServiceComponent)
 class ServiceComponentDetailView(base_views.BaseObjectView):
     queryset = models.ServiceComponent.objects.all()
 
