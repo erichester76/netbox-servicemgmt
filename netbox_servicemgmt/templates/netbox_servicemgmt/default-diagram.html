@@ -60,11 +60,7 @@
     </div>
 </div>  -->
 
-<script type="module">
-  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-  mermaid.initialize({ startOnLoad: true });
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
   let currentLayout = "LR"; // Initial layout direction
@@ -144,7 +140,7 @@
 
   // Initialize object types and render the initial diagram
   initializeObjectTypes();
-  renderMermaid(originalMermaidCode);
+  mermaid.initialize({ startOnLoad: true });
 });
 
 </script>
