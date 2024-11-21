@@ -244,7 +244,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                     link_counter += 1
                     mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
     
-    return mermaid_codex
+    return mermaid_code
 
 class BaseDiagramView(generic.ObjectView):    
     """
