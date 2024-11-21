@@ -142,7 +142,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, visited=None, link_counter=0, links={}, depth=0):
+def generate_mermaid_code(obj, visited=None, link_counter=0, links=None, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
@@ -170,6 +170,9 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, links={}, depth=0):
     indent = "    " * depth  # Indentation for readability
     if visited == None:
         visited=set()
+        
+    if links == None:
+        links=dict()
 
     obj_id = f"{obj._meta.model_name}_{obj.pk}"
     obj_name = sanitize_name(str(obj))  # Sanitize the related object name
