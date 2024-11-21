@@ -264,7 +264,8 @@ class BaseDiagramView(generic.ObjectView):
         mermaid_source += mermaid_code
         for obj_type, color in color_map.items():
             mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
-            mermaid_source += f"linkStyle {link_styles.get(obj_type)} stroke:{color},stroke-width:2px;\n"
+        for key in link_styles:
+            mermaid_source += f"linkStyle {link_styles[key]} stroke:{color_map[key]},stroke-width:2px;\n"
 
         return {
           'mermaid_source': mermaid_source,
