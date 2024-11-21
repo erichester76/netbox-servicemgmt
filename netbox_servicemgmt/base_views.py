@@ -142,7 +142,7 @@ class BaseObjectView(generic.ObjectView):
             'related_tables': related_tables,
         }
         
-def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, depth=0):
+def generate_mermaid_code(obj, visited=None, depth=0):
     """
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
@@ -207,7 +207,7 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                     #link_styles[related_obj._meta.model_name.lower()] += f"{link_counter},"
                     link_counter += 1
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
-                    mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
 
@@ -225,7 +225,7 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                 mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
                 #link_styles[obj._meta.model_name.lower()] += f"{link_counter},"
                 link_counter += 1
-                mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
+                mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
       
         elif field.is_relation and field.auto_created and not field.concrete:
             print(f"processing {obj} -> {field.name} rev")
@@ -242,9 +242,9 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                     mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
                     #link_styles[related_obj._meta.model_name.lower()] += f"{link_counter},"
                     link_counter += 1
-                    mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
+                    mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
     
-    return mermaid_code, link_styles
+    return mermaid_codex
 
 class BaseDiagramView(generic.ObjectView):    
     """
