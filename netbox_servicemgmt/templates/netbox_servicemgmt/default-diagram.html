@@ -37,9 +37,9 @@
         <div class="card mt-3">
             <h5 class="card-header">Diagram</h5>
             <div class="card-body">
-                <div id="mermaid-diagram" class="mermaid">
+                <pre id="mermaid-diagram" class="mermaid">
                     {{ mermaid_source|safe }}
-                </div>
+                </pre>
             </div>
         </div>
     </div>
@@ -65,13 +65,13 @@
   document.addEventListener("DOMContentLoaded", () => {
   let currentLayout = "LR"; // Initial layout direction
   const mermaidContainer = document.getElementById("mermaid-diagram");
-  const originalMermaidCode = mermaidContainer.innerText; // Save original Mermaid code
   const objectTypes = {}; // Object types and their visibility states
 
   // Parse object types from the original Mermaid code
   function initializeObjectTypes() {
-    const regex = /^([a-zA-Z]+)_\d+\(/g; // Matches object IDs like servicetemplate_1[
+    const regex = /^([a-z]+)_\d+/g; 
     const matches = [...originalMermaidCode.matchAll(regex)];
+    console.log(matches)
     matches.forEach(match => {
       const objType = match[1];
       if (!objectTypes.hasOwnProperty(objType)) {
@@ -83,6 +83,7 @@
 
   // Add object types to the dropdown menu
   function addObjectTypeToMenu(objType) {
+    console.log("adding object "+objType)
     const menu = document.getElementById("object-type-menu");
     const item = document.createElement("div");
     item.className = "dropdown-item";
@@ -118,19 +119,13 @@
         updatedCode = updatedCode.replace(regexNode, "").replace(regexLink, "");
       }
     });
-
-    renderMermaid(updatedCode);
+    mermaidContainer.innerText = updatedCode // Update the container with new code
+    mermaid.run({
+        suppressErrors: false,
+        nodes: [document.getElementById('mermaid-diagram')]
+    });    
   }
 
-  // Render the Mermaid diagram
-  function renderMermaid(code) {
-    mermaidContainer.innerText = code; // Update the container with new code
-    try {
-      mermaid.init(undefined, mermaidContainer); // Re-initialize the Mermaid diagram
-    } catch (error) {
-      console.error("Mermaid rendering error:", error);
-    }
-  }
 
   // Event listener for toggling layout
   document.getElementById("toggle-layout").addEventListener("click", () => {
