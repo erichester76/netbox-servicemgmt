@@ -64,12 +64,19 @@
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
     mermaid.initialize({ startOnLoad: true });
 </script>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
   let currentLayout = "LR"; // Initial layout direction
   const mermaidContainer = document.getElementById("mermaid-diagram");
   let originalMermaidCode = mermaidContainer.innerText; // Save original Mermaid code
   const objectTypes = {}; // Object types and whether they are hidden
+
+  // Render the updated Mermaid diagram
+  function renderMermaid(code) {
+    mermaidContainer.innerText = code;
+    mermaid.init(undefined, mermaidContainer);
+  }
 
   // Parse the object types from the original Mermaid code
   function initializeObjectTypes() {
@@ -121,14 +128,7 @@
         updatedCode = updatedCode.replace(regexNode, "").replace(regexLink, "");
       }
     });
-
     renderMermaid(updatedCode);
-  }
-
-  // Render the updated Mermaid diagram
-  function renderMermaid(code) {
-    mermaidContainer.innerText = code;
-    mermaid.init(undefined, mermaidContainer);
   }
 
   // Event listener for toggling layout
@@ -139,7 +139,6 @@
 
   // Initialize the object types and render the diagram
   initializeObjectTypes();
-  renderMermaid(originalMermaidCode);
 });
 
 </script>
