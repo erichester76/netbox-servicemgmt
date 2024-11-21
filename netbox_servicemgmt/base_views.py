@@ -259,7 +259,7 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-        mermaid_source = f"%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\ngraph LR\n"
+        mermaid_source = "%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\ngraph LR\n" 
         mermaid_code, link_styles, link_counter = generate_mermaid_code(instance)
         mermaid_source += mermaid_code
         for obj_type, color in color_map.items():
