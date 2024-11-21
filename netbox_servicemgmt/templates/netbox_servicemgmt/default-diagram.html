@@ -69,12 +69,12 @@
   document.addEventListener("DOMContentLoaded", () => {
   let currentLayout = "LR"; // Initial layout direction
   const mermaidContainer = document.getElementById("mermaid-diagram");
-  mermaidContainer.removeAttribute("data-processed");
   let originalMermaidCode = mermaidContainer.innerText; // Save original Mermaid code
   const objectTypes = {}; // Object types and whether they are hidden
 
   // Render the updated Mermaid diagram
   function renderMermaid(code) {
+    mermaidContainer.removeAttribute("data-processed");
     mermaidContainer.innerText = code;
     mermaid.initialize()
   }
@@ -121,11 +121,8 @@
     // Remove hidden object types and their links
     Object.keys(objectTypes).forEach(objType => {
       if (!objectTypes[objType]) {
-        const regexNode = new RegExp(`{objType}_\\d+\\[.*?\\]\\n`, "g");
-        const regexLink = new RegExp(
-          `.*?(${objType}_\\d+|_\\d+${objType})\\s.*\\n`,
-          "g"
-        );
+        const regexNode = new RegExp(objType+"_\d+[.*?]\n", "g");
+        const regexLink = new RegExp("("+objType+"_\d+|_\d+"+objType+")\s.*\n", "g" );
         updatedCode = updatedCode.replace(regexNode, "").replace(regexLink, "");
       }
     });
