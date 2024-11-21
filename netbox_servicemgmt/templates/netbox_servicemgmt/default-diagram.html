@@ -74,8 +74,8 @@
 
   // Render the updated Mermaid diagram
   function renderMermaid(code) {
-    mermaidContainer.removeAttribute("data-processed");
     mermaidContainer.innerText = code;
+    mermaidContainer.html(node.data.graph).removeAttr('data-processed');
     mermaid.init(undefined, mermaidContainer)
   }
 
