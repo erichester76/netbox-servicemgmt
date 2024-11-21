@@ -8,6 +8,7 @@ from . import tables
 import re
 
 color_map = {
+            'solutionrequest': '#16a2b8',  # Darker Teal
             'solutiontemplate': '#16a2b8',  # Darker Teal
             'servicetemplate': '#184990',   # Teal
             'servicerequirement': '#02252f',  # GreenBlue
@@ -206,7 +207,8 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     link_counter += 1
                     mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
-                    mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                    if obj._meta.model_name.lower() in color_map:
+                        mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
@@ -223,7 +225,8 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                 indent = "    " * (depth+1)
                 mermaid_code += f"{indent}{related_obj_id}({field.name}: {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                 mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
-                mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                if obj._meta.model_name.lower() in color_map:
+                    mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                 link_counter += 1
                 mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
       
@@ -240,7 +243,8 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
-                    mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                    if obj._meta.model_name.lower() in color_map:
+                        mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                     link_counter += 1
                     mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
     
