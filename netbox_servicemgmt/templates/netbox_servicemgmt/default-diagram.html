@@ -32,18 +32,12 @@
     </div>
   </div>
   
-  <div class="mermaid-container">
-    <div class="mermaid" id="mermaid-diagram">
-      <!-- Mermaid code will be dynamically updated here -->
-    </div>
-  </div>
-  
 <div class="tab-content">
     <div class="tab-pane active">
         <div class="card mt-3">
             <h5 class="card-header">Diagram</h5>
             <div class="card-body">
-                <div id=mermaid-diagram class="mermaid">
+                <div id="mermaid-diagram" class="mermaid">
                     {{ mermaid_source|safe }}
                 </div>
             </div>
@@ -72,9 +66,9 @@
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-  let currentLayout = "LR"; // Initial layout direction
+  let currentLayout = "TD"; // Initial layout direction
   const mermaidContainer = document.getElementById("mermaid-diagram");
-  let originalMermaidCode = `graph ${currentLayout}\n` + mermaidContainer.innerText; // Save original Mermaid code
+  let originalMermaidCode = mermaidContainer.innerText; // Save original Mermaid code
   const objectTypes = {}; // Object types and whether they are hidden
 
   // Parse the object types from the original Mermaid code
