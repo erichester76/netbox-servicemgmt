@@ -14,19 +14,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import FormView
 
 
-@register_model_view(Device, 'diagram', path='diagram')
-class DeviceDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for ServiceDeployment model.
-    """  
-    queryset = Device.objects.all()
 
-@register_model_view(VirtualMachine, 'diagram', path='diagram')
-class VMDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for ServiceDeployment model.
-    """  
-    queryset = VirtualMachine.objects.all()
 
 def get_model_class(app_label, model_name):
     # Use ContentType to get the model class
@@ -84,6 +72,21 @@ class GenericAttachView(FormView):
             f'plugins:{self.kwargs["app_label"]}:{self.kwargs["model_name"]}',  # Generate the correct detail view name
             kwargs={'pk': self.kwargs['pk']}
         )
+        
+        
+@register_model_view(Device, 'diagram', path='diagram')
+class DeviceDiagramView(base_views.BaseDiagramView):
+    """
+    Diagram tab for ServiceDeployment model.
+    """  
+    queryset = Device.objects.all()
+
+@register_model_view(VirtualMachine, 'diagram', path='diagram')
+class VMDiagramView(base_views.BaseDiagramView):
+    """
+    Diagram tab for ServiceDeployment model.
+    """  
+    queryset = VirtualMachine.objects.all()        
         
 # SLO Views
 class SLOListView(generic.ObjectListView):
@@ -247,7 +250,7 @@ class ServiceRequirementDetailView(base_views.BaseObjectView):
     queryset = models.ServiceRequirement.objects.all()
 
 @register_model_view(models.ServiceRequirement, 'diagram', path='diagram')
-class ServiceRequirementDiagramView(base_views.base_views.BaseDiagramView):
+class ServiceRequirementDiagramView(base_views.BaseDiagramView):
     queryset = models.ServiceRequirement.objects.all()
 
 class ServiceRequirementEditView(generic.ObjectEditView):
