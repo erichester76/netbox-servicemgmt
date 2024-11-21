@@ -76,7 +76,7 @@
   function renderMermaid(code) {
     mermaidContainer.innerText = code;
     mermaidContainer.removeAttr('data-processed');
-    mermaid.initialize(mermaidContainer)
+    mermaid.initialize()
   }
 
   // Parse the object types from the original Mermaid code
