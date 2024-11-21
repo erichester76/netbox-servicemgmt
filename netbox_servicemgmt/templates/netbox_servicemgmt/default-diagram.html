@@ -121,9 +121,11 @@
     // Remove hidden object types and their links
     Object.keys(objectTypes).forEach(objType => {
       if (!objectTypes[objType]) {
-        const regexNode = new RegExp(objType+"_\d+[.*?]\n", "g");
-        const regexLink = new RegExp("("+objType+"_\d+|_\d+"+objType+")\s.*\n", "g" );
-        updatedCode = updatedCode.replace(regexNode, "").replace(regexLink, "");
+        const regexNode = new RegExp("^("+objType+"_\d+[.*?]\n)", "g");
+        updatedCode = updatedCode.replace(regexNode, "#\\1")
+      } else {
+        const regexNode = new RegExp("^#("+objType+"_\d+[.*?]\n)", "g");
+        updatedCode = updatedCode.replace(regexNode, "\\1")
       }
     });
     renderMermaid(updatedCode);
