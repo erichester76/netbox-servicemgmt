@@ -61,8 +61,8 @@
 </div>  -->
 
 <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true });
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs';
+    mermaid.init({ startOnLoad: true });
 </script>
 
 <script>
@@ -74,7 +74,7 @@
 
   // Render the updated Mermaid diagram
   function renderMermaid(code) {
-    mermaidContainer.innerHTML = code;
+    mermaidContainer.innerText = code;
     mermaidContainer.html(node.data.graph).removeAttr('data-processed');
     mermaid.init(undefined, mermaidContainer)
   }
