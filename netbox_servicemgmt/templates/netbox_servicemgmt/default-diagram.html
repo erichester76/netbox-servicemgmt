@@ -43,7 +43,7 @@
         <div class="card mt-3">
             <h5 class="card-header">Diagram</h5>
             <div class="card-body">
-                <div class="mermaid">
+                <div id=mermaid-diagram class="mermaid">
                     {{ mermaid_source|safe }}
                 </div>
             </div>
@@ -71,7 +71,7 @@
     mermaid.initialize({ startOnLoad: true });
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
   let currentLayout = "LR"; // Initial layout direction
   const mermaidContainer = document.getElementById("mermaid-diagram");
   let originalMermaidCode = `graph ${currentLayout}\n` + mermaidContainer.innerText; // Save original Mermaid code
