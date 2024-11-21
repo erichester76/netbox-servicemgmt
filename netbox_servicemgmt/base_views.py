@@ -8,7 +8,6 @@ from . import tables
 import re
 
 color_map = {
-            'solutionrequest': '#16a2b8',  # Darker Teal
             'solutiontemplate': '#16a2b8',  # Darker Teal
             'servicetemplate': '#184990',   # Teal
             'servicerequirement': '#02252f',  # GreenBlue
@@ -205,10 +204,9 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                     mermaid_code += f"{indent}{related_obj_id}({related_obj._meta.model_name}: {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
+                    #link_styles[related_obj._meta.model_name.lower()] += f"{link_counter},"
                     link_counter += 1
-                    mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
-                    if obj._meta.model_name.lower() in color_map:
-                        mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
                 except related_model.DoesNotExist:
                     continue  # If the related object doesn't exist, skip it
@@ -224,9 +222,8 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                 # Add relationship and recurse with indent for readability
                 indent = "    " * (depth+1)
                 mermaid_code += f"{indent}{related_obj_id}({field.name}: {related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
-                mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
-                if obj._meta.model_name.lower() in color_map:
-                    mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                #link_styles[obj._meta.model_name.lower()] += f"{link_counter},"
                 link_counter += 1
                 mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
       
@@ -242,13 +239,12 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                     mermaid_code += f"{indent}{related_obj_id}({related_obj_name}):::color_{related_obj._meta.model_name.lower()}\n"
                     if hasattr(related_obj, 'get_absolute_url'):
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
-                    mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
-                    if obj._meta.model_name.lower() in color_map:
-                        mermaid_code += f"linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                    mermaid_code += f"{indent}{obj_id} --> {related_obj_id}\n"
+                    #link_styles[related_obj._meta.model_name.lower()] += f"{link_counter},"
                     link_counter += 1
                     mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
     
-    return mermaid_code
+    return mermaid_code, link_styles
 
 class BaseDiagramView(generic.ObjectView):    
     """
@@ -263,14 +259,16 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-        
-        mermaid_source = "%%{ init: { 'flowchart': { 'curve': 'natural' } } }%%\n"
+        mermaid_source = "%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\n"
         mermaid_source += "graph LR\n" 
-        #recurse object relationships to build flowchart diagram
+        #recurse object relationships to build flowchart
         mermaid_source += generate_mermaid_code(instance)
 
         for obj_type, color in color_map.items():
             mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
+        #for key in link_styles:
+        #    mermaid_source += f"linkStyle {link_styles[key]} stroke:{color_map[key]},stroke-width:2px;\n"
+
         return {
           'mermaid_source': mermaid_source,
     }
