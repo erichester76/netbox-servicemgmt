@@ -5,6 +5,24 @@
 
 {% block content %}
 
+<div class="toolbar">
+    <button id="toggle-layout" class="btn btn-primary">Toggle Layout (Vertical/Horizontal)</button>
+    <div class="dropdown">
+      <button id="toggle-object-types" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+        Hide Object Types
+      </button>
+      <div class="dropdown-menu" id="object-type-menu">
+        <!-- Object types will be populated dynamically -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="mermaid-container">
+    <div class="mermaid" id="mermaid-diagram">
+      <!-- Mermaid code will be dynamically updated here -->
+    </div>
+  </div>
+  
 <div class="tab-content">
     <div class="tab-pane active">
         <div class="card mt-3">
@@ -36,5 +54,84 @@
 <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
     mermaid.initialize({ startOnLoad: true });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+  let currentLayout = "LR"; // Initial layout direction
+  const mermaidContainer = document.getElementById("mermaid-diagram");
+  let originalMermaidCode = `graph ${currentLayout}\n` + mermaidContainer.innerText; // Save original Mermaid code
+  const objectTypes = {}; // Object types and whether they are hidden
+
+  // Parse the object types from the original Mermaid code
+  function initializeObjectTypes() {
+    const regex = /\b(\w+)_\d+\[/g; // Matches object IDs like servicetemplate_1[
+    const matches = [...originalMermaidCode.matchAll(regex)];
+    matches.forEach(match => {
+      const objType = match[1];
+      if (!objectTypes.hasOwnProperty(objType)) {
+        objectTypes[objType] = true; // Initially visible
+        addObjectTypeToMenu(objType);
+      }
+    });
+  }
+
+  // Add object types to the menu dynamically
+  function addObjectTypeToMenu(objType) {
+    const menu = document.getElementById("object-type-menu");
+    const item = document.createElement("div");
+    item.className = "dropdown-item";
+    item.innerHTML = `
+      <input type="checkbox" id="toggle-${objType}" checked>
+      <label for="toggle-${objType}">${objType}</label>
+    `;
+    menu.appendChild(item);
+
+    // Add event listener for toggling visibility
+    const checkbox = item.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      objectTypes[objType] = checkbox.checked;
+      updateMermaidCode();
+    });
+  }
+
+  // Update the Mermaid code based on the current layout and hidden object types
+  function updateMermaidCode() {
+    let updatedCode = originalMermaidCode.replace(
+      /graph (LR|TD)/,
+      `graph ${currentLayout}`
+    );
+
+    // Remove hidden object types and their links
+    Object.keys(objectTypes).forEach(objType => {
+      if (!objectTypes[objType]) {
+        const regexNode = new RegExp(`\\b${objType}_\\d+\\[.*?\\]\\n`, "g");
+        const regexLink = new RegExp(
+          `.*?(\\b${objType}_\\d+|\\b_\\d+${objType})\\s.*\\n`,
+          "g"
+        );
+        updatedCode = updatedCode.replace(regexNode, "").replace(regexLink, "");
+      }
+    });
+
+    renderMermaid(updatedCode);
+  }
+
+  // Render the updated Mermaid diagram
+  function renderMermaid(code) {
+    mermaidContainer.innerText = code;
+    mermaid.init(undefined, mermaidContainer);
+  }
+
+  // Event listener for toggling layout
+  document.getElementById("toggle-layout").addEventListener("click", () => {
+    currentLayout = currentLayout === "LR" ? "TD" : "LR";
+    updateMermaidCode();
+  });
+
+  // Initialize the object types and render the diagram
+  initializeObjectTypes();
+  renderMermaid(originalMermaidCode);
+});
+
 </script>
 {% endblock %}
