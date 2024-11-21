@@ -241,7 +241,7 @@ def generate_mermaid_code(obj, visited=None, link_counter=0, link_styles={}, dep
                         mermaid_code += f'{indent}click {related_obj_id} "{related_obj.get_absolute_url()}"\n'
                     mermaid_code += f"{indent}{obj_id} ---- {related_obj_id}\n"
                     link_counter += 1
-                    mermaid_code += f"{indent}linkStyle {link_counter} stroke:{color_map[related_obj._meta.model_name.lower()]},stroke-width:2px;\n"
+                    mermaid_code += f"{indent}linkStyle {link_counter} stroke:{color_map[obj._meta.model_name.lower()]},stroke-width:2px;\n"
                     mermaid_code += generate_mermaid_code(related_obj, visited, link_counter, link_styles, depth + 1)
     
     return mermaid_code
