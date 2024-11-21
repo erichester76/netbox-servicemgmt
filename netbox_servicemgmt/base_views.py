@@ -191,7 +191,6 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         visited.add((obj_name,obj_id,field.name))
         # Handle GenericForeignKey
         if isinstance(field, GenericForeignKey):
-            print(f"processing {obj} -> {field.name} generic")
             content_type = getattr(obj, field.ct_field, None)
             object_id = getattr(obj, field.fk_field, None)
             if content_type and object_id:
@@ -211,7 +210,6 @@ def generate_mermaid_code(obj, visited=None, depth=0):
 
         # Handle ForeignKey and OneToOneField relationships
         elif field.is_relation and not field.auto_created and field.concrete:
-            print(f"processing {obj} -> {field.name} fk/1-2-1")
             # Check if the related object exists
             related_obj = getattr(obj, field.name, None)
             if related_obj and related_obj.pk:
@@ -224,7 +222,6 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 mermaid_code += generate_mermaid_code(related_obj, visited, depth + 1)
       
         elif field.is_relation and field.auto_created and not field.concrete:
-            print(f"processing {obj} -> {field.name} rev")
             related_objects = getattr(obj, field.get_accessor_name(), None)
             if hasattr(related_objects, 'all'):
                 for related_obj in related_objects.all():
