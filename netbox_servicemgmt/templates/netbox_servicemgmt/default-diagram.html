@@ -103,7 +103,7 @@
 
   // Update the Mermaid code and re-render the diagram
   function updateMermaidCode() {
-    let updatedCode = originalMermaidCode.replace(
+    let updatedCode = document.getElementById('mermaid-diagram').innerHTML.replace(
       /graph (LR|TD)/,
       `graph ${currentLayout}`
     );
