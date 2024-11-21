@@ -263,8 +263,9 @@ class BaseDiagramView(generic.ObjectView):
         mermaid_source = "%%{ init: { 'flowchart': { 'curve': 'catmullRom' } } }%%\n"
         mermaid_source += "graph LR\n" 
         #recurse object relationships to build flowchart diagram
-        (mermaid_source, links) += generate_mermaid_code(instance)
-
+        (mermaid_code, links) = generate_mermaid_code(instance)
+        mermaid_source += mermaid_code
+        
         for obj_type, color in color_map.items():
             mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
             mermaid_source += f'linkStyle {links[obj_type]} stroke:{color},stroke-width:3px;\n'
