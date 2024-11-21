@@ -74,17 +74,19 @@
 
   // Render the updated Mermaid diagram
   function renderMermaid(code) {
-    mermaidContainer.innerText = code;
+    console.log(mermaidContainer.innerHTML)
+    mermaidContainer.innerHTML = code;
     mermaidContainer.removeAttr('data-processed');
     mermaid.initialize({ startOnLoad: true })
   }
 
   // Parse the object types from the original Mermaid code
   function initializeObjectTypes() {
-    const regex = /^([a-z]+)_\d+.+$/; // Matches object IDs like servicetemplate_1[
+    const regex = /^([a-z]+)_.+$/; // Matches object IDs like servicetemplate_1[
     const matches = originalMermaidCode.matchAll(regex);
     matches.forEach(match => {
       const objType = match[1];
+      console.log(objType)
       if (!objectTypes.hasOwnProperty(objType)) {
         objectTypes[objType] = true;
         addObjectTypeToMenu(objType);
