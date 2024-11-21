@@ -69,13 +69,14 @@
   document.addEventListener("DOMContentLoaded", () => {
   let currentLayout = "LR"; // Initial layout direction
   const mermaidContainer = document.getElementById("mermaid-diagram");
+  mermaidContainer.removeAttribute("data-processed");
   let originalMermaidCode = mermaidContainer.innerText; // Save original Mermaid code
   const objectTypes = {}; // Object types and whether they are hidden
 
   // Render the updated Mermaid diagram
   function renderMermaid(code) {
     mermaidContainer.innerText = code;
-    mermaid.init(undefined, mermaidContainer);
+    mermaid.initialize()
   }
 
   // Parse the object types from the original Mermaid code
