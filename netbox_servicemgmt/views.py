@@ -129,8 +129,14 @@ class SolutionRequestListView(generic.ObjectListView):
     queryset = models.SolutionRequest.objects.all()
     table = tables.SolutionRequestTable
 
+@register_model_view(models.SolutionRequest)
 class SolutionRequestDetailView(base_views.BaseObjectView):
     queryset = models.SolutionRequest.objects.all()
+
+@register_model_view(models.SolutionRequest, 'diagram', path='diagram')
+class SolutionRequestDiagramView(base_views.BaseDiagramView):
+    queryset = models.SolutionRequest.objects.all()
+
 
 class SolutionRequestEditView(generic.ObjectEditView):
     queryset = models.SolutionRequest.objects.all()
