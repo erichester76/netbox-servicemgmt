@@ -8,6 +8,25 @@ from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from .fields import DynamicObjectChoiceField
 
+class DynamicObjectForm(forms.ModelForm):
+    object_type = forms.ModelChoiceField(
+        queryset=ContentType.objects.all(),
+        required=True,
+        label="Object Type"
+    )
+    object_id = DynamicObjectChoiceField(
+        required=True,
+        label="Object"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'object_type' in self.data:
+            object_type = self.data.get('object_type')
+            self.fields['object_id'].object_type = object_type
+            self.fields['object_id'].queryset = self.fields['object_id'].get_queryset()
+
+
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
         queryset=None,  # This will be dynamically populated
