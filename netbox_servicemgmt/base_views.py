@@ -10,7 +10,7 @@ import re
 color_map = {
             'solutiontemplate': '#16a2b8',  # Darker Teal
             'servicetemplate': '#184990',   # Teal
-            'servicerequirement': '#02252f',  # GreenBlue
+            'servicerequirement': '#f39c12',  # Yellow
             'servicedeployment': '#f76706',  # Orange2
             'servicecomponent': '#d63a39',  # Red
             'virtualmachine': '#9b59b6',  # Purple
