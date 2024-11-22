@@ -264,7 +264,7 @@ class ServiceDeploymentListView(generic.ObjectListView):
 class ServiceDeploymentDetailView(base_views.BaseObjectView):
     queryset = models.ServiceDeployment.objects.all()
 
-@register_model_view(models.ServiceDeployment)
+@register_model_view(models.ServiceDeployment, 'diagram', path='diagram')
 class ServiceDeploymentDiagramView(base_views.BaseDiagramView):
     queryset = models.ServiceDeployment.objects.all()
 

@@ -90,8 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add event listener for toggling visibility
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
-      objectTypes[objType] = checkbox.checked;
-      updateMermaidCode();
+        objectTypes[objType] = checkbox.checked;
+        updateMermaidCode();
     });
 
   }
@@ -156,8 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event listener for toggling layout
   document.getElementById("toggle-layout").addEventListener("click", () => {
-    currentLayout = currentLayout === "LR" ? "TD" : "LR";
-    updateMermaidCode();
+      currentLayout = currentLayout === "LR" ? "TD" : "LR";
+      updateMermaidCode();
   });
 
   // Initialize Mermaid and object types
