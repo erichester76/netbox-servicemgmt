@@ -131,18 +131,26 @@ class ServiceDeploymentImportForm(NetBoxModelImportForm):
 
 
 
+from utilities.forms import DynamicModelChoiceField, ContentTypeChoiceField, NetBoxModelForm
+from .models import ServiceComponent
+from django.contrib.contenttypes.models import ContentType
+
 class ServiceComponentForm(NetBoxModelForm):
     object_type = ContentTypeChoiceField(
         queryset=ContentType.objects.all(),
         required=True,
         label="Object Type",
-        widget_attrs={"class": "object-type-selector"}
+        widget_attrs={"class": "object-type-selector"},
     )
+
     object_id = DynamicModelChoiceField(
-        queryset=None,  # Dynamically set based on object type
+        queryset=None,  # Set dynamically via JavaScript and `widget_filter`
         required=True,
         label="Object ID",
-        widget_attrs={"class": "object-id-selector"}
+        widget_attrs={"class": "object-id-selector"},
+        widget_filter={
+            "object_type": "content_type_id",  # Tied to the object_type field
+        },
     )
 
     class Meta:
@@ -157,6 +165,19 @@ class ServiceComponentForm(NetBoxModelForm):
             "object_id",
             "tags",
         ]
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Check if `object_type` is pre-populated in the form (e.g., during editing)
+        object_type = self.initial.get("object_type") or self.data.get("object_type")
+        if object_type:
+            try:
+                # Dynamically set queryset for object_id based on the selected object_type
+                model_class = ContentType.objects.get(pk=object_type).model_class()
+                self.fields["object_id"].queryset = model_class.objects.all()
+            except ContentType.DoesNotExist:
+                pass
 
 class ServiceComponentImportForm(NetBoxModelImportForm):
     class Meta:
