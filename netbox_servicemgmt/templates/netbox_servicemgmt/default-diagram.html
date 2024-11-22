@@ -168,8 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
   const objectTypes = {}; 
   initializeObjectTypes();
-  mermaid.initialize({ startOnLoad: true});
-  //updateMermaidCode()
+  mermaid.initialize({ startOnLoad: false});
+  updateMermaidCode()
 });
 </script>
 {% endblock %}
