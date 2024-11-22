@@ -107,8 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.keys(objectTypes).forEach(objType => {
         if (!objectTypes[objType]) {
             // Prepend `%%` to hide lines related to the object type
-            updatedCode = updatedCode.replace(new RegExp(`^[^%].*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
-            updatedCode = updatedCode.replace(new RegExp(`^[^%].*--.*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^[^%]*.*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^[^%]*.*--.*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
             updatedCode = updatedCode.replace(new RegExp(`^classDef color_${objType}`, "gm"), "%% $&"); // Hide class definitions
             // Dynamically find and hide link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType} fill:([^,]+)`, "m"));
@@ -164,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initialize Mermaid and object types
-  mermaid.initialize({ startOnLoad: false });
   const lineCount = document.getElementById('mermaid-diagram').textContent.split("\n").length;
   // Use horizontal (LR) for long diagrams, vertical (TD) for short ones
   let currentLayout = lineCount > 500 ? "LR" : "TD"; 
@@ -172,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
   const objectTypes = {}; 
   initializeObjectTypes();
+  mermaid.initialize({ startOnLoad: false});
   //updateMermaidCode()
 });
 </script>
