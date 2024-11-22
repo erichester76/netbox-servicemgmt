@@ -2,11 +2,9 @@ from netbox.forms import NetBoxModelForm, NetBoxModelImportForm, DynamicModelCho
 from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from dcim.models import Device
 from virtualization.models import VirtualMachine
 from django.contrib.contenttypes.models import ContentType
 from netbox.forms.fields import ContentTypeChoiceField
-from netbox.models import Tag
 
 from .models import ServiceComponent
 class AttachForm(forms.Form):
@@ -130,11 +128,6 @@ class ServiceDeploymentImportForm(NetBoxModelImportForm):
                   'production_readiness_checklist', 'major_incident_coordinator_contact', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
 
-
-from utilities.forms import DynamicModelChoiceField, ContentTypeChoiceField, NetBoxModelForm
-from .models import ServiceComponent
-from django.contrib.contenttypes.models import ContentType
-
 class ServiceComponentForm(NetBoxModelForm):
     object_type = ContentTypeChoiceField(
         queryset=ContentType.objects.all(),
@@ -148,9 +141,7 @@ class ServiceComponentForm(NetBoxModelForm):
         required=True,
         label="Object ID",
         widget_attrs={"class": "object-id-selector"},
-        widget_filter={
-            "object_type": "content_type_id",  # Tied to the object_type field
-        },
+        widget_filter={"object_type": "content_type_id"},
     )
 
     class Meta:
