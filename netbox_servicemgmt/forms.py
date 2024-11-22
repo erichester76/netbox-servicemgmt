@@ -1,10 +1,14 @@
-from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
+from netbox.forms import NetBoxModelForm, NetBoxModelImportForm, DynamicModelChoiceField
 from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from dcim.models import Device
 from virtualization.models import VirtualMachine
+from django.contrib.contenttypes.models import ContentType
+from netbox.forms.fields import ContentTypeChoiceField
+from netbox.models import Tag
 
+from .models import ServiceComponent
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
         queryset=None,  # This will be dynamically populated
@@ -125,10 +129,34 @@ class ServiceDeploymentImportForm(NetBoxModelImportForm):
         fields = ['name', 'description', 'version', 'service_template', 'deployment_rfc', 'maintenance_window', 
                   'production_readiness_checklist', 'major_incident_coordinator_contact', 'engineering_contact', 'operations_contact', 'monitoring_contact']
 
+
+
 class ServiceComponentForm(NetBoxModelForm):
+    object_type = ContentTypeChoiceField(
+        queryset=ContentType.objects.all(),
+        required=True,
+        label="Object Type",
+        widget_attrs={"class": "object-type-selector"}
+    )
+    object_id = DynamicModelChoiceField(
+        queryset=None,  # Dynamically set based on object type
+        required=True,
+        label="Object ID",
+        widget_attrs={"class": "object-id-selector"}
+    )
+
     class Meta:
-        model = models.ServiceComponent
-        fields = ['name', 'description', 'version', 'service_deployment', 'service_requirement', 'object_type', 'object_id']
+        model = ServiceComponent
+        fields = [
+            "name",
+            "description",
+            "version",
+            "service_deployment",
+            "service_requirement",
+            "object_type",
+            "object_id",
+            "tags",
+        ]
 
 class ServiceComponentImportForm(NetBoxModelImportForm):
     class Meta:
