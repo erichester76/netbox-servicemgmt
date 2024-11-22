@@ -136,7 +136,7 @@ class ServiceComponentForm(NetBoxModelForm):
     )
 
     object_id = DynamicModelChoiceField(
-        queryset=None,  # Set dynamically via JavaScript and `widget_filter`
+        queryset=ServiceComponent.objects.none(),  # Set dynamically via JavaScript and `widget_filter`
         required=True,
         label="Component",
     )
@@ -157,18 +157,19 @@ class ServiceComponentForm(NetBoxModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["object_id"].queryset = ServiceComponent.objects.none()
-
-        # Check if `object_type` is pre-populated in the form (e.g., during editing)
         object_type = self.initial.get("object_type") or self.data.get("object_type")
         if object_type:
             try:
-                # Dynamically set queryset for object_id based on the selected object_type
                 model_class = ContentType.objects.get(pk=object_type).model_class()
+                app_label = model_class._meta.app_label
+                model_name = model_class._meta.model_name
+                # Use NetBox's core API endpoint
+                self.fields["object_id"].widget.attrs["data-url"] = f"/api/{app_label}/{model_name}/"
+                # Optionally preload queryset for the current object_type
                 self.fields["object_id"].queryset = model_class.objects.all()
             except ContentType.DoesNotExist:
-                pass
-
+                self.fields["object_id"].queryset = ServiceComponent.objects.none()
+                
 class ServiceComponentImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.ServiceComponent
