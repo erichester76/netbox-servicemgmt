@@ -141,9 +141,9 @@ document.addEventListener("DOMContentLoaded", () => {
     newDiagram.className = 'mermaid';
     newDiagram.textContent = updatedCode;
     mermaidContainer.appendChild(newDiagram);
-    mermaid.run({
-      nodes: [document.getElementById('mermaid-diagram')],
-    });  
+    //mermaid.run({
+    //  nodes: [document.getElementById('mermaid-diagram')],
+    //});  
 
   }
   
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
   const objectTypes = {}; 
   initializeObjectTypes();
-  updateMermaidCode()
+  //updateMermaidCode()
 });
 </script>
 {% endblock %}
