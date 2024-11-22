@@ -111,21 +111,21 @@ document.addEventListener("DOMContentLoaded", () => {
             updatedCode = updatedCode.replace(new RegExp(`^.*--.*${objType}_\d+.*$`, "gm"), "%% $&"); // Hide nodes
             updatedCode = updatedCode.replace(new RegExp(`^classDef color_${objType}.*$`, "gm"), "%% $&"); // Hide class definitions
             // Dynamically find and hide link styles using color from classDef
-            const colorMatch = updatedCode.match(new RegExp(`^classDef color_${objType}.*?fill:([^,]+)`, "m"));
+            const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType} fill:([^,]+)`, "m"));
             if (colorMatch) {
                 const color = colorMatch[1].trim();
-                updatedCode = updatedCode.replace(new RegExp(`^linkStyle.*stroke:${color}.*$`, "gm"), "%% $&"); // Hide link styles
+                updatedCode = updatedCode.replace(new RegExp(`^linkStyle.*stroke:${color}`, "gm"), "%% $&"); // Hide link styles
             }
         } else {
             // Remove leading `%%` to show lines related to the object type
-            updatedCode = updatedCode.replace(new RegExp(`^%% .*(${objType}).*$`, "gm"), "$1"); // Show nodes
-            updatedCode = updatedCode.replace(new RegExp(`^%% (.*--.*${objType}_\d+.*)$`, "gm"), "$1"); // Hide nodes
-            updatedCode = updatedCode.replace(new RegExp(`^%% .*(classDef color_${objType}).*$`, "gm"), "$1"); // Show class definitions
+            updatedCode = updatedCode.replace(new RegExp(`^%% .*(${objType}_\d)`, "gm"), "$1"); // Show nodes
+            updatedCode = updatedCode.replace(new RegExp(`^%% (.*--.*${objType}_\d`, "gm"), "$1"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^%% (classDef color_${objType})`, "gm"), "$1"); // Show class definitions
             // Dynamically find and show link styles using color from classDef
-            const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType}.*?fill:([^,]+)`, "m"));
+            const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType} fill:([^,]+)`, "m"));
             if (colorMatch) {
                 const color = colorMatch[1].trim();
-                updatedCode = updatedCode.replace(new RegExp(`^%% (linkStyle.*stroke:${color}).*$`, "gm"), "$1"); // Show link styles
+                updatedCode = updatedCode.replace(new RegExp(`^%%.*(linkStyle.*stroke:${color})`, "gm"), "$1"); // Show link styles
             }
         }
     });
