@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     newDiagram.className = 'mermaid';
     newDiagram.innerText = updatedCode;
     mermaidContainer.appendChild(newDiagram);
-    mermaid.init(undefined, newDiagram);
+    mermaid.init(undefined, document.getElementById('mermaid-diagram'));
   }
 
   // Event listener for toggling layout
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize Mermaid and object types
   initializeObjectTypes();
-  mermaid.init();
+  mermaid.init(undefined, document.getElementById('mermaid-diagram'));
 });
 </script>
 {% endblock %}
