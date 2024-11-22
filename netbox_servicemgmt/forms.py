@@ -1,5 +1,5 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
-from utilities.forms import DynamicModelChoiceField, ContentTypeChoiceField
+from utilities.forms.fields import DynamicModelChoiceField, ContentTypeChoiceField
 from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
