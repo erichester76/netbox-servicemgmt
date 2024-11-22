@@ -57,9 +57,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const regex = /^.+([a-z]+)_\d+/g; 
     const matches = new Set([...originalMermaidCode.matchAll(regex)].map(match => match[1]));
     matches.forEach(objType => {
-      objectTypes[objType] = true; // Initially visible
+      console.log(objType)
+      objectTypes[objType] = true;
       addObjectTypeToMenu(objType);
     });
+
   }
 
   // Add object types to the dropdown menu
@@ -84,10 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Update the Mermaid code and re-render the diagram
   function updateMermaidCode() {
     let updatedCode = originalMermaidCode.replace(/graph (LR|TD)/, `graph ${currentLayout}`);
-
      // Modify object types based on visibility
     Object.keys(objectTypes).forEach(objType => {
-
       if (!objectTypes[objType]) {
         // Prepend `#` to hide lines related to the object type
         updatedCode = updatedCode.replace(new RegExp(`^.+(${objType})`, "gm"), "#$1")      
@@ -104,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mermaidDiagram) {
       mermaidContainer.removeChild(mermaidDiagram);
     }
-
     const newDiagram = document.createElement('div');
     newDiagram.id = 'mermaid-diagram';
     newDiagram.className = 'mermaid';
@@ -121,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize Mermaid and object types
   initializeObjectTypes();
-  mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+  mermaid.init();
 });
 </script>
 {% endblock %}
