@@ -5,7 +5,7 @@ from .models import DynamicQuerySetModel  # Assuming a utility class
 class DynamicObjectChoiceField(DynamicModelChoiceField):
     def __init__(self, object_type=None, **kwargs):
         self.object_type = object_type
-        super().__init__(queryset=None, **kwargs)
+        super().__init__(queryset=ContentType.objects.none(), **kwargs)
 
     def get_queryset(self):
         if self.object_type:
