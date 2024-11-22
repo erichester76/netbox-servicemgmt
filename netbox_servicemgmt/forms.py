@@ -1,11 +1,10 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
-from utilities.forms.fields import DynamicModelChoiceField
+from utilities.forms import DynamicModelChoiceField, ContentTypeChoiceField
 from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from virtualization.models import VirtualMachine
 from django.contrib.contenttypes.models import ContentType
-from netbox.forms.fields import ContentTypeChoiceField
 
 from .models import ServiceComponent
 class AttachForm(forms.Form):
