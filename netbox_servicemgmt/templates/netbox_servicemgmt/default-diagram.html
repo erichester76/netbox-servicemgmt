@@ -48,22 +48,22 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  let currentLayout = "LR"; // Initial layout direction
   const originalMermaidCode = document.getElementById('mermaid-diagram').innerText.trim();
+  const lineCount = originalMermaidCode.split("\n").length;
+  let currentLayout = lineCount > 15 ? "LR" : "TD"; // Use horizontal (LR) for long diagrams, vertical (TD) for short ones
+  document.getElementById('mermaid-diagram').innerText.replace(/graph (LR|TD)/, `graph ${currentLayout}`);
+
   const objectTypes = {}; // Object types and their visibility states
 
   function initializeObjectTypes() {
     // Regular expression to match object types (letters before the first underscore)
-    const regex = /^.+([a-z]+)_\d+/g; 
+    const regex = /([a-z]+)_\d+/g; 
     const matches = new Set();
-
     let match;
     while ((match = regex.exec(originalMermaidCode)) !== null) {
         matches.add(match[1]); // Add the object type to the Set
     }
-
     console.log("All object types:", Array.from(matches)); // Debugging log
-
     matches.forEach(objType => {
         console.log("Found object type:", objType); // Debugging log for each object type
         objectTypes[objType] = true; // Initialize as visible
