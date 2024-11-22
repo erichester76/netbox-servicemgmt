@@ -136,7 +136,7 @@ class ServiceComponentForm(NetBoxModelForm):
     )
 
     object_id = DynamicModelChoiceField(
-        queryset=ContentType.objects.all(),  # Set dynamically via JavaScript and `widget_filter`
+        queryset=ServiceComponent.objects.none(),  # Set dynamically via JavaScript and `widget_filter`
         required=True,
         label="Component",
     )
