@@ -48,10 +48,10 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const originalMermaidCode = document.getElementById('mermaid-diagram').innerText.trim();
-  const lineCount = originalMermaidCode.split("\n").length;
+  const lineCount = document.getElementById('mermaid-diagram').innerText.split("\n").length;
   let currentLayout = lineCount > 15 ? "LR" : "TD"; // Use horizontal (LR) for long diagrams, vertical (TD) for short ones
   document.getElementById('mermaid-diagram').innerText.replace(/graph (LR|TD)/, `graph ${currentLayout}`);
+  const originalMermaidCode = document.getElementById('mermaid-diagram').innerText.trim();
 
   const objectTypes = {}; // Object types and their visibility states
 
