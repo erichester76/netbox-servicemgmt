@@ -21,12 +21,12 @@
 <div class="toolbar">
   <button id="toggle-layout" class="btn btn-primary">Toggle Vertical/Horizontal</button>
   <div class="dropdown">
-    <button id="toggle-object-types" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+    <button id="toggle-object-types" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
       Hide Object Types
     </button>
-    <div class="dropdown-menu" id="object-type-menu">
+    <div class="dropdown-menu" id="object-type-menu" style="display: block; position: relative;">
       <!-- Object types will be populated dynamically -->
-    </div>
+    </div>    
   </div>
 </div>
 
@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add object types to the dropdown menu
   function addObjectTypeToMenu(objType) {
+    console.log("adding "+objType+" to dropdown" )
     const menu = document.getElementById("object-type-menu");
     const item = document.createElement("div");
     item.className = "dropdown-item";
