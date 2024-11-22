@@ -13,7 +13,6 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView
 from django.shortcuts import render
-from .forms import DynamicObjectForm
 
 def get_model_class(app_label, model_name):
     # Use ContentType to get the model class
