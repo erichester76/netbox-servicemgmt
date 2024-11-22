@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   mermaid.initialize({ startOnLoad: false });
   const lineCount = document.getElementById('mermaid-diagram').textContent.split("\n").length;
   // Use horizontal (LR) for long diagrams, vertical (TD) for short ones
-  let currentLayout = lineCount > 50 ? "LR" : "TD"; 
+  let currentLayout = lineCount > 200 ? "LR" : "TD"; 
   document.getElementById('mermaid-diagram'.replace(/graph (LR|TD)/, `graph ${currentLayout}`));
   const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
   const objectTypes = {}; 
