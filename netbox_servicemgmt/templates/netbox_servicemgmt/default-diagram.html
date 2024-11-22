@@ -111,7 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
             updatedCode = updatedCode.replace(new RegExp(`^.*${objType}_\d+`, "gm"), "%% $&"); // Hide nodes
             updatedCode = updatedCode.replace(new RegExp(`^.*${objType}_\d+`, "gm"), "%% $&"); // Hide links
             updatedCode = updatedCode.replace(new RegExp(`^classDef color_${objType}`, "gm"), "%% $&"); // Hide class definitions
-            
             // Dynamically find and hide link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType}.*?fill:([^,]+)`, "m"));
             if (colorMatch) {
@@ -123,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
             updatedCode = updatedCode.replace(new RegExp(`%% (.*${objType})`, "gm"), "$1"); // Show nodes
             updatedCode = updatedCode.replace(new RegExp(`%% (.*${objType}`, "gm"), "$1"); // Show links
             updatedCode = updatedCode.replace(new RegExp(`%% (.*classDef color_${objType})`, "gm"), "$1"); // Show class definitions
-            
             // Dynamically find and show link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType}.*?fill:([^,]+)`, "m"));
             if (colorMatch) {
@@ -132,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-
 
     // Update the container with new code by first deleting it to clear any mermaid objects
     const mermaidContainer = document.getElementById('mermaid-container');
@@ -183,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
   const objectTypes = {}; 
   initializeObjectTypes();
-  //updateMermaidCode()
+  updateMermaidCode()
 });
 </script>
 {% endblock %}
