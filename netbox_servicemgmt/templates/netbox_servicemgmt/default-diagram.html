@@ -73,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
     while ((match = regex.exec(originalMermaidCode)) !== null) {
         matches.add(match[1]); // Add the object type to the Set
     }
-    console.log("All object types:", Array.from(matches)); // Debugging log
     matches.forEach(objType => {
         console.log("Found object type:", objType); // Debugging log for each object type
         objectTypes[objType] = true; // Initialize as visible
@@ -83,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add object types to the dropdown menu
   function addObjectTypeToMenu(objType) {
-    console.log("adding "+objType+" to dropdown" )
     const menu = document.getElementById("object-type-menu");
     const item = document.createElement("div");
     item.className = "dropdown-item";
