@@ -254,8 +254,8 @@ class BaseDiagramView(generic.ObjectView):
         mermaid_source += "graph LR\n" 
         #recurse object relationships to build flowchart
         mermaid_source += generate_mermaid_code(instance)        
-        link_styles = []
-        current_iteration = 1
+        link_styles = {}
+        current_iteration = 0
         for line in mermaid_source.splitlines():
             if "--" in line: 
                 parts = line.split("--")
