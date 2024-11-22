@@ -107,8 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.keys(objectTypes).forEach(objType => {
         if (!objectTypes[objType]) {
             // Prepend `%%` to hide lines related to the object type
-            updatedCode = updatedCode.replace(new RegExp(`^[^%]*.*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
-            updatedCode = updatedCode.replace(new RegExp(`^[^%]*.*--.*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^[^%]*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^[^%]*--.*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
             updatedCode = updatedCode.replace(new RegExp(`^classDef color_${objType}`, "gm"), "%% $&"); // Hide class definitions
             // Dynamically find and hide link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType} fill:([^,]+)`, "m"));
