@@ -7,6 +7,7 @@ from dcim.models import Site, Manufacturer
 from taggit.managers import TaggableManager
 from virtualization.models import VirtualMachine
 from django.urls import reverse  # Import reverse
+from django.core.exceptions import ValidationError
 
 # Status choices
 STATUS_INACTIVE = 'inactive'
@@ -46,6 +47,34 @@ STATUS_CHOICES = [
     (STATUS_REPLACED, 'replaced'),
     (STATUS_DECOMMISSIONED, 'decommissioned'),
 ]
+
+class DynamicQuerySetModel:
+    """
+    A utility to dynamically generate a queryset and API URL
+    based on the selected content type.
+    """
+    def __init__(self, object_type=None):
+        self.object_type = object_type
+
+    @property
+    def queryset(self):
+        """Return the queryset for the selected content type."""
+        if self.object_type:
+            model_class = ContentType.objects.get(pk=self.object_type).model_class()
+            if model_class:
+                return model_class.objects.all()
+        return None  # Return None if no object_type is set
+
+    @property
+    def get_absolute_url(self):
+        """Return the API URL for the selected content type."""
+        if self.object_type:
+            model_class = ContentType.objects.get(pk=self.object_type).model_class()
+            if model_class:
+                return reverse(
+                    f'{model_class._meta.app_label}:{model_class._meta.model_name}'
+                )
+        return None  # Return None if no object_type is set
 
 # Service Level Objective (SLO) Model
 class SLO(NetBoxModel):

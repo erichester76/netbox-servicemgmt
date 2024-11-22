@@ -6,8 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from virtualization.models import VirtualMachine
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
+from .fields import DynamicObjectChoiceField
 
-from .models import ServiceComponent
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
         queryset=None,  # This will be dynamically populated
@@ -136,14 +136,13 @@ class ServiceComponentForm(NetBoxModelForm):
         label="Object Type",
     )
 
-    object_id = DynamicModelChoiceField(
-        queryset=ServiceComponent.objects.none(),
+    object_id = DynamicObjectChoiceField(
         required=True,
-        label="Object",
+        label="Object"
     )
-
+    
     class Meta:
-        model = ServiceComponent
+        model = models.ServiceComponent
         fields = [
             "name",
             "description",
@@ -157,19 +156,10 @@ class ServiceComponentForm(NetBoxModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # Configure `data-url` dynamically for `object_id` field
-        object_type = self.initial.get("object_type") or self.data.get("object_type")
-        if object_type:
-            try:
-                model_class = ContentType.objects.get(pk=object_type).model_class()
-                self.fields["object_id"].queryset = model_class.objects.all()
-                self.fields["object_id"].widget.attrs["data-url"] = reverse(
-                    f"api:{model_class._meta.app_label}:{model_class._meta.model_name}-list"
-                )
-            except ContentType.DoesNotExist:
-                self.fields["object_id"].queryset = ServiceComponent.objects.none()
-
+        if 'object_type' in self.data:
+            object_type = self.data.get('object_type')
+            self.fields['object_id'].object_type = object_type
+            self.fields['object_id'].queryset = self.fields['object_id'].get_queryset()
                 
 class ServiceComponentImportForm(NetBoxModelImportForm):
     class Meta:
