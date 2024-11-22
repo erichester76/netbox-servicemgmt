@@ -268,11 +268,6 @@ class ServiceDeploymentDetailView(base_views.BaseObjectView):
 class ServiceDeploymentDiagramView(base_views.BaseDiagramView):
     queryset = models.ServiceDeployment.objects.all()
 
-@register_model_view(models.ServiceDeployment, 'diagram', path='diagram')
-class ServiceComponentDeploymentView(base_views.BaseDiagramView): 
-    queryset = models.ServiceDeployment.objects.all()
-
-    
 class ServiceDeploymentEditView(generic.ObjectEditView):
     queryset = models.ServiceDeployment.objects.all()
     form = forms.ServiceDeploymentForm
