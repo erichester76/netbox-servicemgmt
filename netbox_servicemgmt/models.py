@@ -63,7 +63,7 @@ class DynamicQuerySetModel:
             model_class = ContentType.objects.get(pk=self.object_type).model_class()
             if model_class:
                 return model_class.objects.all()
-        return ContentType.objects.none()  # Return empty set if no object_type is set
+        return ServiceComponent.objects.none()  # Return empty set if no object_type is set
 
     @property
     def get_absolute_url(self):
@@ -74,7 +74,7 @@ class DynamicQuerySetModel:
                 return reverse(
                     f'{model_class._meta.app_label}:{model_class._meta.model_name}'
                 )
-        return ContentType.objects.none()  # Return empty set if no object_type is set
+        return ServiceComponent.objects.none()  # Return empty set if no object_type is set
 
 # Service Level Objective (SLO) Model
 class SLO(NetBoxModel):
