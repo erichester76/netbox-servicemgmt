@@ -48,12 +48,7 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const lineCount = document.getElementById('mermaid-diagram').textContent.split("\n").length;
-  // Use horizontal (LR) for long diagrams, vertical (TD) for short ones
-  let currentLayout = lineCount > 15 ? "LR" : "TD"; 
-  document.getElementById('mermaid-diagram'.replace(/graph (LR|TD)/, `graph ${currentLayout}`));
-  const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
-  const objectTypes = {}; // Object types and their visibility states
+  
 
   function initializeObjectTypes() {
     // Regular expression to match object types (letters before the first underscore)
@@ -129,12 +124,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initialize Mermaid and object types
-  initializeObjectTypes();
   mermaid.initialize({ startOnLoad: false });
-  mermaid.run({
-      suppressErrors: true,
-      nodes: [document.getElementById('mermaid-diagram')],
-    });  
+  const lineCount = document.getElementById('mermaid-diagram').textContent.split("\n").length;
+  // Use horizontal (LR) for long diagrams, vertical (TD) for short ones
+  let currentLayout = lineCount > 15 ? "LR" : "TD"; 
+  document.getElementById('mermaid-diagram'.replace(/graph (LR|TD)/, `graph ${currentLayout}`));
+  const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
+  const objectTypes = {}; // Object types and their visibility states
+  initializeObjectTypes();
+  updateMermaidCode()
 });
 </script>
 {% endblock %}
