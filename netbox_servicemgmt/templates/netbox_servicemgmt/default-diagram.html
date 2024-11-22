@@ -19,7 +19,7 @@
 }
 </style>
 <div class="toolbar">
-  <button id="toggle-layout" class="btn btn-primary">Toggle Layout (Vertical/Horizontal)</button>
+  <button id="toggle-layout" class="btn btn-primary">Toggle Vertical/Horizontal</button>
   <div class="dropdown">
     <button id="toggle-object-types" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
       Hide Object Types
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const newDiagram = document.createElement('pre');
     newDiagram.id = 'mermaid-diagram';
     newDiagram.className = 'mermaid';
-    newDiagram.innerText = updatedCode;
+    newDiagram.textContent = updatedCode;
     mermaidContainer.appendChild(newDiagram);
     console.log("re-rendering")
     mermaid.run({
