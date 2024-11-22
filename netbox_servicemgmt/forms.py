@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from virtualization.models import VirtualMachine
 from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse
 
 from .models import ServiceComponent
 class AttachForm(forms.Form):
@@ -132,13 +133,13 @@ class ServiceComponentForm(NetBoxModelForm):
     object_type = ContentTypeChoiceField(
         queryset=ContentType.objects.all(),
         required=True,
-        label="Component Type",
+        label="Object Type",
     )
 
     object_id = DynamicModelChoiceField(
-        queryset=ServiceComponent.objects.none(),  # Set dynamically via JavaScript and `widget_filter`
+        queryset=ServiceComponent.objects.none(),
         required=True,
-        label="Component",
+        label="Object",
     )
 
     class Meta:
@@ -153,22 +154,22 @@ class ServiceComponentForm(NetBoxModelForm):
             "object_id",
             "tags",
         ]
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Configure `data-url` dynamically for `object_id` field
         object_type = self.initial.get("object_type") or self.data.get("object_type")
         if object_type:
             try:
                 model_class = ContentType.objects.get(pk=object_type).model_class()
-                app_label = model_class._meta.app_label
-                model_name = model_class._meta.model_name
-                # Use NetBox's core API endpoint
-                self.fields["object_id"].widget.attrs["data-url"] = f"/api/{app_label}/{model_name}/"
-                # Optionally preload queryset for the current object_type
                 self.fields["object_id"].queryset = model_class.objects.all()
+                self.fields["object_id"].widget.attrs["data-url"] = reverse(
+                    f"api:{model_class._meta.app_label}:{model_class._meta.model_name}-list"
+                )
             except ContentType.DoesNotExist:
                 self.fields["object_id"].queryset = ServiceComponent.objects.none()
+
                 
 class ServiceComponentImportForm(NetBoxModelImportForm):
     class Meta:
