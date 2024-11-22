@@ -11,7 +11,7 @@
     /*max-height: 200px;*/
     overflow-y: auto;
     z-index: 1000; /* Ensures it is above other elements */
-    background-color: #474747;
+    background-color: #D3D3D3;
     border: 1px solid #000000;
     border-radius: 4px;
     padding: 4px;
@@ -107,9 +107,9 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.keys(objectTypes).forEach(objType => {
         if (!objectTypes[objType]) {
             // Prepend `%%` to hide lines related to the object type
-            updatedCode = updatedCode.replace(new RegExp(`.*${objType}_\\d`, "gm"), "%% $&"); // Hide nodes
-            updatedCode = updatedCode.replace(new RegExp(`.*--.*${objType}_\\d`, "gm"), "%% $&"); // Hide nodes
-            updatedCode = updatedCode.replace(new RegExp(`classDef color_${objType}`, "gm"), "%% $&"); // Hide class definitions
+            updatedCode = updatedCode.replace(new RegExp(`^[^%].*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^[^%].*--.*${objType}_[0-9].*$`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^classDef color_${objType}`, "gm"), "%% $&"); // Hide class definitions
             // Dynamically find and hide link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType} fill:([^,]+)`, "m"));
             if (colorMatch) {
@@ -118,8 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             // Remove leading `%%` to show lines related to the object type
-            updatedCode = updatedCode.replace(new RegExp(`%% (.*${objType}_\\d)`, "gm"), "$1"); // Show nodes
-            updatedCode = updatedCode.replace(new RegExp(`%% (.*--.*${objType}_\\d)`, "gm"), "$1"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`%% (.*${objType}_[0-9]).*$`, "gm"), "$1"); // Show nodes
+            updatedCode = updatedCode.replace(new RegExp(`%% (.*--.*${objType}_[0-9].*$)`, "gm"), "$1"); // Hide nodes
             updatedCode = updatedCode.replace(new RegExp(`%% (classDef color_${objType})`, "gm"), "$1"); // Show class definitions
             // Dynamically find and show link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType} fill:([^,]+)`, "m"));
@@ -141,27 +141,21 @@ document.addEventListener("DOMContentLoaded", () => {
     newDiagram.className = 'mermaid';
     newDiagram.textContent = updatedCode;
     mermaidContainer.appendChild(newDiagram);
-    //mermaid.run({
-    //  nodes: [document.getElementById('mermaid-diagram')],
-    //});  
+    mermaid.run({
+      nodes: [document.getElementById('mermaid-diagram')],
+    });  
 
   }
   
- /* const dropdownButton = document.getElementById("toggle-object-types");
+  const dropdownButton = document.getElementById("toggle-object-types");
   const dropdownMenu = document.getElementById("object-type-menu");
-
-  // Toggle dropdown visibility on button click
-  dropdownButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    dropdownMenu.classList.toggle("show");
-  });
 
   // Close dropdown when clicking outside
   document.addEventListener("click", (event) => {
     if (!dropdownMenu.contains(event.target) && !dropdownButton.contains(event.target)) {
       dropdownMenu.classList.remove("show");
     }
-  }); */
+  });
 
   // Event listener for toggling layout
   document.getElementById("toggle-layout").addEventListener("click", () => {
@@ -178,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
   const objectTypes = {}; 
   initializeObjectTypes();
-  //updateMermaidCode()
+  updateMermaidCode()
 });
 </script>
 {% endblock %}
