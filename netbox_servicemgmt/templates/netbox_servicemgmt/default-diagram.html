@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
       objectTypes[objType] = checkbox.checked;
       updateMermaidCode();
     });
-    
+
   }
 
   // Update the Mermaid code and re-render the diagram
@@ -108,10 +108,10 @@ document.addEventListener("DOMContentLoaded", () => {
      // Modify object types based on visibility
     Object.keys(objectTypes).forEach(objType => {
       if (!objectTypes[objType]) {
-        // Prepend `#` to hide lines related to the object type
+        // Prepend `%%` to hide lines related to the object type
         updatedCode = updatedCode.replace(new RegExp(`^.+(${objType})`, "gm"), "%% $1")      
     } else {
-        // Remove leading `#` to show lines related to the object type
+        // Remove leading `%%` to show lines related to the object type
         updatedCode = updatedCode.replace(new RegExp(`^.%% (${objType})`, "gm"), "$1");
     }
   });
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dropdownButton = document.getElementById("toggle-object-types");
   const dropdownMenu = document.getElementById("object-type-menu");
 
-  // Toggle dropdown visibility on button click
+ /*  // Toggle dropdown visibility on button click
   dropdownButton.addEventListener("click", (event) => {
     event.preventDefault();
     dropdownMenu.classList.toggle("show");
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!dropdownMenu.contains(event.target) && !dropdownButton.contains(event.target)) {
       dropdownMenu.classList.remove("show");
     }
-  });
+  }); */
 
   // Event listener for toggling layout
   document.getElementById("toggle-layout").addEventListener("click", () => {
