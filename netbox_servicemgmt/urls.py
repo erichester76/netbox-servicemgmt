@@ -5,8 +5,6 @@ urlpatterns = [
     
     path('<str:app_label>/<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
 
-    path('dynamic-object/', views.dynamic_object_view, name='dynamic_object'),
-
     # Solution Template URLs
     path('solution-requests/', views.SolutionRequestListView.as_view(), name='solutionrequest_list'),
     path('solution-requests/<int:pk>/', views.SolutionRequestDetailView.as_view(), name='solutionrequest'),
