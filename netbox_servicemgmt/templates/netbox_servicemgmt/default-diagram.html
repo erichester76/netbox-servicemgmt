@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!objectTypes[objType]) {
             // Prepend `%%` to hide lines related to the object type
             updatedCode = updatedCode.replace(new RegExp(`^.*${objType}_\d+.*$`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^.*--.*${objType}_\d+.*$`, "gm"), "%% $&"); // Hide nodes
             updatedCode = updatedCode.replace(new RegExp(`^classDef color_${objType}.*$`, "gm"), "%% $&"); // Hide class definitions
             // Dynamically find and hide link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`^classDef color_${objType}.*?fill:([^,]+)`, "m"));
@@ -117,8 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             // Remove leading `%%` to show lines related to the object type
-            updatedCode = updatedCode.replace(new RegExp(`^%%.*(${objType}).*$`, "gm"), "$1"); // Show nodes
-            updatedCode = updatedCode.replace(new RegExp(`^%%.*(classDef color_${objType}).*$`, "gm"), "$1"); // Show class definitions
+            updatedCode = updatedCode.replace(new RegExp(`^%% .*(${objType}).*$`, "gm"), "$1"); // Show nodes
+            updatedCode = updatedCode.replace(new RegExp(`^%% (.*--.*${objType}_\d+.*)$`, "gm"), "$1"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^%% .*(classDef color_${objType}).*$`, "gm"), "$1"); // Show class definitions
             // Dynamically find and show link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType}.*?fill:([^,]+)`, "m"));
             if (colorMatch) {

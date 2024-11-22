@@ -250,7 +250,8 @@ class BaseDiagramView(generic.ObjectView):
     )
     
     def get_extra_context(self, request, instance):
-        mermaid_source = "%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\ngraph LR\n" 
+        mermaid_source = "%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\n"
+        mermaid_source += "graph LR\n" 
         #recurse object relationships to build flowchart
         mermaid_source += generate_mermaid_code(instance)        
         link_styles = {}
