@@ -136,7 +136,7 @@ class ServiceComponentForm(NetBoxModelForm):
     )
 
     object_id = DynamicModelChoiceField(
-        queryset=ServiceComponent.objects.none(),  # Set dynamically via JavaScript and `widget_filter`
+        queryset=None,  # Set dynamically via JavaScript and `widget_filter`
         required=True,
         label="Component",
     )
@@ -156,6 +156,8 @@ class ServiceComponentForm(NetBoxModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields["object_id"].queryset = ServiceComponent.objects.none()
 
         # Check if `object_type` is pre-populated in the form (e.g., during editing)
         object_type = self.initial.get("object_type") or self.data.get("object_type")
