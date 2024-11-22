@@ -97,7 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
       objectTypes[objType] = checkbox.checked;
-v    });
+      updateMermaidCode();
+    });
+    
   }
 
   // Update the Mermaid code and re-render the diagram
@@ -130,6 +132,22 @@ v    });
       nodes: [document.getElementById('mermaid-diagram')],
     });  
 }
+  
+  const dropdownButton = document.getElementById("toggle-object-types");
+  const dropdownMenu = document.getElementById("object-type-menu");
+
+  // Toggle dropdown visibility on button click
+  dropdownButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    dropdownMenu.classList.toggle("show");
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (event) => {
+    if (!dropdownMenu.contains(event.target) && !dropdownButton.contains(event.target)) {
+      dropdownMenu.classList.remove("show");
+    }
+  });
 
   // Event listener for toggling layout
   document.getElementById("toggle-layout").addEventListener("click", () => {
