@@ -9,7 +9,7 @@
     display: none;
     position: absolute;
     overflow-y: auto;
-    z-index: 1000; /* Ensures it is above other elements */
+    z-index: 1000; 
     border-radius: 4px;
     padding: 4px;
   }
@@ -138,9 +138,9 @@ document.addEventListener("DOMContentLoaded", () => {
     newDiagram.className = 'mermaid';
     newDiagram.textContent = updatedCode;
     mermaidContainer.appendChild(newDiagram);
-    //mermaid.run({
-    //  nodes: [document.getElementById('mermaid-diagram')],
-    //});  
+    mermaid.run({
+      nodes: [document.getElementById('mermaid-diagram')],
+    });  
 
   }
   
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const originalMermaidCode = document.getElementById('mermaid-diagram').textContent.trim();
   const objectTypes = {}; 
   initializeObjectTypes();
-  mermaid.initialize({ startOnLoad: false});
+  mermaid.initialize({ startOnLoad: true});
   //updateMermaidCode()
 });
 </script>
