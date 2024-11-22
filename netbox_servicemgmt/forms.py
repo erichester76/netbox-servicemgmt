@@ -153,13 +153,6 @@ class ServiceComponentForm(NetBoxModelForm):
             "object_id",
             "tags",
         ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if 'object_type' in self.data:
-            object_type = self.data.get('object_type')
-            self.fields['object_id'].object_type = object_type
-            self.fields['object_id'].queryset = self.fields['object_id'].get_queryset()
                 
 class ServiceComponentImportForm(NetBoxModelImportForm):
     class Meta:

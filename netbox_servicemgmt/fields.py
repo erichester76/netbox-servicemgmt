@@ -1,6 +1,6 @@
 from utilities.forms.fields import DynamicModelChoiceField
 from django.contrib.contenttypes.models import ContentType
-from .dynamic_queryset_model import DynamicQuerySetModel  # Assuming a utility class
+from .models import DynamicQuerySetModel  # Assuming a utility class
 
 class DynamicObjectChoiceField(DynamicModelChoiceField):
     def __init__(self, object_type=None, **kwargs):
