@@ -36,9 +36,9 @@
       <h5 class="card-header">Diagram</h5>
       <div class="card-body">
         <div id="mermaid-container">
-          <div id="mermaid-diagram" class="mermaid">
+          <pre id="mermaid-diagram" class="mermaid">
             {{ mermaid_source|safe }}
-          </div>
+          </pre>
         </div>
       </div>
     </div>
@@ -97,20 +97,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-
     // Update the container with new code by first deleting it to clear any mermaid objects
     const mermaidContainer = document.getElementById('mermaid-container');
     const mermaidDiagram = document.getElementById('mermaid-diagram');
     if (mermaidDiagram) {
       mermaidContainer.removeChild(mermaidDiagram);
     }
-    const newDiagram = document.createElement('div');
+    const newDiagram = document.createElement('pre');
     newDiagram.id = 'mermaid-diagram';
     newDiagram.className = 'mermaid';
     newDiagram.innerText = updatedCode;
     mermaidContainer.appendChild(newDiagram);
-    mermaid.init(undefined, document.getElementById('mermaid-diagram'));
-  }
+    mermaid.run({
+      nodes: [document.getElementById('mermaid-diagram')],
+    });  
+}
 
   // Event listener for toggling layout
   document.getElementById("toggle-layout").addEventListener("click", () => {
@@ -120,7 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize Mermaid and object types
   initializeObjectTypes();
-  mermaid.init(undefined, document.getElementById('mermaid-diagram'));
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.run({
+      suppressErrors: true,
+      nodes: [document.getElementById('mermaid-diagram')],
+    });  
 });
 </script>
 {% endblock %}
