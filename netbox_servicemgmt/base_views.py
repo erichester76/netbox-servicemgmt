@@ -253,12 +253,24 @@ class BaseDiagramView(generic.ObjectView):
         mermaid_source = "%%{ init: { 'flowchart': { 'curve': 'stepBefore' } } }%%\n"
         mermaid_source += "graph LR\n" 
         #recurse object relationships to build flowchart
-        mermaid_source += generate_mermaid_code(instance)
-
+        mermaid_source += generate_mermaid_code(instance)        
+        link_styles = []
+        current_iteration = 1
+        for line in mermaid_source.splitlines():
+            if "--" in line: 
+                parts = line.split("--")
+                if len(parts) > 0:
+                    source_obj = parts[0].strip()
+                    obj_type = source_obj.split("_")[0] 
+                    if obj_type not in link_styles:
+                        link_styles[obj_type] = [] 
+                    link_styles[obj_type].append(str(current_iteration))
+                current_iteration += 1 
         for obj_type, color in color_map.items():
-            mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:0px,color:#fff,font-size:14px;\n'
-        #for key in link_styles:
-        #    mermaid_source += f"linkStyle {link_styles[key]} stroke:{color_map[key]},stroke-width:2px;\n"
+            mermaid_source += f'classDef color_{obj_type} fill:{color},stroke:#000,stroke-width:1px,color:#fff,font-size:16px;\n'
+        for obj_type, link_indices in link_styles.items():
+            indices = ",".join(link_indices)  
+            mermaid_source += f"linkStyle {indices} stroke:{color_map[obj_type]},stroke-width:2px;\n"
 
         return {
           'mermaid_source': mermaid_source,
