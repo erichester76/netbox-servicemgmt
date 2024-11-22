@@ -133,15 +133,12 @@ class ServiceComponentForm(NetBoxModelForm):
         queryset=ContentType.objects.all(),
         required=True,
         label="Component Type",
-        widget_attrs={"class": "object-type-selector"},
     )
 
     object_id = DynamicModelChoiceField(
         queryset=None,  # Set dynamically via JavaScript and `widget_filter`
         required=True,
         label="Component",
-        widget_attrs={"class": "object-id-selector"},
-        widget_filter={"object_type": "content_type_id"},
     )
 
     class Meta:
