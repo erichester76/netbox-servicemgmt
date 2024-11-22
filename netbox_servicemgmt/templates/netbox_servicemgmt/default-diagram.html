@@ -133,19 +133,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Update the Mermaid container
-    const mermaidContainer = document.getElementById("mermaid-diagram");
-    mermaidContainer.innerHTML = updatedCode;
-
-    // Re-render the Mermaid diagram
-    mermaid.init(undefined, mermaidContainer);
-  }
 
     // Update the container with new code by first deleting it to clear any mermaid objects
     const mermaidContainer = document.getElementById('mermaid-container');
     const mermaidDiagram = document.getElementById('mermaid-diagram');
     if (mermaidDiagram) {
-      mermaidContainer.removeChild(mermaidDiagram);
+        mermaidContainer.removeChild(mermaidDiagram);
     }
     const newDiagram = document.createElement('pre');
     newDiagram.id = 'mermaid-diagram';
@@ -156,7 +149,8 @@ document.addEventListener("DOMContentLoaded", () => {
     mermaid.run({
       nodes: [document.getElementById('mermaid-diagram')],
     });  
-}
+
+  }
   
   const dropdownButton = document.getElementById("toggle-object-types");
   const dropdownMenu = document.getElementById("object-type-menu");
