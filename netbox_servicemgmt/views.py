@@ -73,17 +73,11 @@ class GenericAttachView(FormView):
         
         
 @register_model_view(Device, 'diagram', path='diagram')
-class DeviceDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for ServiceDeployment model.
-    """  
+class DeviceDiagramView(base_views.BaseDiagramView): 
     queryset = Device.objects.all()
 
 @register_model_view(VirtualMachine, 'diagram', path='diagram')
 class VMDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for ServiceDeployment model.
-    """  
     queryset = VirtualMachine.objects.all()        
         
 # SLO Views
@@ -164,9 +158,6 @@ class SolutionTemplateDetailView(base_views.BaseObjectView):
 
 @register_model_view(models.SolutionTemplate, 'diagram', path='diagram')
 class SolutionTemplateDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for SolutionTemplate model.
-    """
     queryset = models.SolutionTemplate.objects.all()
 
 class SolutionTemplateEditView(generic.ObjectEditView):
@@ -218,9 +209,6 @@ class ServiceTemplateDetailView(base_views.BaseObjectView):
 
 @register_model_view(models.ServiceTemplate, 'diagram', path='diagram')
 class ServiceTemplateDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for ServceTemplate model.
-    """  
     queryset = models.ServiceTemplate.objects.all()
 
 class ServiceTemplateEditView(generic.ObjectEditView):
@@ -278,17 +266,12 @@ class ServiceDeploymentDetailView(base_views.BaseObjectView):
 
 @register_model_view(models.ServiceDeployment)
 class ServiceDeploymentDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for ServiceDeployment model.
-    """  
     queryset = models.ServiceDeployment.objects.all()
 
-@register_model_view(models.ServiceComponent, 'diagram', path='diagram')
-class ServiceComponentDiagramView(base_views.BaseDiagramView):
-    """
-    Diagram tab for ServiceDeployment model.
-    """  
+@register_model_view(models.ServiceDeployment, 'diagram', path='diagram')
+class ServiceComponentDeploymentView(base_views.BaseDiagramView): 
     queryset = models.ServiceDeployment.objects.all()
+
     
 class ServiceDeploymentEditView(generic.ObjectEditView):
     queryset = models.ServiceDeployment.objects.all()
@@ -312,6 +295,10 @@ class ServiceComponentListView(generic.ObjectListView):
     
 @register_model_view(models.ServiceComponent)
 class ServiceComponentDetailView(base_views.BaseObjectView):
+    queryset = models.ServiceComponent.objects.all()
+
+@register_model_view(models.ServiceComponent, 'diagram', path='diagram')
+class ServiceComponentDiagramView(base_views.BaseDiagramView): 
     queryset = models.ServiceComponent.objects.all()
 
 class ServiceComponentEditView(generic.ObjectEditView):
