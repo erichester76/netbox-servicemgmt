@@ -71,13 +71,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const matches = new Set();
     let match;
     while ((match = regex.exec(originalMermaidCode)) !== null) {
-        matches.add(match[1]); // Add the object type to the Set
+        matches.add(match[1]); 
     }
     matches.forEach(objType => {
         objectTypes[objType] = true; // Initialize as visible
-        addObjectTypeToMenu(objType); // Add to dropdown menu
+        addObjectTypeToMenu(objType);
     });
-}
+  }
 
   // Add object types to the dropdown menu
   function addObjectTypeToMenu(objType) {
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             // Remove leading `%%` to show lines related to the object type
             updatedCode = updatedCode.replace(new RegExp(`%% (.*${objType})`, "gm"), "$1"); // Show nodes
-            updatedCode = updatedCode.replace(new RegExp(`%% (.*${objType}`, "gm"), "$1"); // Show links
+            updatedCode = updatedCode.replace(new RegExp(`%% (.*${objType})`, "gm"), "$1"); // Show links
             updatedCode = updatedCode.replace(new RegExp(`%% (.*classDef color_${objType})`, "gm"), "$1"); // Show class definitions
             // Dynamically find and show link styles using color from classDef
             const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType}.*?fill:([^,]+)`, "m"));
@@ -148,10 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
   
-  const dropdownButton = document.getElementById("toggle-object-types");
+ /* const dropdownButton = document.getElementById("toggle-object-types");
   const dropdownMenu = document.getElementById("object-type-menu");
 
- /*  // Toggle dropdown visibility on button click
+  // Toggle dropdown visibility on button click
   dropdownButton.addEventListener("click", (event) => {
     event.preventDefault();
     dropdownMenu.classList.toggle("show");
