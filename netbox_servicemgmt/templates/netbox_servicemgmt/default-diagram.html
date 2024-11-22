@@ -100,19 +100,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  // Update the Mermaid code and re-render the diagram
   function updateMermaidCode() {
+    // Update graph layout (LR or TD)
     let updatedCode = originalMermaidCode.replace(/graph (LR|TD)/, `graph ${currentLayout}`);
-     // Modify object types based on visibility
+
+    /// Modify object types and associated styles based on visibility
     Object.keys(objectTypes).forEach(objType => {
-      if (!objectTypes[objType]) {
-        // Prepend `%%` to hide lines related to the object type
-        updatedCode = updatedCode.replace(new RegExp(`^.+(${objType})`, "gm"), "%% $1")      
-    } else {
-        // Remove leading `%%` to show lines related to the object type
-        updatedCode = updatedCode.replace(new RegExp(`^.+%% (${objType})`, "gm"), "$1");
-    }
-  });
+        if (!objectTypes[objType]) {
+            // Prepend `%%` to hide lines related to the object type
+            updatedCode = updatedCode.replace(new RegExp(`^.*${objType}_\d+`, "gm"), "%% $&"); // Hide nodes
+            updatedCode = updatedCode.replace(new RegExp(`^.*${objType}_\d+`, "gm"), "%% $&"); // Hide links
+            updatedCode = updatedCode.replace(new RegExp(`^classDef color_${objType}`, "gm"), "%% $&"); // Hide class definitions
+            
+            // Dynamically find and hide link styles using color from classDef
+            const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType}.*?fill:([^,]+)`, "m"));
+            if (colorMatch) {
+                const color = colorMatch[1].trim();
+                updatedCode = updatedCode.replace(new RegExp(`^linkStyle.*stroke:${color}.*$`, "gm"), "%% $&"); // Hide link styles
+            }
+        } else {
+            // Remove leading `%%` to show lines related to the object type
+            updatedCode = updatedCode.replace(new RegExp(`^%% (.*${objType})`, "gm"), "$1"); // Show nodes
+            updatedCode = updatedCode.replace(new RegExp(`^%% (.*${objType}`, "gm"), "$1"); // Show links
+            updatedCode = updatedCode.replace(new RegExp(`^%% (.*classDef color_${objType})`, "gm"), "$1"); // Show class definitions
+            
+            // Dynamically find and show link styles using color from classDef
+            const colorMatch = updatedCode.match(new RegExp(`classDef color_${objType}.*?fill:([^,]+)`, "m"));
+            if (colorMatch) {
+                const color = colorMatch[1].trim();
+                updatedCode = updatedCode.replace(new RegExp(`^%% (linkStyle.*stroke:${color})`, "gm"), "$1"); // Show link styles
+            }
+        }
+    });
+
+    // Update the Mermaid container
+    const mermaidContainer = document.getElementById("mermaid-diagram");
+    mermaidContainer.innerHTML = updatedCode;
+
+    // Re-render the Mermaid diagram
+    mermaid.init(undefined, mermaidContainer);
+  }
 
     // Update the container with new code by first deleting it to clear any mermaid objects
     const mermaidContainer = document.getElementById('mermaid-container');
