@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updatedCode = updatedCode.replace(new RegExp(`^.+(${objType})`, "gm"), "%% $1")      
     } else {
         // Remove leading `%%` to show lines related to the object type
-        updatedCode = updatedCode.replace(new RegExp(`^.%% (${objType})`, "gm"), "$1");
+        updatedCode = updatedCode.replace(new RegExp(`^.+%% (${objType})`, "gm"), "$1");
     }
   });
 
