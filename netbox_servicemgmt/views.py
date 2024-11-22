@@ -282,7 +282,6 @@ class ServiceDeploymentBulkImportView(generic.BulkImportView):
 class ServiceDeploymentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.ServiceDeployment
 
-
 # Service Component Views
 class ServiceComponentListView(generic.ObjectListView):
     queryset = models.ServiceComponent.objects.all()
