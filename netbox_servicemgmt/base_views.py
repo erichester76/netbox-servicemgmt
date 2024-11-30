@@ -147,8 +147,9 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     Recursively generates the Mermaid code for the given object and its relationships.
     Tracks visited objects to avoid infinite loops, particularly through reverse relationships.
     """
-    
+
     # Relationships to follow for each model
+    relationships_to_follow = {}
     if depth == 0:
         if 'service' in obj._meta.model_name or 'solution' in obj._meta.model_name:
             relationships_to_follow = {
