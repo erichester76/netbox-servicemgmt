@@ -174,7 +174,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
                 'device': ['virtual_chassis', 'interfaces', 'cluster', 'rack'],
                 'interface': ['ip_addresses'],
                 'vminterface': ['ip_addresses'],
-                'address': [ 'prefix'],
+                'ipaddress': [ 'prefix'],
                 'cluster': ['site'],
                 'rack': ['location'],
                 'location': ['site'],
