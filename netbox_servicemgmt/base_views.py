@@ -149,22 +149,37 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     """
     
     # Relationships to follow for each model
-    relationships_to_follow = {
-        'solutionrequest': ['soltem_solreqs'],
-        'solutiontemplate': ['servtem_soltems'],
-        'servicetemplate': ['servreq_servtems', 'servdep_servtems'],
-        'servicerequirement': ['servcom_servreqs'],
-        'servicedeployment': ['servcom_servdeps', 'servreq_servdeps'],
-        'servicecomponent': [ 'content_object'],
-        'virtualmachine': ['device'],
-        'device': ['virtual_chassis', 'cluster', 'rack'],
-        'cluster': ['site'],
-        'rack': ['location'],
-        'location': ['site'],
-        'site': [],
-        'certificate': ['hostnames'],
-        'hostname': ['certificates'],
-    }
+    if depth == 0:
+        if 'service' in obj._meta.model_name or 'solution' in obj._meta.model_name:
+            relationships_to_follow = {
+                'solutionrequest': ['soltem_solreqs'],
+                'solutiontemplate': ['servtem_soltems'],
+                'servicetemplate': ['servreq_servtems', 'servdep_servtems'],
+                'servicerequirement': ['servcom_servreqs'],
+                'servicedeployment': ['servcom_servdeps', 'servreq_servdeps'],
+                'servicecomponent': [ 'content_object'],
+                'virtualmachine': ['device'],
+                'device': ['virtual_chassis', 'cluster', 'rack'],
+                'cluster': ['site'],
+                'rack': ['location'],
+                'location': ['site'],
+                'site': [],
+                'certificate': ['hostnames'],
+                'hostname': ['certificates'],
+            }
+        else:
+             relationships_to_follow = {
+                'virtualmachine': ['device', 'vminterfaces', 'virtualdisks'],
+                'device': ['virtual_chassis', 'interfaces', 'cluster', 'rack'],
+                'interface': [],
+                'vminterface': [],
+                'cluster': ['site'],
+                'rack': ['location'],
+                'location': ['site'],
+                'site': [],
+                'certificate': ['hostnames'],
+                'hostname': ['certificates'],
+            }
 
     mermaid_code = ""
     indent = "    " * depth  # Indentation for readability
