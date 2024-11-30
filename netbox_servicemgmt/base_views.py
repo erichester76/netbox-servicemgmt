@@ -170,10 +170,11 @@ def generate_mermaid_code(obj, visited=None, depth=0):
             }
         else:
              relationships_to_follow = {
-                'virtualmachine': ['device', 'vminterfaces', 'virtualdisks'],
+                'virtualmachine': ['device', 'interfaces', 'virtualdisks'],
                 'device': ['virtual_chassis', 'interfaces', 'cluster', 'rack'],
-                'interface': [],
-                'vminterface': [],
+                'interface': ['ip_addresses'],
+                'vminterface': ['ip_addresses'],
+                'address': [ 'prefix'],
                 'cluster': ['site'],
                 'rack': ['location'],
                 'location': ['site'],
