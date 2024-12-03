@@ -153,7 +153,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     if depth == 0:
         if 'service' in obj._meta.model_name or 'solution' in obj._meta.model_name:
             relationships_to_follow = {
-                'solutionrequest': ['soltem_solreqs'],
+                'solutionrequest': ['solreq_soltems'],
                 'solutiontemplate': ['servtem_soltems'],
                 'servicetemplate': ['servreq_servtems', 'servdep_servtems'],
                 'servicerequirement': ['servcom_servreqs'],
