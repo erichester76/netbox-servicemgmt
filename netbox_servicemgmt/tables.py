@@ -28,7 +28,11 @@ class SolutionRequestTable(NetBoxTable):
     design_contact = tables.Column(linkify=True)
     business_owner_contact = tables.Column(linkify=True)
     business_owner_tenant = tables.Column(linkify=True)
-
+    service_owner_contact = tables.Column(linkify=True)
+    service_owner_tenant = tables.Column(linkify=True)
+    functional_sub_area_sponsor_tenant = tables.Column(linkify=True)
+    functional_area_sponsor_tenant = tables.Column(linkify=True)
+    
     class Meta(NetBoxTable.Meta):
         model =models.SolutionRequest
         default_columns = ('name', 'version', 'solution_type', 'slo', 'data_classification', 'rfp_status', 'business_owner_contact', 'business_owner_tenant', 'design_contact')
@@ -40,17 +44,22 @@ class SolutionRequestTable(NetBoxTable):
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
     design_contact = tables.Column(linkify=True)
-    business_owner_contact = tables.Column(linkify=True)
-    business_owner_tenant = tables.Column(linkify=True)
-
+    solution_request = tables.Columes(linkify=True)
+    fault_tolerence = tables.Columns(linkify=True)
+    slo = tables.Columns(linkify=True)
+    
     class Meta(NetBoxTable.Meta):
         model = models.SolutionTemplate
-        default_columns = ('name', 'version', 'solution_type', 'business_owner_contact', 'business_owner_tenant', 'design_contact')
-        fields = ('pk', 'id', 'name', 'description', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 
-                  'solution_type', 'requirements', 'created', 'last_updated' )
+        default_columns = ('name', 'version', 'solution_type', 'design_contact', 'solution_request', 'slo', 'fault_tolerence')
+        fields = ('pk', 'id', 'name', 'description', 'version', 'solution_request', 'solution_type', 'design_contact', 
+                'slo', 'fault_tolerence', 'data_classification', 'sla_number', 'vendors', 'created', 'last_updated' )
+
 
 class FaultToleranceTable(NetBoxTable):
     name = tables.Column(linkify=True)
+    primary_site = tables.Column(linkify=True)
+    secondary_site = tables.Column(linkify=True)
+    tertiary_site = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = models.FaultTolerance
@@ -64,7 +73,8 @@ class ServiceTemplateTable(NetBoxTable):
     solution_template = tables.Column(linkify=True)
     fault_tolerence = tables.Column(linkify=True)
     service_slo = tables.Column(linkify=True)
-
+    design_contact = tables.Column(linkify=True)
+    
     class Meta(NetBoxTable.Meta):
         model = models.ServiceTemplate
         default_columns = ('name', 'description', 'version', 'service_type', 'fault_tolerence', 'service_slo')
@@ -101,11 +111,12 @@ class ServiceComponentTable(NetBoxTable):
     name = tables.Column(linkify=True)
     service_deployment = tables.Column(linkify=True)
     content_object = tables.Column(linkify=True)
-    service_deployment = tables.Column(linkify=True)
+    service_requirement = tables.Column(linkify=True)
+    content_object = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = models.ServiceComponent
         default_columns = ('name', 'description', 'version', 'service_deployment', 'service_requirement', 'content_object')
-        fields = ('pk', 'id', 'name', 'description', 'version', 'service_deployment', 'service_requirement', 'object_type', 
+        fields = ('pk', 'id', 'name', 'description', 'version', 'service_deployment', 'service_requirement', 'content_object', 'object_type', 
                   'object_id', 'created', 'last_updated' )
 
