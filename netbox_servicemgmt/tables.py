@@ -44,9 +44,9 @@ class SolutionRequestTable(NetBoxTable):
 class SolutionTemplateTable(NetBoxTable):
     name = tables.Column(linkify=True)
     design_contact = tables.Column(linkify=True)
-    solution_request = tables.Columes(linkify=True)
-    fault_tolerence = tables.Columns(linkify=True)
-    slo = tables.Columns(linkify=True)
+    solution_request = tables.Column(linkify=True)
+    fault_tolerence = tables.Column(linkify=True)
+    slo = tables.Column(linkify=True)
     
     class Meta(NetBoxTable.Meta):
         model = models.SolutionTemplate
