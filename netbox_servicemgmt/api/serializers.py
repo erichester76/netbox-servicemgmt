@@ -42,7 +42,7 @@ class ServiceTemplateSerializer(NetBoxModelSerializer):
 class ServiceRequirementSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.ServiceRequirement
-        fields = [ 'pk', 'id', 'name', 'description', 'status', 'service_template', 'requirement_owner', 'service_slo' ]
+        fields = [ 'pk', 'id', 'name', 'description', 'status', 'service_template', 'fault_tolerence', 'requirement_owner', 'service_slo' ]
         
 class ServiceDeploymentSerializer(NetBoxModelSerializer):
     class Meta:
