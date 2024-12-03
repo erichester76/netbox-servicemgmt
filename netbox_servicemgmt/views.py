@@ -145,7 +145,6 @@ class SolutionRequestDetailView(base_views.BaseObjectView):
 class SolutionRequestDiagramView(base_views.BaseDiagramView):
     queryset = models.SolutionRequest.objects.all()
 
-
 class SolutionRequestEditView(generic.ObjectEditView):
     queryset = models.SolutionRequest.objects.all()
     form = forms.SolutionRequestForm
