@@ -149,7 +149,6 @@ def generate_mermaid_code(obj, visited=None, depth=0):
     """
 
     # Relationships to follow for each model
-    relationships_to_follow = {}
     relationships_to_follow = {
         'solutionrequest': ['solreq_soltems'],
         'solutiontemplate': ['servtem_soltems'],
@@ -158,12 +157,12 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicedeployment': ['servcom_servdeps', 'servreq_servdeps'],
         'servicecomponent': [ 'content_object'],
         'virtualmachine': ['device', 'cluster' ],
-        'vminterface': ['ipaddresses'],
-        'device': [ 'virtual_chassis', 'cluster' ],
+        'vminterface': ['ip_addresses'],
+        'device': ['virtual_chassis', 'cluster'],
         'cluster': ['site'],
         'rack': ['location'],
         'location': ['site'],
-        'site': ['region'],
+        'site': [ ],
         'region': ['parent', 'site'],
         'certificate': ['hostnames'],
         'hostname': ['certificates'],
