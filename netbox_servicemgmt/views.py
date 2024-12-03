@@ -5,8 +5,8 @@ from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.urls import reverse  # Import reverse
-from dcim.models import Device
-from virtualization.models import VirtualMachine
+from dcim.models import Device, Region
+from virtualization.models import VirtualMachine, Cluster
 from . import models, tables, views, forms
 
 from django.urls import reverse
@@ -71,6 +71,10 @@ class GenericAttachView(FormView):
             kwargs={'pk': self.kwargs['pk']}
         )
         
+   
+@register_model_view(Region, 'diagram', path='diagram')
+class RegionDiagramView(base_views.BaseDiagramView): 
+    queryset = Region.objects.all()   
         
 @register_model_view(Device, 'diagram', path='diagram')
 class DeviceDiagramView(base_views.BaseDiagramView): 
@@ -78,7 +82,11 @@ class DeviceDiagramView(base_views.BaseDiagramView):
 
 @register_model_view(VirtualMachine, 'diagram', path='diagram')
 class VMDiagramView(base_views.BaseDiagramView):
-    queryset = VirtualMachine.objects.all()        
+    queryset = VirtualMachine.objects.all()     
+    
+@register_model_view(Cluster, 'diagram', path='diagram')
+class ClusterDiagramView(base_views.BaseDiagramView):
+    queryset = Cluster.objects.all()       
         
 # SLO Views
 class SLOListView(generic.ObjectListView):
