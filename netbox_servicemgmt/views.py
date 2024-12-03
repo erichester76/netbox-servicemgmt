@@ -69,24 +69,7 @@ class GenericAttachView(FormView):
         return reverse(
             f'plugins:{self.kwargs["app_label"]}:{self.kwargs["model_name"]}',  # Generate the correct detail view name
             kwargs={'pk': self.kwargs['pk']}
-        )
-        
-   
-@register_model_view(Region, 'diagram', path='diagram')
-class RegionDiagramView(base_views.BaseDiagramView): 
-    queryset = Region.objects.all()   
-        
-@register_model_view(Device, 'diagram', path='diagram')
-class DeviceDiagramView(base_views.BaseDiagramView): 
-    queryset = Device.objects.all()
-
-@register_model_view(VirtualMachine, 'diagram', path='diagram')
-class VMDiagramView(base_views.BaseDiagramView):
-    queryset = VirtualMachine.objects.all()     
-    
-@register_model_view(Cluster, 'diagram', path='diagram')
-class ClusterDiagramView(base_views.BaseDiagramView):
-    queryset = Cluster.objects.all()       
+        )      
         
 # SLO Views
 class SLOListView(generic.ObjectListView):
@@ -321,3 +304,20 @@ class ServiceComponentBulkImportView(generic.BulkImportView):
 
 class ServiceComponentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.ServiceComponent
+
+
+@register_model_view(Region, 'diagram', path='diagram')
+class RegionDiagramView(base_views.BaseDiagramView): 
+    queryset = Region.objects.all()   
+        
+@register_model_view(Device, 'diagram', path='diagram')
+class DeviceDiagramView(base_views.BaseDiagramView): 
+    queryset = Device.objects.all()
+
+@register_model_view(VirtualMachine, 'diagram', path='diagram')
+class VMDiagramView(base_views.BaseDiagramView):
+    queryset = VirtualMachine.objects.all()     
+    
+@register_model_view(Cluster, 'diagram', path='diagram')
+class ClusterDiagramView(base_views.BaseDiagramView):
+    queryset = Cluster.objects.all() 
