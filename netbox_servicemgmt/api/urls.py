@@ -5,7 +5,7 @@ from . import views
 router = NetBoxRouter()
 router.register(r'slos', views.SLOViewSet)
 router.register(r'slas', views.SLAViewSet)
-router.register(r'fault-tolerances', views.FaultToleranceViewSet)
+router.register(r'fault-tolerences', views.FaultTolerenceViewSet)
 
 router.register(r'solution-templates', views.SolutionTemplateViewSet)
 router.register(r'solution-requests', views.SolutionRequestViewSet)

@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 
 def get_ft_fields(request, slo_id):
     """API endpoint to get the details of a selected SLO."""
-    ft = models.FaultTolerance.objects.get(id=ft_id)
+    ft = models.FaultTolerence.objects.get(id=ft_id)
 
     data = {
         'vip_required': ft.vip_required,
@@ -79,10 +79,10 @@ class SolutionRequestViewSet(NetBoxModelViewSet):
     serializer_class = serializers.SolutionRequestSerializer
     filterset_class = filtersets.SolutionRequestFilterSet
 
-class FaultToleranceViewSet(NetBoxModelViewSet):
-    queryset = models.FaultTolerance.objects.all()
-    serializer_class = serializers.FaultToleranceSerializer
-    filterset_class = filtersets.FaultToleranceFilterSet
+class FaultTolerenceViewSet(NetBoxModelViewSet):
+    queryset = models.FaultTolerence.objects.all()
+    serializer_class = serializers.FaultTolerenceSerializer
+    filterset_class = filtersets.FaultTolerenceFilterSet
 
 class ServiceTemplateViewSet(NetBoxModelViewSet):
     queryset = models.ServiceTemplate.objects.all()

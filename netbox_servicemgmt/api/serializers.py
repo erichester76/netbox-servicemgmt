@@ -1,6 +1,6 @@
 from netbox.api.serializers import NetBoxModelSerializer
 from ..models import (
-    SLO, SLA, FaultTolerance, SolutionRequest, 
+    SLO, SLA, FaultTolerence, SolutionRequest, 
     SolutionTemplate, ServiceTemplate, ServiceRequirement, 
     ServiceDeployment, ServiceComponent
 )
@@ -15,9 +15,9 @@ class SLASerializer(NetBoxModelSerializer):
         model = SLA
         fields = '__all__'
 
-class FaultToleranceSerializer(NetBoxModelSerializer):
+class FaultTolerenceSerializer(NetBoxModelSerializer):
     class Meta:
-        model = FaultTolerance
+        model = FaultTolerence
         fields = '__all__'
 
 class SolutionRequestSerializer(NetBoxModelSerializer):

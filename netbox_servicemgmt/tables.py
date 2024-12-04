@@ -1,7 +1,7 @@
 import django_tables2 as tables
 from netbox.tables import NetBoxTable
 from .models import (
-    SLO, SLA, FaultTolerance, SolutionRequest, 
+    SLO, SLA, FaultTolerence, SolutionRequest, 
     SolutionTemplate, ServiceTemplate, ServiceRequirement, 
     ServiceDeployment, ServiceComponent
 )
@@ -26,14 +26,14 @@ class SLATable(NetBoxTable):
         fields = ('pk', 'name', 'description', 'uuid', 'slo', 'business_owner_tenant', 'business_owner_contact', 'technical_contact', 'data_classification', 'status', 'last_modified', 'created')
         default_columns = ('name', 'slo', 'business_owner_tenant', 'data_classification', 'status')
 
-class FaultToleranceTable(NetBoxTable):
+class FaultTolerenceTable(NetBoxTable):
     name = tables.Column(linkify=True)
     primary_site = tables.Column(linkify=True)
     secondary_site = tables.Column(linkify=True)
     tertiary_site = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
-        model = FaultTolerance
+        model = FaultTolerence
         fields = ('pk', 'name', 'description', 'primary_site', 'secondary_site', 'tertiary_site', 'vip_required', 'clustered', 'multi_site', 'multi_region', 'status', 'last_modified', 'created')
         default_columns = ('name', 'primary_site', 'vip_required', 'clustered', 'status')
 

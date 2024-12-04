@@ -1,5 +1,5 @@
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import SLA, SLO, SolutionRequest, SolutionTemplate, FaultTolerance, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
+from .models import SLA, SLO, SolutionRequest, SolutionTemplate, FaultTolerence, ServiceTemplate, ServiceRequirement, ServiceDeployment, ServiceComponent
 
 
 # SLO FilterSet
@@ -27,11 +27,11 @@ class SolutionRequestFilterSet(NetBoxModelFilterSet):
         model = SolutionRequest
         fields = ('name', 'version', 'design_contact', 'business_owner_contact', 'business_owner_tenant', 'solution_type')
 
-# FaultTolerance FilterSet
-class FaultToleranceFilterSet(NetBoxModelFilterSet):
+# FaultTolerence FilterSet
+class FaultTolerenceFilterSet(NetBoxModelFilterSet):
 
     class Meta:
-        model = FaultTolerance
+        model = FaultTolerence
         fields = ('name','vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule')
 
 # ServiceTemplate FilterSet

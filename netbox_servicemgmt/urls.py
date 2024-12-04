@@ -51,7 +51,7 @@ urlpatterns = [
     path('service-deployments/<int:pk>/delete/', views.ServiceDeploymentDeleteView.as_view(), name='servicedeployment_delete'),
     path('service-deployments/bulk-import/', views.ServiceDeploymentBulkImportView.as_view(), name='servicedeployment_bulk_import'),
     path('service-deployments/<int:pk>/changelog/', views.ServiceDeploymentChangeLogView.as_view(), name='servicedeployment_changelog', kwargs={'model': models.ServiceDeployment}),
-    path('service-deplotments/<int:pk>/diagram/', views.ServiceDeploymentDiagramView.as_view(), name='servicedeployment_diagram'),
+    path('service-deployments/<int:pk>/diagram/', views.ServiceDeploymentDiagramView.as_view(), name='servicedeployment_diagram'),
 
     # Service Component URLs
     path('service-components/', views.ServiceComponentListView.as_view(), name='servicecomponent_list'),
@@ -63,13 +63,13 @@ urlpatterns = [
     path('service-components/<int:pk>/changelog/', views.ServiceComponentChangeLogView.as_view(), name='servicecomponent_changelog', kwargs={'model': models.ServiceComponent}),
 
     # High Availability (HA) Model URLs
-    path('fault-tolerance/', views.FaultToleranceListView.as_view(), name='faulttolerance_list'),
-    path('fault-tolerance/<int:pk>/', views.FaultToleranceDetailView.as_view(), name='faulttolerance'),
-    path('fault-tolerance/add/', views.FaultToleranceEditView.as_view(), name='faulttolerance_add'),
-    path('fault-tolerance/<int:pk>/edit/', views.FaultToleranceEditView.as_view(), name='faulttolerance_edit'),
-    path('fault-tolerance/<int:pk>/delete/', views.FaultToleranceDeleteView.as_view(), name='faulttolerance_delete'),
-    path('fault-tolerance/bulk-import/', views.FaultToleranceBulkImportView.as_view(), name='faulttolerance_bulk_import'),
-    path('fault-tolerance/<int:pk>/changelog/', views.FaultToleranceChangeLogView.as_view(), name='faulttolerance_changelog', kwargs={'model': models.FaultTolerance}),
+    path('fault-tolerence/', views.FaultTolerenceListView.as_view(), name='faulttolerence_list'),
+    path('fault-tolerence/<int:pk>/', views.FaultTolerenceDetailView.as_view(), name='faulttolerence'),
+    path('fault-tolerence/add/', views.FaultTolerenceEditView.as_view(), name='faulttolerence_add'),
+    path('fault-tolerence/<int:pk>/edit/', views.FaultTolerenceEditView.as_view(), name='faulttolerence_edit'),
+    path('fault-tolerence/<int:pk>/delete/', views.FaultTolerenceDeleteView.as_view(), name='faulttolerence_delete'),
+    path('fault-tolerence/bulk-import/', views.FaultTolerenceBulkImportView.as_view(), name='faulttolerence_bulk_import'),
+    path('fault-tolerence/<int:pk>/changelog/', views.FaultTolerenceChangeLogView.as_view(), name='faulttolerence_changelog', kwargs={'model': models.FaultTolerence}),
 
     # Service Level Objective (SLO) URLs
     path('slos/', views.SLOListView.as_view(), name='slo_list'),

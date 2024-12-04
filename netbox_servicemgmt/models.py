@@ -132,7 +132,7 @@ class SLA(NetBoxModel):
 
 
 # High Availability (HA) Model
-class FaultTolerance(NetBoxModel):
+class FaultTolerence(NetBoxModel):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
     primary_site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, related_name='ft_primary_sites')
@@ -158,7 +158,7 @@ class FaultTolerance(NetBoxModel):
         return f'{self.name}'
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:faulttolerance', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_servicemgmt:faulttolerence', kwargs={'pk': self.pk})
 
 
 # Solution Request Model
@@ -269,7 +269,7 @@ class SolutionTemplate(NetBoxModel):
     sla_number = models.CharField(max_length=50, null=True)
     slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='slo_soltems',verbose_name='Assigned SLO Profile')
     data_classification = models.CharField(null=True,choices=DATA_CHOICES)
-    fault_tolerence = models.ForeignKey(FaultTolerance, on_delete=models.SET_NULL, null=True, related_name='ft_soltems',verbose_name='Fault Tolerence Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.SET_NULL, null=True, related_name='ft_soltems',verbose_name='Fault Tolerence Profile')
     solution_request = models.ForeignKey(SolutionRequest, on_delete=models.SET_NULL, null=True, related_name='solreq_soltems',verbose_name='Solution Request')
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -331,7 +331,7 @@ class ServiceTemplate(NetBoxModel):
     )
 
     
-    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='servtem_fts', verbose_name='Assigned Fault Tolerance Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerence, null=True, on_delete=models.SET_NULL, related_name='servtem_fts', verbose_name='Assigned Fault Tolerence Profile')
     service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='servtem_slos', verbose_name='Assigned Service Level Object Profile')
     
     vendor = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, related_name='servtem_vendors', verbose_name='Vendor')
@@ -363,7 +363,7 @@ class ServiceRequirement(NetBoxModel):
     description = models.TextField()
     service_template = models.ForeignKey(ServiceTemplate, null=True, on_delete=models.SET_NULL, related_name='servreq_servtems', verbose_name='Service Template')
     requirement_owner = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='servreq_designers', verbose_name='Requirement Owner')
-    fault_tolerence = models.ForeignKey(FaultTolerance, null=True, on_delete=models.SET_NULL, related_name='servreq_fts', verbose_name='Assigned Fault Tolerance Profile')
+    fault_tolerence = models.ForeignKey(FaultTolerence, null=True, on_delete=models.SET_NULL, related_name='servreq_fts', verbose_name='Assigned Fault Tolerence Profile')
     service_slo = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='servreq_slos',verbose_name='Assigned SLO Profile')
     version = models.IntegerField(null=True, blank=True)
     

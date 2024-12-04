@@ -106,16 +106,16 @@ service_items = (
 )
 profile_items = (
     PluginMenuItem(
-        link="plugins:netbox_servicemgmt:faulttolerance_list",
-        link_text="Fault Tolerance Profiles",
+        link="plugins:netbox_servicemgmt:faulttolerence_list",
+        link_text="Fault Tolerence Profiles",
         buttons=[
             PluginMenuButton(
-                link="plugins:netbox_servicemgmt:faulttolerance_add",
+                link="plugins:netbox_servicemgmt:faulttolerence_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
             PluginMenuButton(
-                link="plugins:netbox_servicemgmt:faulttolerance_bulk_import",
+                link="plugins:netbox_servicemgmt:faulttolerence_bulk_import",
                 title="Import",
                 icon_class="mdi mdi-upload",
             ),

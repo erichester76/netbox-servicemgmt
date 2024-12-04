@@ -172,26 +172,26 @@ class SolutionTemplateChangeLogView(base_views.BaseChangeLogView):
 
 
 # Solution Request Views
-class FaultToleranceListView(generic.ObjectListView):
-    queryset = models.FaultTolerance.objects.all()
-    table = tables.FaultToleranceTable
+class FaultTolerenceListView(generic.ObjectListView):
+    queryset = models.FaultTolerence.objects.all()
+    table = tables.FaultTolerenceTable
 
-class FaultToleranceDetailView(base_views.BaseObjectView):
-    queryset = models.FaultTolerance.objects.all()
+class FaultTolerenceDetailView(base_views.BaseObjectView):
+    queryset = models.FaultTolerence.objects.all()
 
-class FaultToleranceEditView(generic.ObjectEditView):
-    queryset = models.FaultTolerance.objects.all()
-    form = forms.FaultToleranceForm
+class FaultTolerenceEditView(generic.ObjectEditView):
+    queryset = models.FaultTolerence.objects.all()
+    form = forms.FaultTolerenceForm
 
-class FaultToleranceDeleteView(generic.ObjectDeleteView):
-    queryset = models.FaultTolerance.objects.all()
+class FaultTolerenceDeleteView(generic.ObjectDeleteView):
+    queryset = models.FaultTolerence.objects.all()
 
-class FaultToleranceBulkImportView(generic.BulkImportView):
-    queryset = models.FaultTolerance.objects.all()
-    model_form = forms.FaultToleranceImportForm
+class FaultTolerenceBulkImportView(generic.BulkImportView):
+    queryset = models.FaultTolerence.objects.all()
+    model_form = forms.FaultTolerenceImportForm
 
-class FaultToleranceChangeLogView(base_views.BaseChangeLogView):
-    base_model = models.FaultTolerance
+class FaultTolerenceChangeLogView(base_views.BaseChangeLogView):
+    base_model = models.FaultTolerence
 
 
 # Service Template Views

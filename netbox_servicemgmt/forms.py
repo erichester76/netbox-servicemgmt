@@ -70,14 +70,14 @@ class SolutionTemplateImportForm(NetBoxModelImportForm):
         model = models.SolutionTemplate
         fields = '__all__'
 
-class FaultToleranceForm(NetBoxModelForm):
+class FaultTolerenceForm(NetBoxModelForm):
     class Meta:
-        model = models.FaultTolerance
+        model = models.FaultTolerence
         fields = '__all__'
 
-class FaultToleranceImportForm(NetBoxModelImportForm):
+class FaultTolerenceImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.FaultTolerance
+        model = models.FaultTolerence
         fields = '__all__'
 
 
