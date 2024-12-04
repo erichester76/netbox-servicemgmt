@@ -158,7 +158,7 @@ def generate_mermaid_code(obj, visited=None, depth=0):
         'servicecomponent': [ 'content_object'],
         'virtualmachine': ['device', 'cluster' ],
         'vminterface': ['ip_addresses'],
-        'device': ['virtual_chassis', 'cluster'],
+        'device': ['virtual_chassis' ],
         'cluster': ['site'],
         'rack': ['location'],
         'location': ['site'],
