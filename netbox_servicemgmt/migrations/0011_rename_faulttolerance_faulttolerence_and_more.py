@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='servicerequirement',
             name='fault_tolerence',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='servreq_fts', to='netbox_servicemgmt.faulttolerance'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='servreq_fts', to='netbox_servicemgmt.faulttolerence'),
         ),
         migrations.AlterField(
             model_name='servicerequirement',
@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='servicetemplate',
             name='fault_tolerence',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='servtem_fts', to='netbox_servicemgmt.faulttolerance'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='servtem_fts', to='netbox_servicemgmt.faulttolerence'),
         ),
         migrations.AlterField(
             model_name='servicetemplate',
@@ -150,7 +150,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='solutiontemplate',
             name='fault_tolerence',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='ft_soltems', to='netbox_servicemgmt.faulttolerance'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='ft_soltems', to='netbox_servicemgmt.faulttolerence'),
         ),
         migrations.AlterField(
             model_name='solutiontemplate',
