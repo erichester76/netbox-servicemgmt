@@ -20,7 +20,7 @@ class FaultTolerenceFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = FaultTolerence
-        fields = ('name', 'vip_required', 'offsite_replication', 'clustered', 'multi_site', 'multi_region', 'snapshots', 'offsite_backup', 'airgap_backup', 'primary_site', 'secondary_site', 'tertiary_site', 'instances_per_site', 'backup_schedule')
+        fields = ('name', 'primary_site', 'secondary_site', 'tertiary_site')
 
 # ServiceDeployment FilterSet
 class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
