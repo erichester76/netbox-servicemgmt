@@ -258,8 +258,9 @@ class Solution(SolutionBase):
 
 class Deployment(SolutionBase):
     
-    deployment_type = models.CharField(max_length=255, choices=DEPLOYMENT_TYPES)
+    deployment_type = models.CharField(max_length=255, choices=DEPLOYMENT_TYPES, verbose_name='Deployment Type')
     deployment_solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='deployments', verbose_name="Solution")
+    
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
