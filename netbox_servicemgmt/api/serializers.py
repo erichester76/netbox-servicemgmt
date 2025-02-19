@@ -1,8 +1,7 @@
 from netbox.api.serializers import NetBoxModelSerializer
 from ..models import (
-    SLO, SLA, FaultTolerence, SolutionRequest, 
-    SolutionTemplate, ServiceTemplate, ServiceRequirement, 
-    ServiceDeployment, ServiceComponent
+    Solution, SLO, FaultTolerence,
+    Deployment, Component
 )
 
 class SLOSerializer(NetBoxModelSerializer):
@@ -10,42 +9,23 @@ class SLOSerializer(NetBoxModelSerializer):
         model = SLO
         fields = '__all__'
 
-class SLASerializer(NetBoxModelSerializer):
-    class Meta:
-        model = SLA
-        fields = '__all__'
-
 class FaultTolerenceSerializer(NetBoxModelSerializer):
     class Meta:
         model = FaultTolerence
         fields = '__all__'
 
-class SolutionRequestSerializer(NetBoxModelSerializer):
+class SolutionSerializer(NetBoxModelSerializer):
     class Meta:
-        model = SolutionRequest
+        model = Solution
         fields = '__all__'
 
-class SolutionTemplateSerializer(NetBoxModelSerializer):
+
+class DeploymentSerializer(NetBoxModelSerializer):
     class Meta:
-        model = SolutionTemplate
+        model = Deployment
         fields = '__all__'
 
-class ServiceTemplateSerializer(NetBoxModelSerializer):
+class ComponentSerializer(NetBoxModelSerializer):
     class Meta:
-        model = ServiceTemplate
-        fields = '__all__'
-
-class ServiceRequirementSerializer(NetBoxModelSerializer):
-    class Meta:
-        model = ServiceRequirement
-        fields = '__all__'
-
-class ServiceDeploymentSerializer(NetBoxModelSerializer):
-    class Meta:
-        model = ServiceDeployment
-        fields = '__all__'
-
-class ServiceComponentSerializer(NetBoxModelSerializer):
-    class Meta:
-        model = ServiceComponent
+        model = Component
         fields = '__all__'

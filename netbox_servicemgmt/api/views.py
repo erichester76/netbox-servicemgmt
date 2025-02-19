@@ -64,42 +64,23 @@ class SLOViewSet(NetBoxModelViewSet):
     serializer_class = serializers.SLOSerializer
     filterset_class = filtersets.SLOFilterSet
 
-class SLAViewSet(NetBoxModelViewSet):
-    queryset = models.SLA.objects.all()
-    serializer_class = serializers.SLASerializer
-    filterset_class = filtersets.SLAFilterSet
+class SolutionViewSet(NetBoxModelViewSet):
+    queryset = models.Solution.objects.all()
+    serializer_class = serializers.SolutionSerializer
+    filterset_class = filtersets.SolutionFilterSet
 
-class SolutionTemplateViewSet(NetBoxModelViewSet):
-    queryset = models.SolutionTemplate.objects.all()
-    serializer_class = serializers.SolutionTemplateSerializer
-    filterset_class = filtersets.SolutionTemplateFilterSet
-
-class SolutionRequestViewSet(NetBoxModelViewSet):
-    queryset = models.SolutionRequest.objects.all()
-    serializer_class = serializers.SolutionRequestSerializer
-    filterset_class = filtersets.SolutionRequestFilterSet
 
 class FaultTolerenceViewSet(NetBoxModelViewSet):
     queryset = models.FaultTolerence.objects.all()
     serializer_class = serializers.FaultTolerenceSerializer
     filterset_class = filtersets.FaultTolerenceFilterSet
 
-class ServiceTemplateViewSet(NetBoxModelViewSet):
-    queryset = models.ServiceTemplate.objects.all()
-    serializer_class = serializers.ServiceTemplateSerializer
-    filterset_class = filtersets.ServiceTemplateFilterSet
-
-class ServiceRequirementViewSet(NetBoxModelViewSet):
-    queryset = models.ServiceRequirement.objects.all()
-    serializer_class = serializers.ServiceRequirementSerializer
-    filterset_class = filtersets.ServiceRequirementFilterSet
-
-class ServiceDeploymentViewSet(NetBoxModelViewSet):
-    queryset = models.ServiceDeployment.objects.all()
-    serializer_class = serializers.ServiceDeploymentSerializer
+class DeploymentViewSet(NetBoxModelViewSet):
+    queryset = models.Deployment.objects.all()
+    serializer_class = serializers.DeploymentSerializer
     filterset_class = filtersets.ServiceDeploymentFilterSet
 
-class ServiceComponentViewSet(NetBoxModelViewSet):
-    queryset = models.ServiceComponent.objects.all()
-    serializer_class = serializers.ServiceComponentSerializer
+class ComponentViewSet(NetBoxModelViewSet):
+    queryset = models.Component.objects.all()
+    serializer_class = serializers.ComponentSerializer
     filterset_class = filtersets.ServiceComponentFilterSet

@@ -1,9 +1,8 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
-from utilities.forms.fields import DynamicModelChoiceField, ContentTypeChoiceField
+from utilities.forms.fields import ContentTypeChoiceField
 from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from virtualization.models import VirtualMachine
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from .fields import DynamicObjectChoiceField
@@ -34,40 +33,14 @@ class SLOImportForm(NetBoxModelImportForm):
         model = models.SLO
         fields = '__all__'
 
-class SLAForm(NetBoxModelForm):
+class SolutionForm(NetBoxModelForm):
     class Meta:
-        model = models.SLA
-        virtual_machines = forms.ModelMultipleChoiceField(
-            queryset=VirtualMachine.objects.all(),
-            required=False
-        )
+        model = models.Solution
         fields = '__all__'
-
-class SLAImportForm(NetBoxModelImportForm):
-    class Meta:
-        model = models.SLA
-        fields = '__all__'
-
-
-class SolutionRequestForm(NetBoxModelForm):
-    class Meta:
-        model = models.SolutionRequest
-        fields = '__all__'
-
-class SolutionRequestImportForm(NetBoxModelImportForm):
-    class Meta:
-        model = models.SolutionRequest
-        fields = '__all__'
-
-class SolutionTemplateForm(NetBoxModelForm):
-    class Meta:
-        model = models.SolutionTemplate
-        fields = '__all__'
-
         
-class SolutionTemplateImportForm(NetBoxModelImportForm):
+class SolutionImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.SolutionTemplate
+        model = models.Solution
         fields = '__all__'
 
 class FaultTolerenceForm(NetBoxModelForm):
@@ -80,46 +53,17 @@ class FaultTolerenceImportForm(NetBoxModelImportForm):
         model = models.FaultTolerence
         fields = '__all__'
 
-
-class ServiceTemplateForm(NetBoxModelForm):
+class DeploymentForm(NetBoxModelForm):
     class Meta:
-        model = models.ServiceTemplate
+        model = models.Deployment
         fields = '__all__'
 
-
-class ServiceTemplateImportForm(NetBoxModelImportForm):
+class DeploymentImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.ServiceTemplate
+        model = models.Deployment
         fields = '__all__'
 
-
-
-class ServiceRequirementForm(NetBoxModelForm):
-    
-    class Meta:
-        model = models.ServiceRequirement
-        fields = '__all__'
-
-
-class ServiceRequirementImportForm(NetBoxModelImportForm):
-    
-    class Meta:
-        model = models.ServiceRequirement
-        fields = '__all__'
-
-        
-class ServiceDeploymentForm(NetBoxModelForm):
-    class Meta:
-        model = models.ServiceDeployment
-        fields = '__all__'
-
-class ServiceDeploymentImportForm(NetBoxModelImportForm):
-    class Meta:
-        model = models.ServiceDeployment
-        fields = '__all__'
-
-
-class ServiceComponentForm(NetBoxModelForm):
+class ComponentForm(NetBoxModelForm):
     object_type = ContentTypeChoiceField(
         queryset=ContentType.objects.all(),
         required=True,
@@ -132,19 +76,10 @@ class ServiceComponentForm(NetBoxModelForm):
     )
     
     class Meta:
-        model = models.ServiceComponent
-        fields = [
-            "name",
-            "description",
-            "version",
-            "service_deployment",
-            "service_requirement",
-            "object_type",
-            "object_id",
-            "tags",
-        ]
+        model = models.Component
+        fields = '__all__'
                 
-class ServiceComponentImportForm(NetBoxModelImportForm):
+class ComponentImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.ServiceComponent
+        model = models.Component
         fields = '__all__'
