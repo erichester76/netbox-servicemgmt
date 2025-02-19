@@ -91,7 +91,7 @@ DEPLOYMENT_TYPES = [
     ('P','Production'),
     ('F','Functional'),
     ('R','Disaster Recovery'),
-    ('C','Secondary/Failover')
+    ('C','Secondary/Failover'),
     ('Q','Quality Assurance'),
     ('S','Staging'),
     ('U','User Acceptance Testing (UAT)'),
