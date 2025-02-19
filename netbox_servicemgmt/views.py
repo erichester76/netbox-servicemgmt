@@ -1,13 +1,13 @@
 from netbox.views import generic
 from . import base_views
-from utilities.views import register_model_view, ViewTab
+from utilities.views import register_model_view
 from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
-from django.urls import reverse  # Import reverse
+from django.urls import reverse 
 from dcim.models import Device, Region
 from virtualization.models import VirtualMachine, Cluster
-from . import models, tables, views, forms
+from . import models, tables, forms
 
 from django.urls import reverse
 from django.shortcuts import get_object_or_404

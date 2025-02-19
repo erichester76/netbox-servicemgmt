@@ -3,7 +3,6 @@ from utilities.forms.fields import ContentTypeChoiceField
 from . import models
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from .fields import DynamicObjectChoiceField
 
