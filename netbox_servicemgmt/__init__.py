@@ -2,7 +2,7 @@
 
 __author__ = "Eric Hester"
 __email__ = "hester1@clemson.edu"
-__version__ = "0.1.5"
+__version__ = "0.2.0"
 
 from netbox.plugins import PluginConfig
 
@@ -10,7 +10,7 @@ class servicemgmtConfig(PluginConfig):
     name = "netbox_servicemgmt"
     verbose_name = "Netbox Service Management Plugin"
     description = "Netbox Plugin for Service Management"
-    version = "0.1.5"
+    version = "0.2.0"
     base_url = "netboxservicemgmt"
 
 config = servicemgmtConfig

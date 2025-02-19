@@ -100,6 +100,36 @@ DEPLOYMENT_TYPES = [
     ('O','Demo'),
 ]
 
+
+class DynamicQuerySetModel:
+    """
+    A utility to dynamically generate a queryset and API URL
+    based on the selected content type.
+    """
+    def __init__(self, object_type=None):
+        self.object_type = object_type
+
+    @property
+    def queryset(self):
+        """Return the queryset for the selected content type."""
+        if self.object_type:
+            model_class = ContentType.objects.get(pk=self.object_type).model_class()
+            if model_class:
+                return model_class.objects.all()
+        return Component.objects.none()  # Return empty set if no object_type is set
+
+    @property
+    def get_absolute_url(self):
+        """Return the API URL for the selected content type."""
+        if self.object_type:
+            model_class = ContentType.objects.get(pk=self.object_type).model_class()
+            if model_class:
+                return reverse(
+                    f'{model_class._meta.app_label}:{model_class._meta.model_name}'
+                )
+        return Component.objects.none()  # Return empty set if no object_type is set
+
+
 # Service Level Objective (SLO) Model
 class SLO(NetBoxModel):
 
