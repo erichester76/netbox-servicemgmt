@@ -191,7 +191,7 @@ class FaultTolerence(NetBoxModel):
         return reverse('plugins:netbox_servicemgmt:faulttolerence', kwargs={'pk': self.pk})
 
 # Solution Template Model
-class Solution(NetBoxModel):
+class SolutionBase(NetBoxModel):
 
     name = models.CharField(max_length=255)
     solution_number = models.CharField(max_length=50, null=True)
@@ -243,22 +243,23 @@ class Solution(NetBoxModel):
         default=STATUS_INACTIVE,    
     )
     
+class Solution(SolutionBase):
+      
     class Meta:
         ordering = ['name']
         verbose_name = ('Solution')
         verbose_name_plural = ('Solutions') 
-
+    
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name}'   
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:solution', kwargs={'pk': self.pk})
 
-# Service Deployment Model
-class Deployment(Solution):
+class Deployment(SolutionBase):
     
     deployment_type = models.CharField(max_length=255, choices=DEPLOYMENT_TYPES)
-    solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='solution_deployments')
+    solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='deployments')
     
     class Meta:
         ordering = ['name']
@@ -270,11 +271,11 @@ class Deployment(Solution):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:deployment', kwargs={'pk': self.pk})
+
     
-# Service Deployment Model
-class Component(Solution):
+class Component(SolutionBase):
     
-    deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True, related_name='deployment_components')
+    deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True, related_name='components')
     
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
