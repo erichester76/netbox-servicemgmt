@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import SLO, FaultTolerence, Solution, Deployment, Component
+from ..models import SLO, FaultTolerence, SolutionBase, Solution, Deployment, Component
 
 class SLOSerializer(serializers.ModelSerializer):
     class Meta:
