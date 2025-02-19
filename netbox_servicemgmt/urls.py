@@ -6,14 +6,14 @@ urlpatterns = [
     path('<str:app_label>/<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
 
     # Solution Template URLs
-    path('solution-templates/', views.SolutionTemplateListView.as_view(), name='solutiontemplate_list'),
-    path('solution-templates/<int:pk>/', views.SolutionTemplateDetailView.as_view(), name='solutiontemplate'),
-    path('solution-templates/add/', views.SolutionTemplateEditView.as_view(), name='solutiontemplate_add'),
-    path('solution-templates/<int:pk>/edit/', views.SolutionTemplateEditView.as_view(), name='solutiontemplate_edit'),
-    path('solution-templates/<int:pk>/delete/', views.SolutionTemplateDeleteView.as_view(), name='solutiontemplate_delete'),
-    path('solution-templates/bulk-import/', views.SolutionTemplateBulkImportView.as_view(), name='solutiontemplate_bulk_import'),
-    path('solution-templates/<int:pk>/changelog/', views.SolutionTemplateChangeLogView.as_view(), name='solutiontemplate_changelog', kwargs={'model': models.Solution}),
-    path('solution-templates/<int:pk>/diagram/', views.SolutionTemplateDiagramView.as_view(), name='solutiontemplate_diagram'),
+    path('solutions/', views.SolutionTemplateListView.as_view(), name='solution_list'),
+    path('solutions/<int:pk>/', views.SolutionTemplateDetailView.as_view(), name='solution'),
+    path('solutions/add/', views.SolutionTemplateEditView.as_view(), name='solution_add'),
+    path('solutions/<int:pk>/edit/', views.SolutionTemplateEditView.as_view(), name='solution_edit'),
+    path('solutions/<int:pk>/delete/', views.SolutionTemplateDeleteView.as_view(), name='solution_delete'),
+    path('solutions/bulk-import/', views.SolutionTemplateBulkImportView.as_view(), name='solution_bulk_import'),
+    path('solutions/<int:pk>/changelog/', views.SolutionTemplateChangeLogView.as_view(), name='solution_changelog', kwargs={'model': models.Solution}),
+    path('solutions/<int:pk>/diagram/', views.SolutionTemplateDiagramView.as_view(), name='solution_diagram'),
 
     # Service Deployment URLs
     path('deployments/', views.DeploymentListView.as_view(), name='deployment_list'),
