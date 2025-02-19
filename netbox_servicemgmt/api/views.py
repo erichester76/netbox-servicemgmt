@@ -78,9 +78,9 @@ class FaultTolerenceViewSet(NetBoxModelViewSet):
 class DeploymentViewSet(NetBoxModelViewSet):
     queryset = models.Deployment.objects.all()
     serializer_class = serializers.DeploymentSerializer
-    filterset_class = filtersets.ServiceDeploymentFilterSet
+    filterset_class = filtersets.DeploymentFilterSet
 
 class ComponentViewSet(NetBoxModelViewSet):
     queryset = models.Component.objects.all()
     serializer_class = serializers.ComponentSerializer
-    filterset_class = filtersets.ServiceComponentFilterSet
+    filterset_class = filtersets.ComponentFilterSet

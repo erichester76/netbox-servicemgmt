@@ -259,7 +259,7 @@ class Solution(SolutionBase):
 class Deployment(SolutionBase):
     
     deployment_type = models.CharField(max_length=255, choices=DEPLOYMENT_TYPES)
-    deployment_solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='deployments')
+    deployment_solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='deployments', verbose_name="Solution")
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
@@ -284,12 +284,13 @@ class Deployment(SolutionBase):
     
 class Component(SolutionBase):
     
-    component_deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True, related_name='components')
+    component_deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Deployment")
     
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
+    
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model

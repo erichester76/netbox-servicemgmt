@@ -23,15 +23,15 @@ class FaultTolerenceFilterSet(NetBoxModelFilterSet):
         fields = ('name', 'primary_site', 'secondary_site', 'tertiary_site')
 
 # ServiceDeployment FilterSet
-class ServiceDeploymentFilterSet(NetBoxModelFilterSet):
+class DeploymentFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = Deployment
-        fields = ('name', 'version', 'solution' )
+        fields = ('name', 'version', 'deployment_solution' )
         
 # ServiceComponent FilterSet
-class ServiceComponentFilterSet(NetBoxModelFilterSet):
+class ComponentFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = Component
-        fields = ( 'name', 'version', )
+        fields = ( 'name', 'version', 'component_deployment')

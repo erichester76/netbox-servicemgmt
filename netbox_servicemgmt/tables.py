@@ -37,7 +37,7 @@ class DeploymentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Deployment
-        fields = ('pk', 'name', 'description', 'version', 'solution', 'status', 'last_modified', 'created')
+        fields = ('pk', 'name', 'description', 'version', 'deployment_solution', 'status', 'last_modified', 'created')
         default_columns = ('name', 'version', 'solution', 'status')
 
 class ComponentTable(NetBoxTable):
@@ -45,5 +45,5 @@ class ComponentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Component
-        fields = ('pk', 'name', 'description', 'version', 'object_type', 'object_id', 'status', 'last_modified', 'created')
+        fields = ('pk', 'name', 'description', 'component_deployment', 'version', 'object_type', 'object_id', 'status', 'last_modified', 'created')
         default_columns = ('name', 'version', 'status')
