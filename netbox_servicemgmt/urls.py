@@ -6,14 +6,14 @@ urlpatterns = [
     path('<str:app_label>/<str:model_name>/<int:pk>/attach/', views.GenericAttachView.as_view(), name='generic_attach'),
 
     # Solution Template URLs
-    path('solutions/', views.SolutionTemplateListView.as_view(), name='solution_list'),
-    path('solutions/<int:pk>/', views.SolutionTemplateDetailView.as_view(), name='solution'),
-    path('solutions/add/', views.SolutionTemplateEditView.as_view(), name='solution_add'),
-    path('solutions/<int:pk>/edit/', views.SolutionTemplateEditView.as_view(), name='solution_edit'),
-    path('solutions/<int:pk>/delete/', views.SolutionTemplateDeleteView.as_view(), name='solution_delete'),
-    path('solutions/bulk-import/', views.SolutionTemplateBulkImportView.as_view(), name='solution_bulk_import'),
-    path('solutions/<int:pk>/changelog/', views.SolutionTemplateChangeLogView.as_view(), name='solution_changelog', kwargs={'model': models.Solution}),
-    path('solutions/<int:pk>/diagram/', views.SolutionTemplateDiagramView.as_view(), name='solution_diagram'),
+    path('solutions/', views.SolutionListView.as_view(), name='solution_list'),
+    path('solutions/<int:pk>/', views.SolutionDetailView.as_view(), name='solution'),
+    path('solutions/add/', views.SolutionEditView.as_view(), name='solution_add'),
+    path('solutions/<int:pk>/edit/', views.SolutionEditView.as_view(), name='solution_edit'),
+    path('solutions/<int:pk>/delete/', views.SolutionDeleteView.as_view(), name='solution_delete'),
+    path('solutions/bulk-import/', views.SolutionBulkImportView.as_view(), name='solution_bulk_import'),
+    path('solutions/<int:pk>/changelog/', views.SolutionChangeLogView.as_view(), name='solution_changelog', kwargs={'model': models.Solution}),
+    path('solutions/<int:pk>/diagram/', views.SolutionDiagramView.as_view(), name='solution_diagram'),
 
     # Service Deployment URLs
     path('deployments/', views.DeploymentListView.as_view(), name='deployment_list'),
