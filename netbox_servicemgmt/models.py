@@ -83,23 +83,22 @@ COMPLIANCE_STANDARDS = [
 ]
 
 DEPLOYMENT_TYPES = [
-    ('D','Development Testing'),
-    ('G','Upgrade'),
-    ('L','Learning/Training'),
-    ('M','(Maintenance) Production Support'),
-    ('N','Non-production'),
-    ('P','Production'),
-    ('F','Functional'),
-    ('R','Disaster Recovery'),
-    ('C','Secondary/Failover'),
-    ('Q','Quality Assurance'),
-    ('S','Staging'),
-    ('U','User Acceptance Testing (UAT)'),
-    ('Y','Prototype'),
-    ('Z','Sandbox'),
-    ('O','Demo'),
+    ('d','Development Testing'),
+    ('g','Upgrade'),
+    ('l','Learning/Training'),
+    ('m','(Maintenance) Production Support'),
+    ('n','Non-production'),
+    ('p','Production'),
+    ('f','Functional'),
+    ('r','Disaster Recovery'),
+    ('c','Secondary/Failover'),
+    ('q','Quality Assurance'),
+    ('s','Staging'),
+    ('u','User Acceptance Testing (UAT)'),
+    ('y','Prototype'),
+    ('z','Sandbox'),
+    ('o','Demo'),
 ]
-
 
 class DynamicQuerySetModel:
     """
