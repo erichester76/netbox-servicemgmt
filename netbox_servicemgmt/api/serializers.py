@@ -12,6 +12,7 @@ class FaultTolerenceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SolutionBaseSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = SolutionBase
         fields = [

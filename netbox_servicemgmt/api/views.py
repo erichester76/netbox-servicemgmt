@@ -62,24 +62,24 @@ def get_object_fields(request, object_type_id):
 class SLOViewSet(NetBoxModelViewSet):
     queryset = models.SLO.objects.all()
     serializer_class = serializers.SLOSerializer
-    filterset_class = filtersets.SLOFilterSet
+    #filterset_class = filtersets.SLOFilterSet
 
 class SolutionViewSet(NetBoxModelViewSet):
     queryset = models.Solution.objects.all()
     serializer_class = serializers.SolutionSerializer
-    filterset_class = filtersets.SolutionFilterSet
+    #filterset_class = filtersets.SolutionFilterSet
     
 class FaultTolerenceViewSet(NetBoxModelViewSet):
     queryset = models.FaultTolerence.objects.all()
     serializer_class = serializers.FaultTolerenceSerializer
-    filterset_class = filtersets.FaultTolerenceFilterSet
+    #filterset_class = filtersets.FaultTolerenceFilterSet
 
 class DeploymentViewSet(NetBoxModelViewSet):
     queryset = models.Deployment.objects.all()
     serializer_class = serializers.DeploymentSerializer
-    filterset_class = filtersets.DeploymentFilterSet
+    #filterset_class = filtersets.DeploymentFilterSet
 
 class ComponentViewSet(NetBoxModelViewSet):
     queryset = models.Component.objects.all()
     serializer_class = serializers.ComponentSerializer
-    filterset_class = filtersets.ComponentFilterSet
+    #filterset_class = filtersets.ComponentFilterSet
