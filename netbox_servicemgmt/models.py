@@ -207,18 +207,18 @@ class Solution(NetBoxModel):
     business_owner_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_business_owner', verbose_name='Business Owner Department')
     business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owner', verbose_name='Business Owner Contact')
     
-    os_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_technical_contact', verbose_name='OS Technical Contact Group')  
-    os_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_technical_contact', verbose_name='OS Technical Contact')
+    os_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_os_technical_contact', verbose_name='OS Technical Contact Group')  
+    os_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_os_technical_contact', verbose_name='OS Technical Contact')
     
-    app_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_technical_contact', verbose_name='Application Technical Contact Group')
-    app_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_technical_contact', verbose_name='Application Technical Contact')
+    app_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_app_technical_contact', verbose_name='Application Technical Contact Group')
+    app_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_app_technical_contact', verbose_name='Application Technical Contact')
     
     incident_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='incident_contact', verbose_name='Incident Contact')
 
     data_classification = models.CharField(null=True,choices=DATA_CHOICES, verbose_name='Data Classification')
     compliance_requirements = models.CharField(null=True, blank=True, choices=COMPLIANCE_STANDARDS, verbose_name='Compliance Standards')
-    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.SET_NULL, null=True, related_name='ft_soltems',verbose_name='Fault Tolerence')
-    slos = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='slo_soltems',verbose_name='Service Level Objectives')
+    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.SET_NULL, null=True, related_name='solutions',verbose_name='Fault Tolerence')
+    slos = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='solutions',verbose_name='Service Level Objectives')
     
     last_bcdr_test = models.DateField(null=True, blank=True)
     last_risk_assessment = models.DateField(null=True, blank=True)
