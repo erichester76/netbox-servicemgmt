@@ -205,7 +205,7 @@ class Solution(NetBoxModel):
         null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
         blank=True,
         related_name='next_versions',  # Allows backward reference from the newer version to older ones
-        help_text="Previous version of this solution"
+        help_text="Previous version"
     )
     
     status = models.CharField(
@@ -231,16 +231,6 @@ class Deployment(Solution):
     deployment_type = models.CharField(max_length=255, choices=DEPLOYMENT_TYPES)
     solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='solution_deployments')
     
-    # Self-referencing foreign key to track the previous version of the template
-    previous_version = models.ForeignKey(
-        'self',  # Self-reference to the same model
-        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
-        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
-        blank=True,
-        related_name='next_versions',  # Allows backward reference from the newer version to older ones
-        help_text="Previous version of this deployment"
-    )
-    
     class Meta:
         ordering = ['name']
         verbose_name = ('Deployment')
@@ -261,16 +251,6 @@ class Component(Solution):
     object_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
-            
-    # Self-referencing foreign key to track the previous version of the template
-    previous_version = models.ForeignKey(
-        'self',  # Self-reference to the same model
-        on_delete=models.SET_NULL,  # Allow deletion without deleting related records
-        null=True,  # Previous version can be optional (i.e., the first version will have no previous_version)
-        blank=True,
-        related_name='next_versions',  # Allows backward reference from the newer version to older ones
-        help_text="Previous version of this component"
-    )
     
     class Meta:
         ordering = ['name']
