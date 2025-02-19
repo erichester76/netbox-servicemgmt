@@ -68,8 +68,7 @@ class SolutionViewSet(NetBoxModelViewSet):
     queryset = models.Solution.objects.all()
     serializer_class = serializers.SolutionSerializer
     filterset_class = filtersets.SolutionFilterSet
-
-
+    
 class FaultTolerenceViewSet(NetBoxModelViewSet):
     queryset = models.FaultTolerence.objects.all()
     serializer_class = serializers.FaultTolerenceSerializer
