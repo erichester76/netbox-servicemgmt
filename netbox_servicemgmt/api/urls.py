@@ -5,9 +5,9 @@ from . import views
 router = NetBoxRouter()
 router.register(r'slos', views.SLOViewSet)
 router.register(r'fault-tolerences', views.FaultTolerenceViewSet)
-router.register(r'solution-templates', views.SolutionViewSet)
-router.register(r'service-deployments', views.DeploymentViewSet)
-router.register(r'service-components', views.ComponentViewSet)
+router.register(r'solutions', views.SolutionViewSet)
+router.register(r'deployments', views.DeploymentViewSet)
+router.register(r'components', views.ComponentViewSet)
 
 # Combine router URLs with additional custom API paths
 urlpatterns = router.urls + [
