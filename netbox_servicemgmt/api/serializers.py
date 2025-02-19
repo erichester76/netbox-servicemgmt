@@ -37,7 +37,7 @@ class SolutionSerializer(SolutionBaseSerializer):
         fields = SolutionBaseSerializer.Meta.fields + ['previous_version']
 
 class DeploymentSerializer(SolutionBaseSerializer):
-    deployment_type = serializers.ChoiceField(choices=Deployment.DEPLOYMENT_TYPES)
+    
     deployment_solution = serializers.PrimaryKeyRelatedField(
         queryset=Solution.objects.all(),
         allow_null=True,
