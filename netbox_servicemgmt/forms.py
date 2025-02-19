@@ -35,8 +35,16 @@ class SLOImportForm(NetBoxModelImportForm):
 class SolutionForm(NetBoxModelForm):
     class Meta:
         model = models.Solution
-        fields = '__all__'
-        
+        fields = [
+            'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version', 
+            'architect', 'requester', 'business_owner_group', 'business_owner_contact',
+            'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 
+            'app_technical_contact', 'incident_contact', 'data_classification', 
+            'compliance_requirements', 'fault_tolerence', 'slos', 'last_bcdr_test', 
+            'last_risk_assessment', 'last_review', 'production_readiness_status', 
+            'vendor_management_status', 'status'
+        ]
+                
 class SolutionImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.Solution
