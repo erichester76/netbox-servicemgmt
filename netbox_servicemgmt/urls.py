@@ -32,7 +32,7 @@ urlpatterns = [
     path('components/<int:pk>/edit/', views.ComponentEditView.as_view(), name='component_edit'),
     path('components/<int:pk>/delete/', views.ComponentDeleteView.as_view(), name='component_delete'),
     path('components/bulk-import/', views.ComponentBulkImportView.as_view(), name='component_bulk_import'),
-    path('components/<int:pk>/changelog/', views.ComponentChangeLogView.as_view(), name='component_changelog', kwargs={'model': models.DeploymentComponent}),
+    path('components/<int:pk>/changelog/', views.ComponentChangeLogView.as_view(), name='component_changelog', kwargs={'model': models.Component}),
 
     # High Availability (HA) Model URLs
     path('fault-tolerence/', views.FaultTolerenceListView.as_view(), name='faulttolerence_list'),
