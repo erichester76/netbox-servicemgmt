@@ -6,29 +6,36 @@
     <div class="col-md-12">
       <h3>Solution for {{ vm.name }}</h3>
       {% if solution %}
-        <div class="card">
+        <div class="card mb-3">
           <div class="card-header">
             <h4>{{ solution.name }}</h4>
           </div>
-          <div class="card-body">
-            <table class="table table-hover">
-              {% for field in solution_fields %}
-                <tr>
-                  <th>{{ field.verbose_name|title }}</th>
-                  <td>
-                    {% if field.has_url and field.value %}
-                      <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
-                    {% elif field.value|length_is:0 or field.value == None %}
-                      {{ field.value|placeholder }}
-                    {% else %}
-                      {{ field.value|bettertitle|placeholder }}
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </table>
-          </div>
         </div>
+        {% for group_name, fields in grouped_fields.items %}
+          <div class="card mb-3">
+            <div class="card-header">
+              <h5>{{ group_name }}</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-hover">
+                {% for field in fields %}
+                  <tr>
+                    <th>{{ field.verbose_name|title }}</th>
+                    <td>
+                      {% if field.has_url and field.value %}
+                        <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
+                      {% elif field.value|length_is:0 or field.value == None %}
+                        {{ field.value|placeholder }}
+                      {% else %}
+                        {{ field.value|bettertitle|placeholder }}
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        {% endfor %}
       {% else %}
         <p>No solution found with project ID matching '{{ vm.name|split:'-'|slice:':2'|join:'-' }}'.</p>
       {% endif %}

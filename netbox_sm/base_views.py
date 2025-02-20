@@ -300,10 +300,10 @@ class BaseSolutionView(generic.ObjectView):
     )
 
     def get_extra_context(self, request, instance):
-        """Fetch the Solution object and its fields based on VM name prefix."""
+        """Fetch the Solution object and group its fields."""
         vm = instance
         solution = None
-        solution_fields = []
+        grouped_fields = {}
 
         if vm and hasattr(vm, 'name') and vm.name:
             vm_prefix = '-'.join(vm.name.split('-')[:2])
@@ -315,20 +315,40 @@ class BaseSolutionView(generic.ObjectView):
                 solution = Solution.objects.filter(project_id=vm_prefix).first()
 
         if solution:
-            # Get all fields from the Solution model
-            solution_fields = [
-                {
-                    'name': field.name,
-                    'verbose_name': field.verbose_name,
-                    'value': getattr(solution, field.name),
-                    'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
-                }
-                for field in solution._meta.fields
-                if field.name not in ['id', 'created', 'last_updated']  # Exclude internal fields
-            ]
+            # Define field groupings
+            field_groups = {
+                'General Information': [
+                    'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version', 'status'
+                ],
+                'Ownership and Contacts': [
+                    'architect', 'requester', 'business_owner_group', 'business_owner_contact', 'incident_contact'
+                ],
+                'Technical Contacts': [
+                    'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
+                ],
+                'Compliance and Resilience': [
+                    'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos'
+                ],
+                'Reviews and Status': [
+                    'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
+                ],
+            }
+
+            # Populate grouped fields
+            for group_name, field_names in field_groups.items():
+                grouped_fields[group_name] = [
+                    {
+                        'name': field.name,
+                        'verbose_name': field.verbose_name,
+                        'value': getattr(solution, field.name),
+                        'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
+                    }
+                    for field in solution._meta.fields
+                    if field.name in field_names
+                ]
 
         return {
             'vm': vm,
             'solution': solution,
-            'solution_fields': solution_fields,
+            'grouped_fields': grouped_fields,
         }
