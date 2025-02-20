@@ -297,7 +297,7 @@ class BaseSolutionView(generic.ObjectView):
         badge=lambda obj: 1,
     )
     
-    def get_queryset(self, obj):
+    def get_queryset(self, request, obj):
         """
         Get the base queryset - we'll filter in the view
         """
