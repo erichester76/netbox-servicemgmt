@@ -17,18 +17,14 @@
               <h5>{{ group_name }}</h5>
             </div>
             <div class="card-body">
-              <table class="table table-hover table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th class="w-25">Field</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for field in fields %}
-                    <tr>
-                      <td class="align-middle">{{ field.verbose_name|title }}</td>
-                      <td class="align-middle">
+              <div class="row row-cols-1 row-cols-md-2 g-3">
+                {% for field in fields %}
+                  <div class="col">
+                    <div class="d-flex align-items-center">
+                      <div class="fw-bold text-nowrap me-2" style="min-width: 200px;">
+                        {{ field.verbose_name|title }}:
+                      </div>
+                      <div>
                         {% if field.has_url and field.value %}
                           <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
                         {% elif field.value is None %}
@@ -36,11 +32,14 @@
                         {% else %}
                           {{ field.value|bettertitle|placeholder }}
                         {% endif %}
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                  </div>
+                  {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                    </div><div class="row row-cols-1 row-cols-md-2 g-3">
+                  {% endif %}
+                {% endfor %}
+              </div>
             </div>
           </div>
         {% endfor %}
