@@ -83,13 +83,6 @@ class SolutionListView(generic.ObjectListView):
     queryset = models.Solution.objects.all()
     table = tables.SolutionTable
 
-@register_model_view(models.Solution)
-class SolutionDetailView(base_views.BaseObjectView):
-    queryset = models.Solution.objects.all()
-
-@register_model_view(models.Solution, 'diagram', path='diagram')
-class SolutionDiagramView(base_views.BaseDiagramView):
-    queryset = models.Solution.objects.all()
 
 class SolutionEditView(generic.ObjectEditView):
     queryset = models.Solution.objects.all()
@@ -133,13 +126,6 @@ class DeploymentListView(generic.ObjectListView):
     queryset = models.Deployment.objects.all()
     table = tables.DeploymentTable
 
-@register_model_view(models.Deployment)
-class DeploymentDetailView(base_views.BaseObjectView):
-    queryset = models.Deployment.objects.all()
-
-@register_model_view(models.Deployment, 'diagram', path='diagram')
-class DeploymentDiagramView(base_views.BaseDiagramView):
-    queryset = models.Deployment.objects.all()
 
 class DeploymentEditView(generic.ObjectEditView):
     queryset = models.Deployment.objects.all()
@@ -160,13 +146,7 @@ class ComponentListView(generic.ObjectListView):
     queryset = models.Component.objects.all()
     table = tables.ComponentTable
     
-@register_model_view(models.Component)
-class ComponentDetailView(base_views.BaseObjectView):
-    queryset = models.Component.objects.all()
 
-@register_model_view(models.Component, 'diagram', path='diagram')
-class ComponentDiagramView(base_views.BaseDiagramView): 
-    queryset = models.Component.objects.all()
 
 class ComponentEditView(generic.ObjectEditView):
     queryset = models.Component.objects.all()
@@ -182,6 +162,30 @@ class ComponentBulkImportView(generic.BulkImportView):
 class ComponentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Component
 
+@register_model_view(models.Solution)
+class SolutionDetailView(base_views.BaseObjectView):
+    queryset = models.Solution.objects.all()
+
+@register_model_view(models.Solution, 'diagram', path='diagram')
+class SolutionDiagramView(base_views.BaseDiagramView):
+    queryset = models.Solution.objects.all()
+
+
+@register_model_view(models.Deployment)
+class DeploymentDetailView(base_views.BaseObjectView):
+    queryset = models.Deployment.objects.all()
+
+@register_model_view(models.Deployment, 'diagram', path='diagram')
+class DeploymentDiagramView(base_views.BaseDiagramView):
+    queryset = models.Deployment.objects.all()
+
+@register_model_view(models.Component)
+class ComponentDetailView(base_views.BaseObjectView):
+    queryset = models.Component.objects.all()
+
+@register_model_view(models.Component, 'diagram', path='diagram')
+class ComponentDiagramView(base_views.BaseDiagramView): 
+    queryset = models.Component.objects.all()
 
 @register_model_view(Region, 'diagram', path='diagram')
 class RegionDiagramView(base_views.BaseDiagramView): 

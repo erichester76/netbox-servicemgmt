@@ -1,10 +1,14 @@
-from netbox.forms import NetBoxModelForm, NetBoxModelImportForm
-from utilities.forms.fields import ContentTypeChoiceField
-from . import models
 from django import forms
+from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm, NetBoxModelImportForm
+from utilities.forms.fields import DynamicModelChoiceField, CSVChoiceField, CSVContentTypeField
+from .models import SLO, FaultTolerence, Solution, Deployment, Component, \
+                   STATUS_CHOICES, SOLUTION_CHOICES, DATA_CHOICES, COMPLIANCE_STANDARDS, DEPLOYMENT_TYPES
+from tenancy.models import Tenant, Contact
+from dcim.models import Site
 from django.contrib.contenttypes.models import ContentType
-from django.urls import reverse
 from .fields import DynamicObjectChoiceField
+from utilities.forms import ContentTypeChoiceField
+
 
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
@@ -20,52 +24,76 @@ class AttachForm(forms.Form):
         # Populate the queryset for `existing_object`, excluding the ones already related
         self.fields['existing_object'].queryset = related_model_class.objects.exclude(pk=current_object.pk)
         
+# SLO Forms
 class SLOForm(NetBoxModelForm):
     class Meta:
-        model = models.SLO
-        fields = '__all__'
+        model = SLO
+        fields = ('name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response')
 
 class SLOImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.SLO
+        model = SLO
         fields = '__all__'
 
 class SolutionForm(NetBoxModelForm):
+    architect = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    requester = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    business_owner_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
+    business_owner_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    os_technical_contact_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
+    os_technical_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    app_technical_contact_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
+    app_technical_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    incident_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    fault_tolerence = DynamicModelChoiceField(queryset=FaultTolerence.objects.all(), required=False)
+    slos = DynamicModelChoiceField(queryset=SLO.objects.all(), required=False)
+    previous_version = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
+
     class Meta:
-        model = models.Solution
-        fields = [
-            'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version', 
+        model = Solution
+        fields = (
+            'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version',
             'architect', 'requester', 'business_owner_group', 'business_owner_contact',
-            'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 
-            'app_technical_contact', 'incident_contact', 'data_classification', 
-            'compliance_requirements', 'fault_tolerence', 'slos', 'last_bcdr_test', 
-            'last_risk_assessment', 'last_review', 'production_readiness_status', 
-            'vendor_management_status', 'status'
-        ]
-                
+            'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group',
+            'app_technical_contact', 'incident_contact', 'data_classification', 'compliance_requirements',
+            'fault_tolerence', 'slos', 'last_bcdr_test', 'last_risk_assessment', 'last_review',
+            'production_readiness_status', 'vendor_management_status', 'status', 'previous_version'
+        )
+        widgets = {
+            'last_bcdr_test': forms.DateInput(),
+            'last_risk_assessment': forms.DateInput(),
+            'last_review': forms.DateInput(),
+        }
+        
 class SolutionImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.Solution
+        model = Solution
         fields = '__all__'
 
 class FaultTolerenceForm(NetBoxModelForm):
-    class Meta:
-        model = models.FaultTolerence
-        fields = '__all__'
+    primary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    secondary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    tertiary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
 
-class FaultTolerenceImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.FaultTolerence
-        fields = '__all__'
+        model = FaultTolerence
+        fields = (
+            'name', 'description', 'multi_site', 'multi_region', 'multi_cloud', 'primary_site',
+            'secondary_site', 'tertiary_site', 'gtm_required', 'ltm_required', 'snapshots',
+            'storage_replication', 'vm_replication', 'backups', 'backup_schedule', 'offsite_backup', 'airgap_backup'
+        )
 
 class DeploymentForm(NetBoxModelForm):
+    deployment_solution = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
+    previous_version = DynamicModelChoiceField(queryset=Deployment.objects.all(), required=False)
+
     class Meta:
-        model = models.Deployment
-        fields = '__all__'
+        model = Deployment
+        fields = ('name', 'description', 'version', 'status', 'deployment_type', 'deployment_solution', 'previous_version')
 
 class DeploymentImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.Deployment
+        model = Deployment
         fields = '__all__'
 
 class ComponentForm(NetBoxModelForm):
@@ -81,10 +109,10 @@ class ComponentForm(NetBoxModelForm):
     )
     
     class Meta:
-        model = models.Component
-        fields = '__all__'
-                
+        model = Component
+        fields = ('name', 'description', 'version', 'status', 'component_deployment', 'object_type', 'object_id', 'previous_version')                
+        
 class ComponentImportForm(NetBoxModelImportForm):
     class Meta:
-        model = models.Component
+        model = Component
         fields = '__all__'
