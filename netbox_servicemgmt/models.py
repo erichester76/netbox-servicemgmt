@@ -294,6 +294,8 @@ class Deployment(NetBoxModel):
 class Component(NetBoxModel):
     
     name = models.CharField(max_length=255)
+    description = models.TextField()
+    version = models.IntegerField(null=True, blank=True)
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,  
