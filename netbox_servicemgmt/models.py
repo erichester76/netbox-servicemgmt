@@ -192,7 +192,7 @@ class FaultTolerence(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:faulttolerence', kwargs={'pk': self.pk})
 
-class Solutions(NetBoxModel):
+class Solution(NetBoxModel):
 
     name = models.CharField(max_length=255)
     solution_number = models.CharField(max_length=50, null=True)
