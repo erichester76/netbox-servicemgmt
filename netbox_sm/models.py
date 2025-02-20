@@ -153,7 +153,7 @@ class SLO(NetBoxModel):
         return f'{self.name}'
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:slo', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_sm:slo', kwargs={'pk': self.pk})
  
 # High Availability (HA) Model
 class FaultTolerence(NetBoxModel):
@@ -190,7 +190,7 @@ class FaultTolerence(NetBoxModel):
         return f'{self.name}'
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:faulttolerence', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_sm:faulttolerence', kwargs={'pk': self.pk})
 
 class Solution(NetBoxModel):
 
@@ -252,7 +252,7 @@ class Solution(NetBoxModel):
         return f'{self.name}'   
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:solution', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_sm:solution', kwargs={'pk': self.pk})
 
 class Deployment(NetBoxModel):
     
@@ -287,7 +287,7 @@ class Deployment(NetBoxModel):
         return f'{self.name}'   
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:deployment', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_sm:deployment', kwargs={'pk': self.pk})
 
     
 class Component(NetBoxModel):
@@ -326,4 +326,4 @@ class Component(NetBoxModel):
         return f'{self.name}'   
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_servicemgmt:component', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_sm:component', kwargs={'pk': self.pk})
