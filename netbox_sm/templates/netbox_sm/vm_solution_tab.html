@@ -12,19 +12,17 @@
           </div>
           <div class="card-body">
             <table class="table table-hover">
-              {% for field in solution|get_fields %}
+              {% for field in solution_fields %}
                 <tr>
-                  <th>{{ field.name|title }}</th>
+                  <th>{{ field.verbose_name|title }}</th>
                   <td>
-                    {% with value=solution|get_field_value:field.name %}
-                      {% if value|is_object_with_url %}
-                        <a href="{{ value.get_absolute_url }}">{{ value|bettertitle|placeholder }}</a>
-                      {% elif value|length_is:0 or value == None %}
-                        {{ value|placeholder }}
-                      {% else %}
-                        {{ value|bettertitle|placeholder }}
-                      {% endif %}
-                    {% endwith %}
+                    {% if field.has_url and field.value %}
+                      <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
+                    {% elif field.value|length_is:0 or field.value == None %}
+                      {{ field.value|placeholder }}
+                    {% else %}
+                      {{ field.value|bettertitle|placeholder }}
+                    {% endif %}
                   </td>
                 </tr>
               {% endfor %}

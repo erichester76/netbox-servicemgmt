@@ -293,27 +293,42 @@ class BaseDiagramView(generic.ObjectView):
     }
         
 class BaseSolutionView(generic.ObjectView):
-    model = VirtualMachine  # The object being viewed is a VirtualMachine
+    model = VirtualMachine
     tab = ViewTab(
         label='Solution',
         badge=lambda obj: Solution.objects.filter(project_id='-'.join(obj.name.split('-')[:2])).count() if obj.name else 0,
     )
 
     def get_extra_context(self, request, instance):
-        """Fetch the Solution object based on VM name prefix."""
-        vm = instance  # The VirtualMachine instance
+        """Fetch the Solution object and its fields based on VM name prefix."""
+        vm = instance
         solution = None
+        solution_fields = []
 
         if vm and hasattr(vm, 'name') and vm.name:
-            vm_prefix = '-'.join(vm.name.split('-')[:2])  # e.g., 'xxx-yyy' from 'xxx-yyy-p-zzzNN'
+            vm_prefix = '-'.join(vm.name.split('-')[:2])
             try:
                 solution = Solution.objects.get(project_id=vm_prefix)
             except Solution.DoesNotExist:
                 solution = None
             except Solution.MultipleObjectsReturned:
-                solution = Solution.objects.filter(project_id=vm_prefix).first()  # Fallback to first match
+                solution = Solution.objects.filter(project_id=vm_prefix).first()
+
+        if solution:
+            # Get all fields from the Solution model
+            solution_fields = [
+                {
+                    'name': field.name,
+                    'verbose_name': field.verbose_name,
+                    'value': getattr(solution, field.name),
+                    'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
+                }
+                for field in solution._meta.fields
+                if field.name not in ['id', 'created', 'last_updated']  # Exclude internal fields
+            ]
 
         return {
             'vm': vm,
-            'solution': solution,  # Single Solution object or None
+            'solution': solution,
+            'solution_fields': solution_fields,
         }
