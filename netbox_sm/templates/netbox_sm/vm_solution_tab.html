@@ -6,18 +6,18 @@
     <div class="col-md-12">
       <h3>Solution for {{ vm.name }}</h3>
       {% if solution %}
-        <div class="card mb-3">
+        <div class="card mb-1">
           <div class="card-header">
             <h4>{{ solution.name }}</h4>
           </div>
         </div>
         {% for group_name, fields in grouped_fields.items %}
-          <div class="card mb-3">
+          <div class="card mb-1">
             <div class="card-header">
               <h5>{{ group_name }}</h5>
             </div>
             <div class="card-body">
-              <div class="row row-cols-1 row-cols-md-2 g-3">
+              <div class="row row-cols-1 row-cols-md-3 g-3">
                 {% for field in fields %}
                   <div class="col">
                     <div class="d-flex align-items-center">
