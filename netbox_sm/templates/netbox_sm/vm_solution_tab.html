@@ -1,6 +1,20 @@
 {% extends 'generic/object.html' %}
 {% load helpers %}
 
+{% block extra_css %}
+  <style>
+    .card-header {
+      padding: 0.5rem 1rem !important; /* Reduce padding from default (1rem 1.25rem) */
+    }
+    .card-body .col {
+      padding: 0.5rem; /* Ensure consistent padding in body */
+    }
+    .fw-bold {
+      color: #007bff; /* Optional: Blue labels for consistency with screenshot */
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <div class="row">
     <div class="col-md-12">
