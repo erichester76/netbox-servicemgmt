@@ -2,4 +2,4 @@
 
 """Tests for `netbox_servicemgmt` package."""
 
-from netbox_servicemgmt import netbox_servicemgmt
+from netbox_sm import netbox_servicemgmt

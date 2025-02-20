@@ -6,8 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from .fields import DynamicObjectChoiceField
 
-
-
 class AttachForm(forms.Form):
     existing_object = forms.ModelChoiceField(
         queryset=None,  # This will be dynamically populated
