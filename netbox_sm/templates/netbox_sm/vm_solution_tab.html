@@ -12,31 +12,22 @@
           </div>
           <div class="card-body">
             <table class="table table-hover">
-              <tr>
-                <th>Name</th>
-                <td>{{ solution.name }}</td>
-              </tr>
-              <tr>
-                <th>Solution Number</th>
-                <td>{{ solution.solution_number|placeholder }}</td>
-              </tr>
-              <tr>
-                <th>Project ID</th>
-                <td>{{ solution.project_id|placeholder }}</td>
-              </tr>
-              <tr>
-                <th>Description</th>
-                <td>{{ solution.description|placeholder }}</td>
-              </tr>
-              <tr>
-                <th>Solution Type</th>
-                <td>{{ solution.get_solution_type_display|placeholder }}</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td>{{ solution.get_status_display|placeholder }}</td>
-              </tr>
-              <!-- Add more fields as needed -->
+              {% for field in solution|get_fields %}
+                <tr>
+                  <th>{{ field.name|title }}</th>
+                  <td>
+                    {% with value=solution|get_field_value:field.name %}
+                      {% if value|is_object_with_url %}
+                        <a href="{{ value.get_absolute_url }}">{{ value|bettertitle|placeholder }}</a>
+                      {% elif value|length_is:0 or value == None %}
+                        {{ value|placeholder }}
+                      {% else %}
+                        {{ value|bettertitle|placeholder }}
+                      {% endif %}
+                    {% endwith %}
+                  </td>
+                </tr>
+              {% endfor %}
             </table>
           </div>
         </div>
