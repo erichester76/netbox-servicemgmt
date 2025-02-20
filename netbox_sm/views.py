@@ -8,11 +8,9 @@ from django.urls import reverse
 from dcim.models import Device, Region
 from virtualization.models import VirtualMachine, Cluster
 from . import models, tables, forms
-
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView
-from django.shortcuts import render
 
 def get_model_class(app_label, model_name):
     # Use ContentType to get the model class

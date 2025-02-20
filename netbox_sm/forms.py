@@ -1,13 +1,12 @@
 from django import forms
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm, NetBoxModelImportForm
-from utilities.forms.fields import DynamicModelChoiceField, CSVChoiceField, CSVContentTypeField
+from utilities.forms.fields import DynamicModelChoiceField, ContentTypeChoiceField
 from .models import SLO, FaultTolerence, Solution, Deployment, Component, \
                    STATUS_CHOICES, SOLUTION_CHOICES, DATA_CHOICES, COMPLIANCE_STANDARDS, DEPLOYMENT_TYPES
 from tenancy.models import Tenant, Contact
 from dcim.models import Site
 from django.contrib.contenttypes.models import ContentType
 from .fields import DynamicObjectChoiceField
-from utilities.forms import ContentTypeChoiceField
 
 
 class AttachForm(forms.Form):
