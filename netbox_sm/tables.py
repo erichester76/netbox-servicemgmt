@@ -99,13 +99,18 @@ class DeploymentTable(NetBoxTable):
     status = ChoiceFieldColumn()
     deployment_type = ChoiceFieldColumn()
     deployment_solution = tables.Column(linkify=True, empty_values=(None,))
+    deployment_vlan = tables.Column(linkify=True, empty_values=(None,))
+    deployment_prefix = tables.Column(linkify=True, empty_values=(None,))
+    deployment_site = tables.Column(linkify=True, empty_values=(None,))
+
     previous_version = tables.Column(linkify=True, empty_values=(None,))
 
     class Meta(NetBoxTable.Meta):
         model = Deployment
         fields = (
             'pk', 'name', 'description', 'version', 'status', 'deployment_type',
-            'deployment_solution', 'previous_version', 'created', 'last_updated'
+            'deployment_solution', 'deployment_vlan', 'deployment_prefix', 'deployment_site',
+            'previous_version', 'created', 'last_updated'
         )
         default_columns = ('name', 'deployment_type', 'status', 'deployment_solution')
 
@@ -116,6 +121,10 @@ class ComponentTable(NetBoxTable):
     version = tables.Column(empty_values=(None,))
     status = ChoiceFieldColumn()
     component_deployment = tables.Column(linkify=True, empty_values=(None,))
+    component_vlan = tables.Column(linkify=True, empty_values=(None,))
+    component_prefix = tables.Column(linkify=True, empty_values=(None,))
+    component_site = tables.Column(linkify=True, empty_values=(None,))
+
     content_object = columns.ContentTypeColumn()
     previous_version = tables.Column(linkify=True, empty_values=(None,))
 

@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from tenancy.models import Tenant, Contact
 from dcim.models import Site
+from ipam.models import VLAN, Prefix
 from django.urls import reverse
 from netbox.models.features import *
 
@@ -267,6 +268,9 @@ class Deployment(NetBoxModel):
 
     deployment_type = models.CharField(max_length=255, choices=DEPLOYMENT_TYPES, verbose_name='Deployment Type')
     deployment_solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='deployments', verbose_name="Solution")
+    deployment_vlan = models.ForeignKey(VLAN, on_delete=models.SET_NULL, null=True, related_name='deployments', verbose_name="VLAN")
+    deployment_prefix = models.ForeignKey(Prefix, on_delete=models.SET_NULL, null=True, related_name='deployments', verbose_name="Prefix")
+    deployment_site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, related_name='deployments', verbose_name="Site")
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
@@ -301,11 +305,16 @@ class Component(NetBoxModel):
         default=STATUS_INACTIVE,    
     )
     component_deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Deployment")
+    component_prefix = models.ForeignKey(Prefix, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Prefix")
+    component_site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Site")
     
     # Object type (GenericForeignKey) - allows dynamic references to any object type
     object_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('object_type', 'object_id')
+    #vlan / prefix
+    #storage type
+    #site    
     
     # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(

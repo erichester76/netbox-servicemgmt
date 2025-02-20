@@ -93,7 +93,9 @@ class DeploymentForm(NetBoxModelForm):
 
     class Meta:
         model = Deployment
-        fields = ('name', 'description', 'version', 'status', 'deployment_type', 'deployment_solution', 'previous_version')
+        fields = ('name', 'description', 'version', 'status', 'deployment_type', 'deployment_solution', 
+                  'deployment_vlan', 'deployment_prefix', 'deployment_site',
+                  'previous_version')
 
 class DeploymentImportForm(NetBoxModelImportForm):
     class Meta:
@@ -114,7 +116,9 @@ class ComponentForm(NetBoxModelForm):
     
     class Meta:
         model = Component
-        fields = ('name', 'description', 'version', 'status', 'component_deployment', 'object_type', 'object_id', 'previous_version')                
+        fields = ('name', 'description', 'version', 'status', 'component_deployment', 
+                  'component_vlan', 'component_prefix', 'component_site',
+                  'object_type', 'object_id', 'previous_version')                
         
 class ComponentImportForm(NetBoxModelImportForm):
     class Meta:
