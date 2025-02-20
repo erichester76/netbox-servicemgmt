@@ -6,6 +6,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
 from .models import Solution
+from .tables import SolutionTable
 from virtualization.models import VirtualMachine
 from django.http import Http404
 
@@ -293,28 +294,35 @@ class BaseDiagramView(generic.ObjectView):
         
 class BaseSolutionView(generic.ObjectView):
     queryset = Solution.objects.all()
-    
+    model = VirtualMachine  # The model this view is attached to (VirtualMachine)
+
     tab = ViewTab(
         label='Solution',
-        badge=lambda obj: 1,
+        badge=lambda obj: obj.solutions.count() if hasattr(obj, 'solutions') else 0,
     )
-    
-    model = VirtualMachine  
 
     def get_queryset(self, request=None):
         """Return the base queryset for solutions."""
         return self.queryset
 
-    def get_context(self, request, **kwargs):
+    def get_object(self, request, **kwargs):
+        """Override to fetch the VirtualMachine object."""
+        return super().get_object(**kwargs)
+
+    def get_extra_context(self, request, instance):
         """Add filtered solutions to context based on VM name prefix."""
-        context = super().get_context(request, **kwargs)
-        vm = super().get_object(request, **kwargs) 
-        
-        if vm and hasattr(vm, 'name'):
+        vm = instance  # The VirtualMachine instance
+        solutions = self.get_queryset(request).none()  # Default to empty queryset
+
+        if vm and hasattr(vm, 'name') and vm.name:
             vm_prefix = '-'.join(vm.name.split('-')[:2])
-            context['solutions'] = self.get_queryset(request).filter(project_id=vm_prefix)
-        else:
-            context['solutions'] = self.get_queryset(request).none()
-            
-        context['vm'] = vm
-        return context
+            solutions = self.get_queryset(request).filter(project_id=vm_prefix)
+
+        # Create and configure the table
+        solutions_table = SolutionTable(solutions)
+        solutions_table.configure(request)
+
+        return {
+            'vm': vm,
+            'solutions_table': solutions_table,
+        }
