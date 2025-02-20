@@ -293,36 +293,27 @@ class BaseDiagramView(generic.ObjectView):
     }
         
 class BaseSolutionView(generic.ObjectView):
-    queryset = Solution.objects.all()
-    model = VirtualMachine  # The model this view is attached to (VirtualMachine)
-
+    model = VirtualMachine  # The object being viewed is a VirtualMachine
     tab = ViewTab(
         label='Solution',
-        badge=lambda obj: obj.solutions.count() if hasattr(obj, 'solutions') else 0,
+        badge=lambda obj: Solution.objects.filter(project_id='-'.join(obj.name.split('-')[:2])).count() if obj.name else 0,
     )
 
-    def get_queryset(self, request=None):
-        """Return the base queryset for solutions."""
-        return self.queryset
-
-    def get_object(self, request, **kwargs):
-        """Override to fetch the VirtualMachine object."""
-        return super().get_object(**kwargs)
-
     def get_extra_context(self, request, instance):
-        """Add filtered solutions to context based on VM name prefix."""
+        """Fetch the Solution object based on VM name prefix."""
         vm = instance  # The VirtualMachine instance
-        solutions = self.get_queryset(request).none()  # Default to empty queryset
+        solution = None
 
         if vm and hasattr(vm, 'name') and vm.name:
-            vm_prefix = '-'.join(vm.name.split('-')[:2])
-            solutions = self.get_queryset(request).filter(project_id=vm_prefix)
-
-        # Create and configure the table
-        solutions_table = SolutionTable(solutions)
-        solutions_table.configure(request)
+            vm_prefix = '-'.join(vm.name.split('-')[:2])  # e.g., 'xxx-yyy' from 'xxx-yyy-p-zzzNN'
+            try:
+                solution = Solution.objects.get(project_id=vm_prefix)
+            except Solution.DoesNotExist:
+                solution = None
+            except Solution.MultipleObjectsReturned:
+                solution = Solution.objects.filter(project_id=vm_prefix).first()  # Fallback to first match
 
         return {
             'vm': vm,
-            'solutions_table': solutions_table,
+            'solution': solution,  # Single Solution object or None
         }
