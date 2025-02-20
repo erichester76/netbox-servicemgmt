@@ -6,7 +6,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name =  "netbox-servicemgmt"
+name =  "netbox-sm"
 version = "0.2.0"
 authors = [
     {name = "Eric Hester", email = "hester1@clemson.edu"},

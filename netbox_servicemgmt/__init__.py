@@ -7,7 +7,7 @@ __version__ = "0.2.0"
 from netbox.plugins import PluginConfig
 
 class servicemgmtConfig(PluginConfig):
-    name = "netbox_servicemgmt"
+    name = "netbox_sm"
     verbose_name = "Netbox Service Management Plugin"
     description = "Netbox Plugin for Service Management"
     version = "0.2.0"
