@@ -295,34 +295,33 @@ class BaseSolutionView(generic.ObjectView):
     
     tab = ViewTab(
         label='Solution',
-        badge=lambda obj: Solution.objects.filter(project_id=obj.name.split('-')[:2]).count()
+        badge=lambda obj: 1,
+        permission='your_app.view_solution',  # Adjust if you have specific permissions
     )
     
-    model = VirtualMachine
+    model = VirtualMachine  # Explicitly define the model
 
     def get_queryset(self, request=None):
         """Return the base queryset for solutions."""
         return self.queryset
 
-    def get_object(self, request=None, **kwargs):
+    def get_object(self, request, **kwargs):
         """Get the VirtualMachine object based on pk."""
         try:
             return self.model.objects.get(pk=kwargs.get('pk'))
         except self.model.DoesNotExist:
-            from django.http import Http404
             raise Http404("Virtual Machine not found")
 
     def get_context(self, request, **kwargs):
         """Add filtered solutions to context based on VM name prefix."""
         context = super().get_context(request, **kwargs)
-        vm = self.get_object(request, **kwargs)
+        vm = self.get_object(request, **kwargs)  # Pass request and kwargs explicitly
         
         if vm and hasattr(vm, 'name'):
             vm_prefix = '-'.join(vm.name.split('-')[:2])
-            context['solutions'] = self.get_queryset().filter(project_id=vm_prefix)
+            context['solutions'] = self.get_queryset(request).filter(project_id=vm_prefix)
         else:
-            context['solutions'] = self.get_queryset().none()
+            context['solutions'] = self.get_queryset(request).none()
             
         context['vm'] = vm
         return context
-
