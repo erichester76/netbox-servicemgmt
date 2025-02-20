@@ -288,7 +288,6 @@ class BaseDiagramView(generic.ObjectView):
     }
         
 class BaseSolutionView(generic.ObjectView):
-    queryset = models.Solution.objects.all()
     
     tab = ViewTab(
         label='Solution',
