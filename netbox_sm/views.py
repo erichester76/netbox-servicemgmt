@@ -20,7 +20,7 @@ def get_model_class(app_label, model_name):
     return content_type.model_class()
 
 class GenericAttachView(FormView):
-    template_name = "netbox_servicemgmt/attach_form.html"
+    template_name = "netbox_sm/attach_form.html"
     form_class = forms.AttachForm
 
     def get_form_kwargs(self):

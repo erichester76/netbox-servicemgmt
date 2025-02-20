@@ -37,10 +37,10 @@ def sanitize_name(name):
     return clean_name
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
-    base_template = 'netbox_servicemgmt/default-detail.html'
+    base_template = 'netbox_sm/default-detail.html'
     
 class BaseObjectView(generic.ObjectView):
-    template_name = 'netbox_servicemgmt/default-detail.html'
+    template_name = 'netbox_sm/default-detail.html'
     
     def get_extra_context(self, request, instance):
         # Extract fields and their values for the object, including relationships
@@ -106,12 +106,12 @@ class BaseObjectView(generic.ObjectView):
                 if hasattr(related_model, 'get_absolute_url'):
                     model_name = related_model._meta.model_name.lower()
                     add_url = reverse(
-                        f'plugins:netbox_servicemgmt:{model_name}_add'
+                        f'plugins:netbox_sm:{model_name}_add'
                     )   
                     # Pre-fill the linking field with the current object's ID, if possible
                     add_url += f'?{instance._meta.model_name.lower()}={instance.pk}'
                     content_type = ContentType.objects.get_for_model(instance)
-                    attach_url = reverse('plugins:netbox_servicemgmt:generic_attach', kwargs={
+                    attach_url = reverse('plugins:netbox_sm:generic_attach', kwargs={
                         'app_label': content_type.app_label,
                         'model_name': content_type.model,
                         'pk': instance.pk
@@ -253,7 +253,7 @@ class BaseDiagramView(generic.ObjectView):
     Diagram tab View to show mermiad diagram of relationships of object
     """
     
-    template_name = "netbox_servicemgmt/default-diagram.html"  
+    template_name = "netbox_sm/default-diagram.html"  
     
     tab = ViewTab(
         label='Diagram',
