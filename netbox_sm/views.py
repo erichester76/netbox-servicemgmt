@@ -205,6 +205,6 @@ class ClusterDiagramView(base_views.BaseDiagramView):
     
     
 @register_model_view(VirtualMachine, 'solution', path='solution')
-class VMSolutionView(BaseSolutionView):
+class VMSolutionView(base_views.BaseSolutionView):
     template_name = 'netbox_sm/vm_solution_tab.html'
     queryset = VirtualMachine.objects.all()
