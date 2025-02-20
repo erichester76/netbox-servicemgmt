@@ -82,6 +82,11 @@ class FaultTolerenceForm(NetBoxModelForm):
             'storage_replication', 'vm_replication', 'backups', 'backup_schedule', 'offsite_backup', 'airgap_backup'
         )
 
+class FaultTolerenceImportForm(NetBoxModelImportForm):
+    class Meta:
+        model = FaultTolerence
+        fields = '__all__'
+
 class DeploymentForm(NetBoxModelForm):
     deployment_solution = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
     previous_version = DynamicModelChoiceField(queryset=Deployment.objects.all(), required=False)
