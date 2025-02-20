@@ -288,30 +288,38 @@ class BaseDiagramView(generic.ObjectView):
     }
         
 class BaseSolutionView(generic.ObjectView):
+    queryset = models.Solution.objects.all()
     
     tab = ViewTab(
         label='Solution',
         badge=lambda obj: 1,
     )
     
-    def get_queryset(self, request, obj):
+    def get_queryset(self):
         """
-        Filter solutions based on VM name prefix matching solution project_id
+        Get the base queryset - we'll filter in the view
         """
-        if not obj or not hasattr(obj, 'name'):
-            return self.queryset.none()
-            
-        # Get the VM name and extract prefix (assuming first two parts separated by '-')
-        vm_name = obj.name
-        vm_prefix = '-'.join(vm_name.split('-')[:2])  # Gets '5j3-ied' from '5j3-ied-p-app01'
+        return super().get_queryset()
+
+    def get_object(self, request, **kwargs):
+        """
+        Get the VM object from the parent view
+        """
+        return self.model.objects.get(pk=kwargs.get('pk'))
+
+    def get_context(self, request, **kwargs):
+        """
+        Add filtered solutions to context based on VM name prefix
+        """
+        context = super().get_context(request, **kwargs)
+        vm = self.get_object(request, **kwargs)
         
-        # Filter solutions where project_id matches the VM prefix
-        return self.queryset.filter(project_id=vm_prefix)
-    
-    def get_context(self, request, obj):
-        """
-        Add solution data to the context
-        """
-        context = super().get_context(request, obj)
-        context['solutions'] = self.get_queryset(request, obj)
+        if vm and hasattr(vm, 'name'):
+            vm_prefix = '-'.join(vm.name.split('-')[:2])
+            context['solutions'] = self.get_queryset().filter(project_id=vm_prefix)
+        else:
+            context['solutions'] = self.get_queryset().none()
+            
+        context['vm'] = vm
         return context
+
