@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from . import tables 
 from .models import Solution
 from virtualization.models import VirtualMachine
+from django.http import Http404
 
 import re
 
@@ -305,7 +306,7 @@ class BaseSolutionView(generic.ObjectView):
         """Return the base queryset for solutions."""
         return self.queryset
 
-    def get_object(self, request, **kwargs):
+    def get_object(self, request=None, **kwargs):
         """Get the VirtualMachine object based on pk."""
         try:
             return self.model.objects.get(pk=kwargs.get('pk'))
