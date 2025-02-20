@@ -6,7 +6,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
 from .models import Solution
-from dcim.models import VirtualMachine
+from virtualization.models import VirtualMachine
 
 import re
 
@@ -298,7 +298,6 @@ class BaseSolutionView(generic.ObjectView):
         badge=lambda obj: Solution.objects.filter(project_id=obj.name.split('-')[:2]).count()
     )
     
-    # Explicitly set the model for this view
     model = VirtualMachine
 
     def get_queryset(self):
