@@ -192,18 +192,7 @@ class FaultTolerence(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:faulttolerence', kwargs={'pk': self.pk})
 
-# Solution Template Model
-class SolutionBase(
-    BookmarksMixin,
-    ChangeLoggingMixin,
-    CloningMixin,
-    CustomLinksMixin,
-    CustomValidationMixin,
-    ExportTemplatesMixin,
-    JournalingMixin,
-    NotificationsMixin,
-    TagsMixin,
-    EventRulesMixin, models.Model):
+class Solutions(NetBoxModel):
 
     name = models.CharField(max_length=255)
     solution_number = models.CharField(max_length=50, null=True)
@@ -245,9 +234,6 @@ class SolutionBase(
         default=STATUS_INACTIVE,    
     )
     
-class Solution(SolutionBase):
-      
-    # Self-referencing foreign key to track the previous version of the template
     previous_version = models.ForeignKey(
         'self',  # Self-reference to the same model
         on_delete=models.SET_NULL,  # Allow deletion without deleting related records
@@ -268,8 +254,48 @@ class Solution(SolutionBase):
     def get_absolute_url(self):
         return reverse('plugins:netbox_servicemgmt:solution', kwargs={'pk': self.pk})
 
-class Deployment(SolutionBase):
+class Deployment(NetBoxModel):
     
+    name = models.CharField(max_length=255)
+    solution_number = models.CharField(max_length=50, null=True)
+    project_id = models.CharField(max_length=50, null=True) # 4gj-sis
+    
+    description = models.TextField()
+    solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
+    version = models.IntegerField(null=True, blank=True)
+
+    architect = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_design_contact', verbose_name='Architect')
+    requester = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_requester', verbose_name='Requester')
+    
+    business_owner_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_business_owner', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owner', verbose_name='Business Owner Contact')
+    
+    os_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_os_technical_contact', verbose_name='OS Technical Contact Group')  
+    os_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_os_technical_contact', verbose_name='OS Technical Contact')
+    
+    app_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_app_technical_contact', verbose_name='Application Technical Contact Group')
+    app_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_app_technical_contact', verbose_name='Application Technical Contact')
+    
+    incident_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='incident_contact', verbose_name='Incident Contact')
+
+    data_classification = models.CharField(null=True,choices=DATA_CHOICES, verbose_name='Data Classification')
+    compliance_requirements = models.CharField(null=True, blank=True, choices=COMPLIANCE_STANDARDS, verbose_name='Compliance Standards')
+    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.SET_NULL, null=True, related_name='solutions',verbose_name='Fault Tolerence')
+    slos = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='solutions',verbose_name='Service Level Objectives')
+    
+    last_bcdr_test = models.DateField(null=True, blank=True)
+    last_risk_assessment = models.DateField(null=True, blank=True)
+    last_review = models.DateField(null=True, blank=True)
+
+    production_readiness_status = models.CharField(max_length=255, null=True, blank=True)
+    vendor_management_status = models.CharField(max_length=255, null=True, blank=True)
+ 
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,    
+    )
+
     deployment_type = models.CharField(max_length=255, choices=DEPLOYMENT_TYPES, verbose_name='Deployment Type')
     deployment_solution = models.ForeignKey(Solution, on_delete=models.SET_NULL, null=True, related_name='deployments', verbose_name="Solution")
     
@@ -295,8 +321,47 @@ class Deployment(SolutionBase):
         return reverse('plugins:netbox_servicemgmt:deployment', kwargs={'pk': self.pk})
 
     
-class Component(SolutionBase):
+class Component(NetBoxModel):
     
+    name = models.CharField(max_length=255)
+    solution_number = models.CharField(max_length=50, null=True)
+    project_id = models.CharField(max_length=50, null=True) # 4gj-sis
+    
+    description = models.TextField()
+    solution_type = models.CharField(max_length=55, null=True, choices=SOLUTION_CHOICES)
+    version = models.IntegerField(null=True, blank=True)
+
+    architect = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_design_contact', verbose_name='Architect')
+    requester = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True, related_name='solution_requester', verbose_name='Requester')
+    
+    business_owner_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_business_owner', verbose_name='Business Owner Department')
+    business_owner_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_business_owner', verbose_name='Business Owner Contact')
+    
+    os_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_os_technical_contact', verbose_name='OS Technical Contact Group')  
+    os_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_os_technical_contact', verbose_name='OS Technical Contact')
+    
+    app_technical_contact_group = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True,related_name='solution_app_technical_contact', verbose_name='Application Technical Contact Group')
+    app_technical_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='solution_app_technical_contact', verbose_name='Application Technical Contact')
+    
+    incident_contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, null=True,related_name='incident_contact', verbose_name='Incident Contact')
+
+    data_classification = models.CharField(null=True,choices=DATA_CHOICES, verbose_name='Data Classification')
+    compliance_requirements = models.CharField(null=True, blank=True, choices=COMPLIANCE_STANDARDS, verbose_name='Compliance Standards')
+    fault_tolerence = models.ForeignKey(FaultTolerence, on_delete=models.SET_NULL, null=True, related_name='solutions',verbose_name='Fault Tolerence')
+    slos = models.ForeignKey(SLO, on_delete=models.SET_NULL, null=True, related_name='solutions',verbose_name='Service Level Objectives')
+    
+    last_bcdr_test = models.DateField(null=True, blank=True)
+    last_risk_assessment = models.DateField(null=True, blank=True)
+    last_review = models.DateField(null=True, blank=True)
+
+    production_readiness_status = models.CharField(max_length=255, null=True, blank=True)
+    vendor_management_status = models.CharField(max_length=255, null=True, blank=True)
+ 
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,  
+        default=STATUS_INACTIVE,    
+    )
     component_deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Deployment")
     
     # Object type (GenericForeignKey) - allows dynamic references to any object type
