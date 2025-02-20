@@ -297,26 +297,18 @@ class BaseSolutionView(generic.ObjectView):
     tab = ViewTab(
         label='Solution',
         badge=lambda obj: 1,
-        permission='your_app.view_solution',  # Adjust if you have specific permissions
     )
     
-    model = VirtualMachine  # Explicitly define the model
+    model = VirtualMachine  
 
     def get_queryset(self, request=None):
         """Return the base queryset for solutions."""
         return self.queryset
 
-    def get_object(self, request=None, **kwargs):
-        """Get the VirtualMachine object based on pk."""
-        try:
-            return self.model.objects.get(pk=kwargs.get('pk'))
-        except self.model.DoesNotExist:
-            raise Http404("Virtual Machine not found")
-
     def get_context(self, request, **kwargs):
         """Add filtered solutions to context based on VM name prefix."""
         context = super().get_context(request, **kwargs)
-        vm = self.get_object(request, **kwargs)  # Pass request and kwargs explicitly
+        vm = super().get_object(request, **kwargs) 
         
         if vm and hasattr(vm, 'name'):
             vm_prefix = '-'.join(vm.name.split('-')[:2])
