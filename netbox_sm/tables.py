@@ -10,7 +10,7 @@ class SLOTable(NetBoxTable):
     
     class Meta(NetBoxTable.Meta):
         model = SLO
-        fields = ('pk', 'name', 'description', 'rpo', 'rto', 'sev1_response', 'sev2_response', 'sev3_response', 'status', 'last_modified', 'created')
+        fields = "__all__"
         default_columns = ('name', 'rpo', 'rto', 'status')
 
 class FaultTolerenceTable(NetBoxTable):
