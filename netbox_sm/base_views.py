@@ -6,6 +6,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
 from .models import Solution
+from dcim.models import VirtualMachine
 
 import re
 
@@ -294,21 +295,26 @@ class BaseSolutionView(generic.ObjectView):
     
     tab = ViewTab(
         label='Solution',
-        badge=lambda obj: 1,
+        badge=lambda obj: Solution.objects.filter(project_id=obj.name.split('-')[:2]).count()
     )
     
+    # Explicitly set the model for this view
+    model = VirtualMachine
 
+    def get_queryset(self):
+        """Return the base queryset."""
+        return self.queryset
 
     def get_object(self, request, **kwargs):
-        """
-        Get the VM object from the parent view
-        """
-        return self.model.objects.get(pk=kwargs.get('pk'))
+        """Get the VirtualMachine object based on pk."""
+        try:
+            return self.model.objects.get(pk=kwargs.get('pk'))
+        except self.model.DoesNotExist:
+            from django.http import Http404
+            raise Http404("Virtual Machine not found")
 
     def get_context(self, request, **kwargs):
-        """
-        Add filtered solutions to context based on VM name prefix
-        """
+        """Add filtered solutions to context based on VM name prefix."""
         context = super().get_context(request, **kwargs)
         vm = self.get_object(request, **kwargs)
         
