@@ -17,21 +17,29 @@
               <h5>{{ group_name }}</h5>
             </div>
             <div class="card-body">
-              <table class="table table-hover">
-                {% for field in fields %}
+              <table class="table table-hover table-striped table-bordered">
+                <thead>
                   <tr>
-                    <th>{{ field.verbose_name|title }}</th>
-                    <td>
-                      {% if field.has_url and field.value %}
-                        <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
-                      {% elif field.value is None %}
-                        {{ field.value|placeholder }}
-                      {% else %}
-                        {{ field.value|bettertitle|placeholder }}
-                      {% endif %}
-                    </td>
+                    <th class="w-25">Field</th>
+                    <th>Value</th>
                   </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                  {% for field in fields %}
+                    <tr>
+                      <td class="align-middle">{{ field.verbose_name|title }}</td>
+                      <td class="align-middle">
+                        {% if field.has_url and field.value %}
+                          <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
+                        {% elif field.value is None %}
+                          {{ field.value|placeholder }}
+                        {% else %}
+                          {{ field.value|bettertitle|placeholder }}
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
               </table>
             </div>
           </div>
