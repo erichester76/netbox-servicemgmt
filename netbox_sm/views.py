@@ -207,7 +207,8 @@ class ClusterDiagramView(base_views.BaseDiagramView):
 @register_model_view(VirtualMachine, 'solution', path='solution')
 class VMSolutionView(base_views.BaseSolutionView):
     template_name = 'netbox_sm/vm_solution_tab.html'  # You'll need to create this template
-    
+    queryset = models.Solution.objects.all() 
+
     def get_context(self, request, obj):
         """
         Customize context if needed for VM-specific view
