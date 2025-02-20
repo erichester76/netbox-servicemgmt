@@ -304,7 +304,7 @@ class BaseSolutionView(generic.ObjectView):
         """Return the base queryset for solutions."""
         return self.queryset
 
-    def get_object(self, request, **kwargs):
+    def get_object(self, request=None, **kwargs):
         """Get the VirtualMachine object based on pk."""
         try:
             return self.model.objects.get(pk=kwargs.get('pk'))
