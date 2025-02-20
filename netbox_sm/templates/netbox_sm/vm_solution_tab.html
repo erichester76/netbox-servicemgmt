@@ -18,10 +18,12 @@
                 <h5>{{ group_name }}</h5>
               </div>
               <div class="card-body">
-                <div class="row row-cols-1 row-cols-md-2 g-2">
+                <div class="row">
                   {% for field in fields %}
-                    <div class="col d-flex align-items-center">
-                      <span class="label">{{ field.verbose_name|title }}:</span>
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                      <span class="fw-bold text-nowrap me-2" style="min-width: 200px; text-align: right;">
+                        {{ field.verbose_name|title }}:
+                      </span>
                       <span>
                         {% if field.has_url and field.value %}
                           <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
@@ -33,7 +35,7 @@
                       </span>
                     </div>
                     {% if forloop.counter|divisibleby:2 and not forloop.last %}
-                      </div><div class="row row-cols-1 row-cols-md-2 g-2">
+                      </div><div class="row">
                     {% endif %}
                   {% endfor %}
                 </div>
@@ -41,7 +43,7 @@
             </div>
           {% endfor %}
         {% else %}
-          <p class="no-solution">No solution found with project ID matching '{{ vm.name|split:'-'|slice:':2'|join:'-' }}'.</p>
+          <p class="text-muted">No solution found with project ID matching '{{ vm.name|split:'-'|slice:':2'|join:'-' }}'.</p>
         {% endif %}
       </div>
     </div>
