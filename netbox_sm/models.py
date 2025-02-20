@@ -306,6 +306,7 @@ class Component(NetBoxModel):
     )
     component_deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Deployment")
     component_prefix = models.ForeignKey(Prefix, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Prefix")
+    component_vlan = models.ForeignKey(VLAN, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="VLAN")
     component_site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, related_name='components', verbose_name="Site")
     
     # Object type (GenericForeignKey) - allows dynamic references to any object type
