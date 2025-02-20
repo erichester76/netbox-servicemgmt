@@ -21,7 +21,7 @@ class FaultTolerenceTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = FaultTolerence
-        fields = ('pk', 'name', 'description', 'primary_site', 'secondary_site', 'tertiary_site', 'vip_required', 'clustered', 'multi_site', 'multi_region', 'status', 'last_modified', 'created')
+        fields = "__all__"
         default_columns = ('name', 'primary_site', 'vip_required', 'clustered', 'status')
 
 class SolutionTable(NetBoxTable):
@@ -29,7 +29,7 @@ class SolutionTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Solution
-        fields = ('pk', 'name', 'description', 'version', 'solution_type', 'status', 'last_modified', 'created')
+        fields = "__all__"
         default_columns = ('name', 'version', 'solution_type', 'status')
 
 class DeploymentTable(NetBoxTable):
@@ -37,7 +37,7 @@ class DeploymentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Deployment
-        fields = ('pk', 'name', 'description', 'version', 'deployment_solution', 'status', 'last_modified', 'created')
+        fields = "__all__"
         default_columns = ('name', 'version', 'solution', 'status')
 
 class ComponentTable(NetBoxTable):
@@ -45,5 +45,5 @@ class ComponentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Component
-        fields = ('pk', 'name', 'description', 'component_deployment', 'version', 'object_type', 'object_id', 'status', 'last_modified', 'created')
+        fields = "__all__"
         default_columns = ('name', 'version', 'status')
