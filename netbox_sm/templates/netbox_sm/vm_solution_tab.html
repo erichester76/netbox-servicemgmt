@@ -24,7 +24,7 @@
                     <td>
                       {% if field.has_url and field.value %}
                         <a href="{{ field.value.get_absolute_url }}">{{ field.value|bettertitle|placeholder }}</a>
-                      {% elif field.value|length_is:0 or field.value == None %}
+                      {% elif field.value == None %}
                         {{ field.value|placeholder }}
                       {% else %}
                         {{ field.value|bettertitle|placeholder }}
