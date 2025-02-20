@@ -5,6 +5,8 @@ from django.contrib.contenttypes.models import ContentType
 from tenancy.models import Tenant, Contact
 from dcim.models import Site
 from django.urls import reverse
+from netbox.models.features import *
+
 
 # Status choices
 STATUS_INACTIVE = 'inactive'
@@ -191,7 +193,17 @@ class FaultTolerence(NetBoxModel):
         return reverse('plugins:netbox_servicemgmt:faulttolerence', kwargs={'pk': self.pk})
 
 # Solution Template Model
-class SolutionBase(NetBoxModel):
+class SolutionBase(
+    BookmarksMixin,
+    ChangeLoggingMixin,
+    CloningMixin,
+    CustomLinksMixin,
+    CustomValidationMixin,
+    ExportTemplatesMixin,
+    JournalingMixin,
+    NotificationsMixin,
+    TagsMixin,
+    EventRulesMixin, models.Model):
 
     name = models.CharField(max_length=255)
     solution_number = models.CharField(max_length=50, null=True)

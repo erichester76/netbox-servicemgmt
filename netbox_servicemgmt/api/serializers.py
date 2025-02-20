@@ -12,7 +12,6 @@ class FaultTolerenceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SolutionBaseSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = SolutionBase
         fields = [
@@ -37,7 +36,6 @@ class SolutionSerializer(SolutionBaseSerializer):
         fields = SolutionBaseSerializer.Meta.fields + ['previous_version']
 
 class DeploymentSerializer(SolutionBaseSerializer):
-    
     deployment_solution = serializers.PrimaryKeyRelatedField(
         queryset=Solution.objects.all(),
         allow_null=True,
