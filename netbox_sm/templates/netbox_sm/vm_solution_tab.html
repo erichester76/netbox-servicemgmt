@@ -1,0 +1,28 @@
+{% extends "generic/object_detail.html" %}
+
+{% block content %}
+  <h2>Solution for {{ vm.name }}</h2>
+  
+  {% if solutions.exists %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Project ID</th>
+          <th>Solution Details</th>
+          <!-- Add other solution fields as needed -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for solution in solutions %}
+          <tr>
+            <td>{{ solution.project_id }}</td>
+            <td>{{ solution }}</td>
+            <!-- Add other solution fields as needed -->
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No solutions found matching prefix for {{ vm.name }}</p>
+  {% endif %}
+{% endblock %}

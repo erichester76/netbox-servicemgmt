@@ -286,3 +286,33 @@ class BaseDiagramView(generic.ObjectView):
         return {
           'mermaid_source': mermaid_source,
     }
+        
+class BaseSolutionView(generic.ObjectView):
+    queryset = models.Solution.objects.all()
+    
+    tab = ViewTab(
+        label='Solution',
+        badge=lambda obj: 1,
+    )
+    
+    def get_queryset(self, request, obj):
+        """
+        Filter solutions based on VM name prefix matching solution project_id
+        """
+        if not obj or not hasattr(obj, 'name'):
+            return self.queryset.none()
+            
+        # Get the VM name and extract prefix (assuming first two parts separated by '-')
+        vm_name = obj.name
+        vm_prefix = '-'.join(vm_name.split('-')[:2])  # Gets '5j3-ied' from '5j3-ied-p-app01'
+        
+        # Filter solutions where project_id matches the VM prefix
+        return self.queryset.filter(project_id=vm_prefix)
+    
+    def get_context(self, request, obj):
+        """
+        Add solution data to the context
+        """
+        context = super().get_context(request, obj)
+        context['solutions'] = self.get_queryset(request, obj)
+        return context

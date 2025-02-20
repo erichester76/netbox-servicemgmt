@@ -160,6 +160,7 @@ class ComponentBulkImportView(generic.BulkImportView):
 class ComponentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Component
 
+
 @register_model_view(models.Solution)
 class SolutionDetailView(base_views.BaseObjectView):
     queryset = models.Solution.objects.all()
@@ -167,7 +168,6 @@ class SolutionDetailView(base_views.BaseObjectView):
 @register_model_view(models.Solution, 'diagram', path='diagram')
 class SolutionDiagramView(base_views.BaseDiagramView):
     queryset = models.Solution.objects.all()
-
 
 @register_model_view(models.Deployment)
 class DeploymentDetailView(base_views.BaseObjectView):
@@ -180,6 +180,8 @@ class DeploymentDiagramView(base_views.BaseDiagramView):
 @register_model_view(models.Component)
 class ComponentDetailView(base_views.BaseObjectView):
     queryset = models.Component.objects.all()
+
+
 
 @register_model_view(models.Component, 'diagram', path='diagram')
 class ComponentDiagramView(base_views.BaseDiagramView): 
@@ -200,3 +202,16 @@ class VMDiagramView(base_views.BaseDiagramView):
 @register_model_view(Cluster, 'diagram', path='diagram')
 class ClusterDiagramView(base_views.BaseDiagramView):
     queryset = Cluster.objects.all() 
+    
+    
+@register_model_view(VirtualMachine, 'solution', path='solution')
+class VMSolutionView(base_views.BaseSolutionView):
+    template_name = 'netbox_sm/vm_solution_tab.html'  # You'll need to create this template
+    
+    def get_context(self, request, obj):
+        """
+        Customize context if needed for VM-specific view
+        """
+        context = super().get_context(request, obj)
+        context['vm'] = obj
+        return context
