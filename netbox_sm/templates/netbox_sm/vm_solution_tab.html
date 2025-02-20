@@ -1,28 +1,48 @@
-{% extends "generic/object.html" %}
+{% extends 'generic/object.html' %}
+{% load helpers %}
 
 {% block content %}
-  <h2>Solution for {{ vm.name }}</h2>
-  
-  {% if solutions.exists %}
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Project ID</th>
-          <th>Solution Details</th>
-          <!-- Add other solution fields as needed -->
-        </tr>
-      </thead>
-      <tbody>
-        {% for solution in solutions %}
-          <tr>
-            <td>{{ solution.project_id }}</td>
-            <td>{{ solution }}</td>
-            <!-- Add other solution fields as needed -->
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No solutions found matching prefix for {{ vm.name }}</p>
-  {% endif %}
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Solution for {{ vm.name }}</h3>
+      {% if solution %}
+        <div class="card">
+          <div class="card-header">
+            <h4>{{ solution.name }}</h4>
+          </div>
+          <div class="card-body">
+            <table class="table table-hover">
+              <tr>
+                <th>Name</th>
+                <td>{{ solution.name }}</td>
+              </tr>
+              <tr>
+                <th>Solution Number</th>
+                <td>{{ solution.solution_number|placeholder }}</td>
+              </tr>
+              <tr>
+                <th>Project ID</th>
+                <td>{{ solution.project_id|placeholder }}</td>
+              </tr>
+              <tr>
+                <th>Description</th>
+                <td>{{ solution.description|placeholder }}</td>
+              </tr>
+              <tr>
+                <th>Solution Type</th>
+                <td>{{ solution.get_solution_type_display|placeholder }}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{ solution.get_status_display|placeholder }}</td>
+              </tr>
+              <!-- Add more fields as needed -->
+            </table>
+          </div>
+        </div>
+      {% else %}
+        <p>No solution found with project ID matching '{{ vm.name|split:'-'|slice:':2'|join:'-' }}'.</p>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}
