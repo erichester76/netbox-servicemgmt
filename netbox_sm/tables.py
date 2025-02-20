@@ -132,6 +132,7 @@ class ComponentTable(NetBoxTable):
         model = Component
         fields = (
             'pk', 'name', 'description', 'version', 'status', 'component_deployment',
+            'component_vlan', 'component_prefix', 'component_site',
             'content_object', 'previous_version', 'created', 'last_updated'
         )
         default_columns = ('name', 'status', 'component_deployment', 'content_object')

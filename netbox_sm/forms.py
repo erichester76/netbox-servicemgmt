@@ -5,6 +5,7 @@ from .models import SLO, FaultTolerence, Solution, Deployment, Component, \
                    STATUS_CHOICES, SOLUTION_CHOICES, DATA_CHOICES, COMPLIANCE_STANDARDS, DEPLOYMENT_TYPES
 from tenancy.models import Tenant, Contact
 from dcim.models import Site
+from ipam.models import Prefix, VLAN
 from django.contrib.contenttypes.models import ContentType
 from .fields import DynamicObjectChoiceField
 
@@ -89,7 +90,11 @@ class FaultTolerenceImportForm(NetBoxModelImportForm):
 
 class DeploymentForm(NetBoxModelForm):
     deployment_solution = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
+    deployment_prefix = DynamicModelChoiceField(queryset=Prefix.objects.all(), required=False)
+    deployment_vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), required=False)
+    deployment_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
     previous_version = DynamicModelChoiceField(queryset=Deployment.objects.all(), required=False)
+    
 
     class Meta:
         model = Deployment
@@ -103,6 +108,10 @@ class DeploymentImportForm(NetBoxModelImportForm):
         fields = '__all__'
 
 class ComponentForm(NetBoxModelForm):
+    component_prefix = DynamicModelChoiceField(queryset=Prefix.objects.all(), required=False)
+    component_vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), required=False)
+    compionent_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    
     object_type = ContentTypeChoiceField(
         queryset=ContentType.objects.all(),
         required=True,
