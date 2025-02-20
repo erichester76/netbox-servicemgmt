@@ -195,7 +195,7 @@ class FaultTolerence(NetBoxModel):
 class Solution(NetBoxModel):
 
     name = models.CharField(max_length=255)
-    solution_number = models.CharField(max_length=50, null=True, verbose_name='CU-SLA Number')
+    solution_number = models.CharField(max_length=50, null=True, verbose_name='Billing Number')
     project_id = models.CharField(max_length=50, null=True) # 4gj-sis
     
     description = models.TextField()
