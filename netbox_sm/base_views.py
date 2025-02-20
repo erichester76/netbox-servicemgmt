@@ -300,8 +300,8 @@ class BaseSolutionView(generic.ObjectView):
     
     model = VirtualMachine
 
-    def get_queryset(self):
-        """Return the base queryset."""
+    def get_queryset(self, request=None):
+        """Return the base queryset for solutions."""
         return self.queryset
 
     def get_object(self, request, **kwargs):
