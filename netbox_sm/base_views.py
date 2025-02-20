@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
+from .models import Solution
+
 import re
 
 color_map = {
@@ -288,7 +290,7 @@ class BaseDiagramView(generic.ObjectView):
     }
         
 class BaseSolutionView(generic.ObjectView):
-    queryset = models.Solution.objects.all()
+    queryset = Solution.objects.all()
     
     tab = ViewTab(
         label='Solution',
