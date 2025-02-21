@@ -342,7 +342,9 @@ class BaseSolutionView(generic.ObjectView):
                 if deployment_type_char:
                     deployment = Deployment.objects.filter(
                         deployment_solution=solution,
-                        deployment_type=DEPLOYMENT_TYPES(deployment_type_char) 
+                        deployment_type=deployment_type_char 
+                        #deployment_type=DEPLOYMENT_TYPES(deployment_type_char) 
+
                     ).first()
 
                 other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
