@@ -351,7 +351,7 @@ class BaseSolutionView(generic.ObjectView):
                         if field.name in field_names
                     ]
 
-        # related_vms_table = VirtualMachineTable(related_vms)
+        related_vms = VirtualMachineTable(related_vms)
         # related_vms_table.configure(request)
         # other_deployments_table = DeploymentTable(other_deployments)
         # other_deployments_table.configure(request)
