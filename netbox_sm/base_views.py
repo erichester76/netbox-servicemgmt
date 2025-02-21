@@ -11,6 +11,25 @@ from .models import Solution, Deployment
 from .tables import DeploymentTable
 import re
 
+
+DEPLOYMENT_TYPES = [
+    ('p','Production'),
+    ('g','Upgrade'),
+    ('q','Quality Assurance'),
+    ('u','User Acceptance Testing (UAT)'),
+    ('d','Development'),
+    ('s','Staging'),
+    ('y','Prototype'),
+    ('l','Learning/Training'),
+    ('m','(Maintenance) Production Support'),
+    ('n','Non-production'),
+    ('f','Functional'),
+    ('r','Disaster Recovery'),
+    ('c','Secondary/Failover'),
+    ('z','Sandbox'),
+    ('o','Demo'),
+]
+
 color_map = {
             'solutiontemplate': '#16a2b8',  # Darker Teal
             'servicetemplate': '#184990',   # Teal
@@ -323,7 +342,7 @@ class BaseSolutionView(generic.ObjectView):
                 if deployment_type_char:
                     deployment = Deployment.objects.filter(
                         deployment_solution=solution,
-                        deployment_type=deployment_type_char 
+                        deployment_type=DEPLOYMENT_TYPES(deployment_type_char) 
                     ).first()
 
                 other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
@@ -352,9 +371,7 @@ class BaseSolutionView(generic.ObjectView):
                     ]
 
         related_vms = VirtualMachineTable(related_vms)
-        # related_vms_table.configure(request)
-        # other_deployments_table = DeploymentTable(other_deployments)
-        # other_deployments_table.configure(request)
+        other_deployments = DeploymentTable(other_deployments)
 
         return {
             'vm': vm,
