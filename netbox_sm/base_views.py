@@ -305,9 +305,9 @@ class BaseSolutionView(generic.ObjectView):
         grouped_fields = {}
 
         if vm and hasattr(vm, 'name') and vm.name:
-            vm_prefix = '-'.join(vm.name.split('-')[:2]) 
-            vm_full_prefix = vm.name[:9]  
-            deployment_type_char = vm.name[8].lower() if len(vm.name) > 8 else None 
+            vm_prefix = '-'.join(vm.name.split('-')[:2]) # xxx-yyy (xxx=tenant yyy=project)
+            vm_full_prefix = vm.name[:9] # xxx-yyy-z (xxx=tenant yyy=project z=deployment_type)
+            deployment_type_char = vm.name[8].lower() if len(vm.name) > 8 else None # xxx-yyy-z (z= deployment_type)
             related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
 
             try:
