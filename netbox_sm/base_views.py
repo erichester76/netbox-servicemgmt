@@ -305,9 +305,9 @@ class BaseSolutionView(generic.ObjectView):
         grouped_fields = {}
 
         if vm and hasattr(vm, 'name') and vm.name:
-            vm_prefix = '-'.join(vm.name.split('-')[:2])  # e.g., '2bp-nps' from '2bp-nps-app5i'
-            vm_full_prefix = vm.name[:9]  # First 9 characters, e.g., '2bp-nps-app' from '2bp-nps-app5i'
-            deployment_type_char = vm.name[8] if len(vm.name) > 8 else None  # 9th character (0-based index 8)
+            vm_prefix = '-'.join(vm.name.split('-')[:2]) 
+            vm_full_prefix = vm.name[:9]  
+            deployment_type_char = vm.name[8].lower() if len(vm.name) > 8 else None 
 
             try:
                 solution = Solution.objects.get(project_id=vm_prefix)
@@ -317,21 +317,17 @@ class BaseSolutionView(generic.ObjectView):
                 solution = Solution.objects.filter(project_id=vm_prefix).first()
 
             if solution:
-                # Find the Deployment linked to this Solution with matching deployment_type
                 if deployment_type_char:
                     deployment = Deployment.objects.filter(
                         deployment_solution=solution,
-                        deployment_type__startswith=deployment_type_char  # Assuming deployment_type is a single char or prefix
+                        deployment_type=deployment_type_char 
                     ).first()
 
-                # Find other VMs in the same Deployment (based on first 9 chars of name)
                 if deployment:
                     related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
 
-                # Find other Deployments linked to the same Solution
                 other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
 
-                # Group Solution fields as before
                 field_groups = {
                     'General Information': [
                         'name', 'description', 'status'
