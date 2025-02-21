@@ -87,6 +87,27 @@
             </div>
           {% endif %}
 
+          {% if related_vms %}
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5>Related Virtual Machines</h5>
+              </div>
+              <div class="card-body">
+                {% render_table related_vms_table %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if other_deployments %}
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5>Other Deployments</h5>
+              </div>
+              <div class="card-body">
+                {% render_table other_deployments_table %}
+              </div>
+            </div>
+          {% endif %}
           
         {% else %}
           <p class="text-muted">No solution found with project ID matching '{{ vm.name|split:'-'|slice:':2'|join:'-' }}'.</p>
