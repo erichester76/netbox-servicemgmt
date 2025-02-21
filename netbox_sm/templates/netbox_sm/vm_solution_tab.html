@@ -7,8 +7,13 @@
     <div class="row">
       <div class="col-12">
         <h3 class="mb-3">Solution for {{ vm.name }}</h3>
-        
         {% if solution %}
+          <div class="card mb-3">
+            <div class="card-header">
+              <h4>{{ solution.name }}</h4>
+            </div>
+          </div>
+
           {% for group_name, fields in grouped_fields.items %}
             <div class="card mb-3">
               <div class="card-header">
@@ -39,17 +44,6 @@
               </div>
             </div>
           {% endfor %}
-
-          {% if related_vms %}
-            <div class="card mb-3">
-              <div class="card-header">
-                <h5>Related Virtual Machines</h5>
-              </div>
-              <div class="card-body">
-                {% render_table related_vms_table %}
-              </div>
-            </div>
-          {% endif %}
 
           {% if deployment %}
             <div class="card mb-3">
@@ -93,6 +87,17 @@
             </div>
           {% endif %}
 
+          {% if related_vms %}
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5>Related Virtual Machines</h5>
+              </div>
+              <div class="card-body">
+                {% render_table related_vms_table %}
+              </div>
+            </div>
+          {% endif %}
+
           {% if other_deployments %}
             <div class="card mb-3">
               <div class="card-header">
@@ -103,11 +108,6 @@
               </div>
             </div>
           {% endif %}
-
-
-
-
-
         {% else %}
           <p class="text-muted">No solution found with project ID matching '{{ vm.name|split:'-'|slice:':2'|join:'-' }}'.</p>
         {% endif %}
