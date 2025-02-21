@@ -308,6 +308,7 @@ class BaseSolutionView(generic.ObjectView):
             vm_prefix = '-'.join(vm.name.split('-')[:2]) 
             vm_full_prefix = vm.name[:9]  
             deployment_type_char = vm.name[8].lower() if len(vm.name) > 8 else None 
+            related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
 
             try:
                 solution = Solution.objects.get(project_id=vm_prefix)
@@ -322,9 +323,6 @@ class BaseSolutionView(generic.ObjectView):
                         deployment_solution=solution,
                         deployment_type=deployment_type_char 
                     ).first()
-
-                if deployment:
-                    related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
 
                 other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
 
