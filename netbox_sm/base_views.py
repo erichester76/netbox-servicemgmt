@@ -334,18 +334,14 @@ class BaseSolutionView(generic.ObjectView):
                 # Group Solution fields as before
                 field_groups = {
                     'General Information': [
-                        'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version', 'status'
+                        'name', 'description', 'status'
                     ],
                     'Ownership and Contacts': [
-                        'architect', 'requester', 'business_owner_group', 'business_owner_contact', 'incident_contact'
-                    ],
-                    'Technical Contacts': [
+                        'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact'
                         'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
                     ],
                     'Compliance and Resilience': [
                         'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos'
-                    ],
-                    'Reviews and Status': [
                         'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
                     ],
                 }
