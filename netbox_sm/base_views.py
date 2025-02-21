@@ -1,14 +1,11 @@
 from netbox.views import generic
 from django.urls import reverse
 from utilities.views import ViewTab
-from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
-from .models import Solution
-from .tables import SolutionTable
+from .models import Solution,Deployment
 from virtualization.models import VirtualMachine
-from django.http import Http404
 
 import re
 
@@ -295,18 +292,23 @@ class BaseDiagramView(generic.ObjectView):
 class BaseSolutionView(generic.ObjectView):
     model = VirtualMachine
     tab = ViewTab(
-        label='Service Management',
+        label='Solution',
         badge=lambda obj: Solution.objects.filter(project_id='-'.join(obj.name.split('-')[:2])).count() if obj.name else 0,
     )
 
     def get_extra_context(self, request, instance):
-        """Fetch the Solution object and group its fields."""
         vm = instance
         solution = None
+        deployment = None
+        related_vms = []
+        other_deployments = []
         grouped_fields = {}
 
         if vm and hasattr(vm, 'name') and vm.name:
-            vm_prefix = '-'.join(vm.name.split('-')[:2])
+            vm_prefix = '-'.join(vm.name.split('-')[:2])  # e.g., '2bp-nps' from '2bp-nps-app5i'
+            vm_full_prefix = vm.name[:9]  # First 9 characters, e.g., '2bp-nps-app' from '2bp-nps-app5i'
+            deployment_type_char = vm.name[8] if len(vm.name) > 8 else None  # 9th character (0-based index 8)
+
             try:
                 solution = Solution.objects.get(project_id=vm_prefix)
             except Solution.DoesNotExist:
@@ -314,37 +316,57 @@ class BaseSolutionView(generic.ObjectView):
             except Solution.MultipleObjectsReturned:
                 solution = Solution.objects.filter(project_id=vm_prefix).first()
 
-        if solution:
-            # Define field groupings
-            field_groups = {
-                'General Information': [
-                    'name', 'description'
-                ],
-                'Contacts': [
-                    'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact'
-                    'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
-                ],
-                'Compliance and Resilience': [
-                    'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos'
-                    'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
-                ],
-            }
+            if solution:
+                # Find the Deployment linked to this Solution with matching deployment_type
+                if deployment_type_char:
+                    deployment = Deployment.objects.filter(
+                        deployment_solution=solution,
+                        deployment_type__startswith=deployment_type_char  # Assuming deployment_type is a single char or prefix
+                    ).first()
 
-            # Populate grouped fields
-            for group_name, field_names in field_groups.items():
-                grouped_fields[group_name] = [
-                    {
-                        'name': field.name,
-                        'verbose_name': field.verbose_name,
-                        'value': getattr(solution, field.name),
-                        'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
-                    }
-                    for field in solution._meta.fields
-                    if field.name in field_names
-                ]
+                # Find other VMs in the same Deployment (based on first 9 chars of name)
+                if deployment:
+                    related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
+
+                # Find other Deployments linked to the same Solution
+                other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
+
+                # Group Solution fields as before
+                field_groups = {
+                    'General Information': [
+                        'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version', 'status'
+                    ],
+                    'Ownership and Contacts': [
+                        'architect', 'requester', 'business_owner_group', 'business_owner_contact', 'incident_contact'
+                    ],
+                    'Technical Contacts': [
+                        'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
+                    ],
+                    'Compliance and Resilience': [
+                        'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos'
+                    ],
+                    'Reviews and Status': [
+                        'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
+                    ],
+                }
+
+                for group_name, field_names in field_groups.items():
+                    grouped_fields[group_name] = [
+                        {
+                            'name': field.name,
+                            'verbose_name': field.verbose_name,
+                            'value': getattr(solution, field.name),
+                            'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
+                        }
+                        for field in solution._meta.fields
+                        if field.name in field_names
+                    ]
 
         return {
             'vm': vm,
             'solution': solution,
+            'deployment': deployment,
+            'related_vms': related_vms,
+            'other_deployments': other_deployments,
             'grouped_fields': grouped_fields,
         }

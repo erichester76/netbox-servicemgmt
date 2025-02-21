@@ -1,5 +1,6 @@
 {% extends 'generic/object.html' %}
 {% load helpers %}
+{% load render_table from django_tables2 %}
 
 {% block content %}
   <div class="container-fluid">
@@ -12,6 +13,7 @@
               <h4>{{ solution.name }}</h4>
             </div>
           </div>
+
           {% for group_name, fields in grouped_fields.items %}
             <div class="card mb-3">
               <div class="card-header">
@@ -21,7 +23,7 @@
                 <div class="row">
                   {% for field in fields %}
                     <div class="col-md-6 d-flex align-items-center mb-2">
-                      <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
+                      <span class="fw-bold text-nowrap me-2" style="min-width: 200px; text-align: right;">
                         {{ field.verbose_name|title }}:
                       </span>
                       <span>
@@ -42,6 +44,70 @@
               </div>
             </div>
           {% endfor %}
+
+          {% if deployment %}
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5>Deployment</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 200px; text-align: right;">
+                      Name:
+                    </span>
+                    <span>
+                      {% if deployment %}
+                        <a href="{{ deployment.get_absolute_url }}">{{ deployment.name|placeholder }}</a>
+                      {% else %}
+                        {{ ''|placeholder }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 200px; text-align: right;">
+                      Deployment Type:
+                    </span>
+                    <span>{{ deployment.deployment_type|bettertitle|placeholder }}</span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 200px; text-align: right;">
+                      Status:
+                    </span>
+                    <span>{{ deployment.status|bettertitle|placeholder }}</span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 200px; text-align: right;">
+                      Description:
+                    </span>
+                    <span>{{ deployment.description|placeholder }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if related_vms %}
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5>Related Virtual Machines</h5>
+              </div>
+              <div class="card-body">
+                {% render_table related_vms_table %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if other_deployments %}
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5>Other Deployments</h5>
+              </div>
+              <div class="card-body">
+                {% render_table other_deployments_table %}
+              </div>
+            </div>
+          {% endif %}
         {% else %}
           <p class="text-muted">No solution found with project ID matching '{{ vm.name|split:'-'|slice:':2'|join:'-' }}'.</p>
         {% endif %}
