@@ -13,7 +13,6 @@ urlpatterns = [
     path('solutions/<int:pk>/delete/', views.SolutionDeleteView.as_view(), name='solution_delete'),
     path('solutions/bulk-import/', views.SolutionBulkImportView.as_view(), name='solution_bulk_import'),
     path('solutions/<int:pk>/changelog/', views.SolutionChangeLogView.as_view(), name='solution_changelog', kwargs={'model': models.Solution}),
-    path('solutions/<int:pk>/diagram/', views.SolutionDiagramView.as_view(), name='solution_diagram'),
 
     # Service Deployment URLs
     path('deployments/', views.DeploymentListView.as_view(), name='deployment_list'),
@@ -23,7 +22,6 @@ urlpatterns = [
     path('deployments/<int:pk>/delete/', views.DeploymentDeleteView.as_view(), name='deployment_delete'),
     path('deployments/bulk-import/', views.DeploymentBulkImportView.as_view(), name='deployment_bulk_import'),
     path('deployments/<int:pk>/changelog/', views.DeploymentChangeLogView.as_view(), name='deployment_changelog', kwargs={'model': models.Deployment}),
-    path('deployments/<int:pk>/diagram/', views.DeploymentDiagramView.as_view(), name='deployment_diagram'),
 
     # Service Component URLs
     path('components/', views.ComponentListView.as_view(), name='component_list'),

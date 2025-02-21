@@ -295,7 +295,7 @@ class BaseDiagramView(generic.ObjectView):
 class BaseSolutionView(generic.ObjectView):
     model = VirtualMachine
     tab = ViewTab(
-        label='Solution',
+        label='Service Management',
         badge=lambda obj: Solution.objects.filter(project_id='-'.join(obj.name.split('-')[:2])).count() if obj.name else 0,
     )
 
@@ -318,18 +318,14 @@ class BaseSolutionView(generic.ObjectView):
             # Define field groupings
             field_groups = {
                 'General Information': [
-                    'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version', 'status'
+                    'name', 'description'
                 ],
-                'Ownership and Contacts': [
-                    'architect', 'requester', 'business_owner_group', 'business_owner_contact', 'incident_contact'
-                ],
-                'Technical Contacts': [
+                'Contacts': [
+                    'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact'
                     'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
                 ],
                 'Compliance and Resilience': [
                     'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos'
-                ],
-                'Reviews and Status': [
                     'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
                 ],
             }
