@@ -76,11 +76,15 @@ class SLOBulkImportView(generic.BulkImportView):
 class SLOChangeLogView(base_views.BaseChangeLogView):
     base_model = models.SLO
 
-# Solution Template Views
+
+# Solution Views
 class SolutionListView(generic.ObjectListView):
     queryset = models.Solution.objects.all()
     table = tables.SolutionTable
 
+#@register_model_view(models.Solution)
+class SolutionDetailView(base_views.BaseObjectView):
+    queryset = models.Solution.objects.all()
 
 class SolutionEditView(generic.ObjectEditView):
     queryset = models.Solution.objects.all()
@@ -97,7 +101,7 @@ class SolutionChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Solution
 
 
-# Solution Request Views
+# FaultTolerence Views
 class FaultTolerenceListView(generic.ObjectListView):
     queryset = models.FaultTolerence.objects.all()
     table = tables.FaultTolerenceTable
@@ -119,11 +123,14 @@ class FaultTolerenceBulkImportView(generic.BulkImportView):
 class FaultTolerenceChangeLogView(base_views.BaseChangeLogView):
     base_model = models.FaultTolerence
 
-# Service Deployment Views
+# Deployment Views
 class DeploymentListView(generic.ObjectListView):
     queryset = models.Deployment.objects.all()
     table = tables.DeploymentTable
 
+#@register_model_view(models.Deployment)
+class DeploymentDetailView(base_views.BaseObjectView):
+    queryset = models.Deployment.objects.all()
 
 class DeploymentEditView(generic.ObjectEditView):
     queryset = models.Deployment.objects.all()
@@ -139,12 +146,14 @@ class DeploymentBulkImportView(generic.BulkImportView):
 class DeploymentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Deployment
 
-# Service Component Views
+# Component Views
 class ComponentListView(generic.ObjectListView):
     queryset = models.Component.objects.all()
     table = tables.ComponentTable
-    
 
+#@register_model_view(models.Component)
+class ComponentDetailView(base_views.BaseObjectView):
+    queryset = models.Component.objects.all()
 
 class ComponentEditView(generic.ObjectEditView):
     queryset = models.Component.objects.all()
@@ -160,51 +169,37 @@ class ComponentBulkImportView(generic.BulkImportView):
 class ComponentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Component
 
-
-@register_model_view(models.Solution)
-class SolutionDetailView(base_views.BaseObjectView):
-    queryset = models.Solution.objects.all()
-
-@register_model_view(models.Solution, 'diagram', path='diagram')
-class SolutionDiagramView(base_views.BaseDiagramView):
-    queryset = models.Solution.objects.all()
-
-@register_model_view(models.Deployment)
-class DeploymentDetailView(base_views.BaseObjectView):
-    queryset = models.Deployment.objects.all()
-
-@register_model_view(models.Deployment, 'diagram', path='diagram')
-class DeploymentDiagramView(base_views.BaseDiagramView):
-    queryset = models.Deployment.objects.all()
-
-@register_model_view(models.Component)
-class ComponentDetailView(base_views.BaseObjectView):
-    queryset = models.Component.objects.all()
-
-
-
-@register_model_view(models.Component, 'diagram', path='diagram')
-class ComponentDiagramView(base_views.BaseDiagramView): 
-    queryset = models.Component.objects.all()
-
-@register_model_view(Region, 'diagram', path='diagram')
-class RegionDiagramView(base_views.BaseDiagramView): 
-    queryset = Region.objects.all()   
-        
-@register_model_view(Device, 'diagram', path='diagram')
-class DeviceDiagramView(base_views.BaseDiagramView): 
-    queryset = Device.objects.all()
-
-@register_model_view(VirtualMachine, 'diagram', path='diagram')
-class VMDiagramView(base_views.BaseDiagramView):
-    queryset = VirtualMachine.objects.all()     
-    
-@register_model_view(Cluster, 'diagram', path='diagram')
-class ClusterDiagramView(base_views.BaseDiagramView):
-    queryset = Cluster.objects.all() 
-    
-    
 @register_model_view(VirtualMachine, 'solution', path='solution')
 class VMSolutionView(base_views.BaseSolutionView):
     template_name = 'netbox_sm/vm_solution_tab.html'
     queryset = VirtualMachine.objects.all()
+
+# @register_model_view(models.Solution, 'diagram', path='diagram')
+# class SolutionDiagramView(base_views.BaseDiagramView):
+#     queryset = models.Solution.objects.all()
+
+# @register_model_view(models.Deployment, 'dia
+#                      gram', path='diagram')
+# class DeploymentDiagramView(base_views.BaseDiagramView):
+#     queryset = models.Deployment.objects.all()
+
+# @register_model_view(models.Component, 'diagram', path='diagram')
+# class ComponentDiagramView(base_views.BaseDiagramView): 
+#     queryset = models.Component.objects.all()
+
+# @register_model_view(Region, 'diagram', path='diagram')
+# class RegionDiagramView(base_views.BaseDiagramView): 
+#     queryset = Region.objects.all()   
+        
+# @register_model_view(Device, 'diagram', path='diagram')
+# class DeviceDiagramView(base_views.BaseDiagramView): 
+#     queryset = Device.objects.all()
+
+# @register_model_view(VirtualMachine, 'diagram', path='diagram')
+# class VMDiagramView(base_views.BaseDiagramView):
+#     queryset = VirtualMachine.objects.all()     
+    
+# @register_model_view(Cluster, 'diagram', path='diagram')
+# class ClusterDiagramView(base_views.BaseDiagramView):
+#     queryset = Cluster.objects.all() 
+   

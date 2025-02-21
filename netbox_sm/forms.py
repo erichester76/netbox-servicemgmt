@@ -36,18 +36,18 @@ class SLOImportForm(NetBoxModelImportForm):
         fields = '__all__'
 
 class SolutionForm(NetBoxModelForm):
-    architect = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
-    requester = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
-    business_owner_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
-    business_owner_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
-    os_technical_contact_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
-    os_technical_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
-    app_technical_contact_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
-    app_technical_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
-    incident_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
-    fault_tolerence = DynamicModelChoiceField(queryset=FaultTolerence.objects.all(), required=False)
-    slos = DynamicModelChoiceField(queryset=SLO.objects.all(), required=False)
-    previous_version = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
+    # architect = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    # requester = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    # business_owner_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
+    # business_owner_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    # os_technical_contact_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
+    # os_technical_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    # app_technical_contact_group = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
+    # app_technical_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    # incident_contact = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    # fault_tolerence = DynamicModelChoiceField(queryset=FaultTolerence.objects.all(), required=False)
+    # slos = DynamicModelChoiceField(queryset=SLO.objects.all(), required=False)
+    # previous_version = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
 
     class Meta:
         model = Solution
@@ -71,9 +71,9 @@ class SolutionImportForm(NetBoxModelImportForm):
         fields = '__all__'
 
 class FaultTolerenceForm(NetBoxModelForm):
-    primary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
-    secondary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
-    tertiary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    # primary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    # secondary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    # tertiary_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
 
     class Meta:
         model = FaultTolerence
@@ -89,13 +89,13 @@ class FaultTolerenceImportForm(NetBoxModelImportForm):
         fields = '__all__'
 
 class DeploymentForm(NetBoxModelForm):
-    deployment_solution = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
-    deployment_prefix = DynamicModelChoiceField(queryset=Prefix.objects.all(), required=False)
-    deployment_vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), required=False)
-    deployment_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
-    previous_version = DynamicModelChoiceField(queryset=Deployment.objects.all(), required=False)
     
-
+    # deployment_solution = DynamicModelChoiceField(queryset=Solution.objects.all(), required=False)
+    # deployment_prefix = DynamicModelChoiceField(queryset=Prefix.objects.all(), required=False)
+    # deployment_vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), required=False)
+    # deployment_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    # previous_version = DynamicModelChoiceField(queryset=Deployment.objects.all(), required=False)
+    
     class Meta:
         model = Deployment
         fields = ('name', 'description', 'version', 'status', 'deployment_type', 'deployment_solution', 
@@ -108,9 +108,9 @@ class DeploymentImportForm(NetBoxModelImportForm):
         fields = '__all__'
 
 class ComponentForm(NetBoxModelForm):
-    component_prefix = DynamicModelChoiceField(queryset=Prefix.objects.all(), required=False)
-    component_vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), required=False)
-    compionent_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
+    # component_prefix = DynamicModelChoiceField(queryset=Prefix.objects.all(), required=False)
+    # component_vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), required=False)
+    # compionent_site = DynamicModelChoiceField(queryset=Site.objects.all(), required=False)
     
     object_type = ContentTypeChoiceField(
         queryset=ContentType.objects.all(),
