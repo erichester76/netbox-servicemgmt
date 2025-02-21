@@ -300,14 +300,14 @@ class BaseSolutionView(generic.ObjectView):
         vm = instance
         solution = None
         deployment = None
-        related_vms = []
-        other_deployments = []
+        related_vms = VirtualMachine.objects.none()  # Default empty queryset
+        other_deployments = Deployment.objects.none()  # Default empty queryset
         grouped_fields = {}
 
         if vm and hasattr(vm, 'name') and vm.name:
-            vm_prefix = '-'.join(vm.name.split('-')[:2]) # xxx-yyy (xxx=tenant yyy=project)
-            vm_full_prefix = vm.name[:9] # xxx-yyy-z (xxx=tenant yyy=project z=deployment_type)
-            deployment_type_char = vm.name[8].lower() if len(vm.name) > 8 else None # xxx-yyy-z (z= deployment_type)
+            vm_prefix = '-'.join(vm.name.split('-')[:2])
+            vm_full_prefix = vm.name[:9]
+            deployment_type_char = vm.name[8].lower() if len(vm.name) > 8 else None
             related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
 
             try:
@@ -327,15 +327,12 @@ class BaseSolutionView(generic.ObjectView):
                 other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
 
                 field_groups = {
-                    'General Information': [
-                        'name', 'description', 'status'
-                    ],
                     'Ownership and Contacts': [
-                        'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact'
+                        'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact',
                         'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
                     ],
                     'Compliance and Resilience': [
-                        'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos'
+                        'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos',
                         'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
                     ],
                 }
@@ -356,7 +353,7 @@ class BaseSolutionView(generic.ObjectView):
             'vm': vm,
             'solution': solution,
             'deployment': deployment,
-            'related_vms': related_vms,
-            'other_deployments': other_deployments,
+            'related_vms_table': related_vms,
+            'other_deployments_table': other_deployments,
             'grouped_fields': grouped_fields,
         }
