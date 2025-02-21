@@ -5,8 +5,10 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
 from .models import Solution,Deployment
-from virtualization.models import VirtualMachine
-
+from virtualization.models import VirtualMachine 
+from virtualization.tables import VirtualMachineTable  
+from .models import Solution, Deployment
+from .tables import DeploymentTable
 import re
 
 color_map = {
@@ -349,11 +351,16 @@ class BaseSolutionView(generic.ObjectView):
                         if field.name in field_names
                     ]
 
+        related_vms_table = VirtualMachineTable(related_vms)
+        related_vms_table.configure(request)
+        other_deployments_table = DeploymentTable(other_deployments)
+        other_deployments_table.configure(request)
+
         return {
             'vm': vm,
             'solution': solution,
             'deployment': deployment,
-            'related_vms_table': related_vms,
-            'other_deployments_table': other_deployments,
+            'related_vms_table': related_vms_table,
+            'other_deployments_table': other_deployments_table,
             'grouped_fields': grouped_fields,
         }
