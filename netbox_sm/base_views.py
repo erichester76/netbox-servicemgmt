@@ -360,7 +360,7 @@ class BaseSolutionView(generic.ObjectView):
             'vm': vm,
             'solution': solution,
             'deployment': deployment,
-            'related_vms_table': related_vms,
-            'other_deployments_table': other_deployments,
+            'related_vms': related_vms,
+            'other_deployments': other_deployments,
             'grouped_fields': grouped_fields,
         }
