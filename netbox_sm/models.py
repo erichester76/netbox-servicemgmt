@@ -140,9 +140,9 @@ class SLO(NetBoxModel):
     rpo = models.IntegerField(help_text="Recovery Point Objective in hours", verbose_name='RPO (hours)')
     rto = models.IntegerField(help_text="Recovery Time Objective in hours", verbose_name='RTO (hours)')
 
-    sev1_response = models.IntegerField(help_text="Severity 1 Response Time in minutes",null=True, blank=True, verbose_name='Severity 1 Respone Time (minutes)')
-    sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes",null=True, blank=True, verbose_name='Severity 2 Respone Time (minutes)')
-    sev3_response = models.IntegerField(help_text="Severity 3 Response Time in minutes",null=True, blank=True, verbose_name='Severity 3 Respone Time (minutes)')
+    sev1_response = models.IntegerField(help_text="Severity 1 Response Time in minutes",null=True, blank=True, verbose_name='Severity 1 Response Time (minutes)')
+    sev2_response = models.IntegerField(help_text="Severity 2 Response Time in minutes",null=True, blank=True, verbose_name='Severity 2 Response Time (minutes)')
+    sev3_response = models.IntegerField(help_text="Severity 3 Response Time in minutes",null=True, blank=True, verbose_name='Severity 3 Response Time (minutes)')
 
     class Meta:
         ordering = ['name']
