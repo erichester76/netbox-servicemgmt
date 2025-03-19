@@ -22,9 +22,12 @@ class DeploymentSerializer(serializers.ModelSerializer):
         model = Deployment
         fields = '__all__'
 
-
 class ComponentSerializer(serializers.ModelSerializer):
     content_object = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Component
+        fields = '__all__'
     
     def get_content_object(self, obj):
         if obj.content_object:
