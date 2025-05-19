@@ -467,6 +467,10 @@ class BaseDeviceSolutionView(generic.ObjectView):
                 other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
 
                 field_groups = {
+                    'Solution Details': [
+                        'name', 'solution_number', 'project_id', 'description', 'solution_type', 'version',
+                        'status', 'previous_version'
+                    ],
                     'Ownership and Contacts': [
                         'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact',
                         'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
