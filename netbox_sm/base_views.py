@@ -395,8 +395,8 @@ class BaseVMSolutionView(generic.ObjectView):
                     ]
 
         # Configure tables with limited fields
-        related_vms = VirtualMachineTable(related_vms, columns=['name', 'status', 'site'])
-        related_devices = DeviceTable(related_devices, columns=['name', 'status', 'site'])
+        related_vms = VirtualMachineTable(related_vms)
+        related_devices = DeviceTable(related_devices)
         other_deployments = DeploymentTable(other_deployments)
 
         return {
@@ -490,8 +490,8 @@ class BaseDeviceSolutionView(generic.ObjectView):
                     ]
 
         # Configure tables with limited fields
-        related_vms = VirtualMachineTable(related_vms, columns=['name', 'status', 'site'])
-        related_devices = DeviceTable(related_devices, columns=['name', 'status', 'site'])
+        related_vms = VirtualMachineTable(related_vms)
+        related_devices = DeviceTable(related_devices)
         other_deployments = DeploymentTable(other_deployments)
 
         return {
