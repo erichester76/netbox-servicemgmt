@@ -394,10 +394,10 @@ class BaseVMSolutionView(generic.ObjectView):
                         if field.name in field_names
                     ]
 
-        # Configure tables with limited fields
-        related_vms = VirtualMachineTable(related_vms)
-        related_devices = DeviceTable(related_devices)
-        other_deployments = DeploymentTable(other_deployments)
+        # # Configure tables with limited fields
+        # related_vms = VirtualMachineTable(related_vms)
+        # related_devices = DeviceTable(related_devices)
+        # other_deployments = DeploymentTable(other_deployments)
 
         return {
             'vm': vm,
@@ -489,10 +489,10 @@ class BaseDeviceSolutionView(generic.ObjectView):
                         if field.name in field_names
                     ]
 
-        # Configure tables with limited fields
-        related_vms = VirtualMachineTable(related_vms)
-        related_devices = DeviceTable(related_devices)
-        other_deployments = DeploymentTable(other_deployments)
+        # # Configure tables with limited fields
+        # related_vms = VirtualMachineTable(related_vms)
+        # related_devices = DeviceTable(related_devices)
+        # other_deployments = DeploymentTable(other_deployments)
 
         return {
             'device': device,

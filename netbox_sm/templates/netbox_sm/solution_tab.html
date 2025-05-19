@@ -85,17 +85,25 @@
             </div>
           {% endif %}
 
-          {% if related_vms %}
+           
+         {% if related_vms.data or related_devices.data %}
             <div class="card mb-3">
               <div class="card-header">
                 <h5>Related Assets</h5>
               </div>
               <div class="card-body">
-                {% render_table related_vms %}
-                {% render_table related_devices %}
+                {% if related_vms.data %}
+                  <h6>Virtual Machines</h6>
+                  {% render_table related_vms %}
+                {% endif %}
+                {% if related_devices.data %}
+                  <h6>Devices</h6>
+                  {% render_table related_devices %}
+                {% endif %}
               </div>
             </div>
           {% endif %}
+
 
           {% if other_deployments %}
             <div class="card mb-3">
