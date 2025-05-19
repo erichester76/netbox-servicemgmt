@@ -170,12 +170,12 @@ class ComponentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Component
 
 @register_model_view(Device, 'solution', path='solution')
-class DeviceSolutionView(base_views.BaseVMSolutionView):
+class DeviceSolutionView(base_views.BaseDeviceSolutionView):
     template_name = 'netbox_sm/solution_tab.html'
-    queryset = VirtualMachine.objects.all()
+    queryset = Device.objects.all()
 
 @register_model_view(VirtualMachine, 'solution', path='solution')
-class VMSolutionView(base_views.BaseDeviceSolutionView):
+class VMSolutionView(base_views.BaseVMSolutionView):
     template_name = 'netbox_sm/solution_tab.html'
     queryset = VirtualMachine.objects.all()
 

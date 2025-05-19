@@ -411,7 +411,7 @@ class BaseVMSolutionView(generic.ObjectView):
             'grouped_fields': grouped_fields,
         }
 
-class DeviceDeviceSolutionView(generic.ObjectView):
+class BaseDeviceSolutionView(generic.ObjectView):
     model = Device
     tab = ViewTab(
         label='Solution',
