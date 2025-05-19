@@ -55,18 +55,20 @@
                       Name:
                     </span>
                     <span>
-                      {% if deployment %}
-                        <a href="{{ deployment.get_absolute_url }}">{{ deployment.name|placeholder }}</a>
-                      {% else %}
-                        {{ ''|placeholder }}
-                      {% endif %}
+                      <a href="{{ deployment.get_absolute_url }}">{{ deployment.name|placeholder }}</a>
                     </span>
                   </div>
                   <div class="col-md-6 d-flex align-items-center mb-2">
                     <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
-                      Deployment Type:
+                      Description:
                     </span>
-                    <span>{{ deployment.deployment_type|bettertitle|placeholder }}</span>
+                    <span>{{ deployment.description|placeholder }}</span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
+                      Version:
+                    </span>
+                    <span>{{ deployment.version|placeholder }}</span>
                   </div>
                   <div class="col-md-6 d-flex align-items-center mb-2">
                     <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
@@ -76,9 +78,69 @@
                   </div>
                   <div class="col-md-6 d-flex align-items-center mb-2">
                     <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
-                      Description:
+                      Deployment Type:
                     </span>
-                    <span>{{ deployment.description|placeholder }}</span>
+                    <span>{{ deployment.deployment_type|bettertitle|placeholder }}</span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
+                      Solution:
+                    </span>
+                    <span>
+                      {% if deployment.deployment_solution %}
+                        <a href="{{ deployment.deployment_solution.get_absolute_url }}">{{ deployment.deployment_solution|bettertitle|placeholder }}</a>
+                      {% else %}
+                        {{ ''|placeholder }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
+                      VLAN:
+                    </span>
+                    <span>
+                      {% if deployment.deployment_vlan %}
+                        <a href="{{ deployment.deployment_vlan.get_absolute_url }}">{{ deployment.deployment_vlan|bettertitle|placeholder }}</a>
+                      {% else %}
+                        {{ ''|placeholder }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
+                      Prefix:
+                    </span>
+                    <span>
+                      {% if deployment.deployment_prefix %}
+                        <a href="{{ deployment.deployment_prefix.get_absolute_url }}">{{ deployment.deployment_prefix|bettertitle|placeholder }}</a>
+                      {% else %}
+                        {{ ''|placeholder }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
+                      Site:
+                    </span>
+                    <span>
+                      {% if deployment.deployment_site %}
+                        <a href="{{ deployment.deployment_site.get_absolute_url }}">{{ deployment.deployment_site|bettertitle|placeholder }}</a>
+                      {% else %}
+                        {{ ''|placeholder }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-center mb-2">
+                    <span class="fw-bold text-nowrap me-2" style="min-width: 250px; text-align: left;">
+                      Previous Version:
+                    </span>
+                    <span>
+                      {% if deployment.previous_version %}
+                        <a href="{{ deployment.previous_version.get_absolute_url }}">{{ deployment.previous_version|bettertitle|placeholder }}</a>
+                      {% else %}
+                        {{ ''|placeholder }}
+                      {% endif %}
+                    </span>
                   </div>
                 </div>
               </div>
