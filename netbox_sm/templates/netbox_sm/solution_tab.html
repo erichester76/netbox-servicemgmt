@@ -9,9 +9,7 @@
         <h3 class="mb-3">Solution for {{ vm.name }}</h3>
         {% if solution %}
           <div class="card mb-3">
-            <div class="card-header">
-              <h4>{{ solution.name }} ({{solution.solution_number}})</h4>
-            </div>
+          <h4>{{ solution.name }} ({{solution.solution_number}})</h4>
           </div>
 
           {% for group_name, fields in grouped_fields.items %}

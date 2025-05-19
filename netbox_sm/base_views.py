@@ -312,7 +312,8 @@ class BaseDiagramView(generic.ObjectView):
         return {
           'mermaid_source': mermaid_source,
     }
-        
+
+
 class BaseVMSolutionView(generic.ObjectView):
     model = VirtualMachine
     tab = ViewTab(
@@ -352,19 +353,15 @@ class BaseVMSolutionView(generic.ObjectView):
                         deployment_type=deployment_type_char
                     ).first()
 
-                # Query related VMs and Devices by name prefix
+                # Query related VMs and Devices by name prefix and components
                 related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
                 related_devices = Device.objects.filter(name__startswith=vm_full_prefix)
 
                 if deployment:
-                    # Query components associated with the deployment
                     components = Component.objects.filter(component_deployment=deployment)
-                    
-                    # Get related VMs and Devices via components
                     component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
                     component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
                     
-                    # Combine name-based and component-based queries
                     related_vms = VirtualMachine.objects.filter(
                         Q(id__in=component_vm_ids) | Q(name__startswith=vm_full_prefix)
                     ).distinct()
@@ -397,8 +394,9 @@ class BaseVMSolutionView(generic.ObjectView):
                         if field.name in field_names
                     ]
 
-        related_vms = VirtualMachineTable(related_vms)
-        related_devices = DeviceTable(related_devices)
+        # Configure tables with limited fields
+        related_vms = VirtualMachineTable(related_vms, columns=['name', 'status', 'site'])
+        related_devices = DeviceTable(related_devices, columns=['name', 'status', 'site'])
         other_deployments = DeploymentTable(other_deployments)
 
         return {
@@ -450,19 +448,15 @@ class BaseDeviceSolutionView(generic.ObjectView):
                         deployment_type=deployment_type_char
                     ).first()
 
-                # Query related VMs and Devices by name prefix
+                # Query related VMs and Devices by name prefix and components
                 related_vms = VirtualMachine.objects.filter(name__startswith=device_full_prefix)
                 related_devices = Device.objects.filter(name__startswith=device_full_prefix)
 
                 if deployment:
-                    # Query components associated with the deployment
                     components = Component.objects.filter(component_deployment=deployment)
-                    
-                    # Get related VMs and Devices via components
                     component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
                     component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
                     
-                    # Combine name-based and component-based queries
                     related_vms = VirtualMachine.objects.filter(
                         Q(id__in=component_vm_ids) | Q(name__startswith=device_full_prefix)
                     ).distinct()
@@ -495,8 +489,9 @@ class BaseDeviceSolutionView(generic.ObjectView):
                         if field.name in field_names
                     ]
 
-        related_vms = VirtualMachineTable(related_vms)
-        related_devices = DeviceTable(related_devices)
+        # Configure tables with limited fields
+        related_vms = VirtualMachineTable(related_vms, columns=['name', 'status', 'site'])
+        related_devices = DeviceTable(related_devices, columns=['name', 'status', 'site'])
         other_deployments = DeploymentTable(other_deployments)
 
         return {
