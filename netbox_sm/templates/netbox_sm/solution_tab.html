@@ -94,11 +94,11 @@
               <div class="card-body">
                 {% if related_vms.data %}
                   <h6>Virtual Machines</h6>
-                  {% render_table related_vms exclude="id,created,modified,tenant,vcpus,memory,disk,comments" %}
+                  {% render_table related_vms %}
                 {% endif %}
                 {% if related_devices.data %}
                   <h6>Devices</h6>
-                  {% render_table related_devices exclude="id,created,modified,tenant,rack,position,face,comments" %}
+                  {% render_table related_devices %}
                 {% endif %}
               </div>
             </div>
