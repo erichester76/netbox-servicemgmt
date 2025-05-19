@@ -86,7 +86,7 @@
           {% endif %}
 
            
-         {% if related_vms.data or related_devices.data %}
+          {% if related_vms.data or related_devices.data %}
             <div class="card mb-3">
               <div class="card-header">
                 <h5>Related Assets</h5>
@@ -94,11 +94,11 @@
               <div class="card-body">
                 {% if related_vms.data %}
                   <h6>Virtual Machines</h6>
-                  {% render_table related_vms %}
+                  {% render_table related_vms exclude="id,created,modified,cluster,tenant,platform,vcpus,memory,disk,comments,primary_ip,primary_ip4,primary_ip6" %}
                 {% endif %}
                 {% if related_devices.data %}
                   <h6>Devices</h6>
-                  {% render_table related_devices %}
+                  {% render_table related_devices exclude="id,created,modified,device_type,device_role,tenant,rack,position,face,comments,primary_ip,primary_ip4,primary_ip6,serial" %}
                 {% endif %}
               </div>
             </div>
