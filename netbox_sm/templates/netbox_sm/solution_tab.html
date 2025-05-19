@@ -90,10 +90,11 @@
           {% if related_vms %}
             <div class="card mb-3">
               <div class="card-header">
-                <h5>Related Virtual Machines</h5>
+                <h5>Related Assets</h5>
               </div>
               <div class="card-body">
                 {% render_table related_vms %}
+                {% render_table related_devices %}
               </div>
             </div>
           {% endif %}

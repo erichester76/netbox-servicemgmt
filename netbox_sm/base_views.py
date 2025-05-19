@@ -4,9 +4,12 @@ from utilities.views import ViewTab
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from . import tables 
-from .models import Solution,Deployment
+from .models import Solution,Deployment,Component
+from django.db.models import Q
 from virtualization.models import VirtualMachine 
 from virtualization.tables import VirtualMachineTable  
+from dcim.models import Device
+from dcim.tables import DeviceTable
 from .models import Solution, Deployment
 from .tables import DeploymentTable
 import re
@@ -310,7 +313,7 @@ class BaseDiagramView(generic.ObjectView):
           'mermaid_source': mermaid_source,
     }
         
-class BaseSolutionView(generic.ObjectView):
+class BaseVMSolutionView(generic.ObjectView):
     model = VirtualMachine
     tab = ViewTab(
         label='Solution',
@@ -321,15 +324,19 @@ class BaseSolutionView(generic.ObjectView):
         vm = instance
         solution = None
         deployment = None
-        related_vms = VirtualMachine.objects.none()  # Default empty queryset
-        other_deployments = Deployment.objects.none()  # Default empty queryset
+        related_vms = VirtualMachine.objects.none()
+        related_devices = Device.objects.none()
+        other_deployments = Deployment.objects.none()
         grouped_fields = {}
 
         if vm and hasattr(vm, 'name') and vm.name:
             vm_prefix = '-'.join(vm.name.split('-')[:2])
             vm_full_prefix = vm.name[:9]
             deployment_type_char = vm.name[8].lower() if len(vm.name) > 8 else None
-            related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
+            
+            # Get content types for Device and VirtualMachine
+            vm_content_type = ContentType.objects.get_for_model(VirtualMachine)
+            device_content_type = ContentType.objects.get_for_model(Device)
 
             try:
                 solution = Solution.objects.get(project_id=vm_prefix)
@@ -342,10 +349,28 @@ class BaseSolutionView(generic.ObjectView):
                 if deployment_type_char:
                     deployment = Deployment.objects.filter(
                         deployment_solution=solution,
-                        deployment_type=deployment_type_char 
-                        #deployment_type=DEPLOYMENT_TYPES(deployment_type_char) 
-
+                        deployment_type=deployment_type_char
                     ).first()
+
+                # Query related VMs and Devices by name prefix
+                related_vms = VirtualMachine.objects.filter(name__startswith=vm_full_prefix)
+                related_devices = Device.objects.filter(name__startswith=vm_full_prefix)
+
+                if deployment:
+                    # Query components associated with the deployment
+                    components = Component.objects.filter(component_deployment=deployment)
+                    
+                    # Get related VMs and Devices via components
+                    component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
+                    component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
+                    
+                    # Combine name-based and component-based queries
+                    related_vms = VirtualMachine.objects.filter(
+                        Q(id__in=component_vm_ids) | Q(name__startswith=vm_full_prefix)
+                    ).distinct()
+                    related_devices = Device.objects.filter(
+                        Q(id__in=component_device_ids) | Q(name__startswith=vm_full_prefix)
+                    ).distinct()
 
                 other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
 
@@ -373,6 +398,7 @@ class BaseSolutionView(generic.ObjectView):
                     ]
 
         related_vms = VirtualMachineTable(related_vms)
+        related_devices = DeviceTable(related_devices)
         other_deployments = DeploymentTable(other_deployments)
 
         return {
@@ -380,6 +406,105 @@ class BaseSolutionView(generic.ObjectView):
             'solution': solution,
             'deployment': deployment,
             'related_vms': related_vms,
+            'related_devices': related_devices,
+            'other_deployments': other_deployments,
+            'grouped_fields': grouped_fields,
+        }
+
+class DeviceDeviceSolutionView(generic.ObjectView):
+    model = Device
+    tab = ViewTab(
+        label='Solution',
+        badge=lambda obj: Solution.objects.filter(project_id='-'.join(obj.name.split('-')[:2])).count() if obj.name else 0,
+    )
+
+    def get_extra_context(self, request, instance):
+        device = instance
+        solution = None
+        deployment = None
+        related_vms = VirtualMachine.objects.none()
+        related_devices = Device.objects.none()
+        other_deployments = Deployment.objects.none()
+        grouped_fields = {}
+
+        if device and hasattr(device, 'name') and device.name:
+            device_prefix = '-'.join(device.name.split('-')[:2])
+            device_full_prefix = device.name[:9]
+            deployment_type_char = device.name[8].lower() if len(device.name) > 8 else None
+            
+            # Get content types for Device and VirtualMachine
+            vm_content_type = ContentType.objects.get_for_model(VirtualMachine)
+            device_content_type = ContentType.objects.get_for_model(Device)
+
+            try:
+                solution = Solution.objects.get(project_id=device_prefix)
+            except Solution.DoesNotExist:
+                solution = None
+            except Solution.MultipleObjectsReturned:
+                solution = Solution.objects.filter(project_id=device_prefix).first()
+
+            if solution:
+                if deployment_type_char:
+                    deployment = Deployment.objects.filter(
+                        deployment_solution=solution,
+                        deployment_type=deployment_type_char
+                    ).first()
+
+                # Query related VMs and Devices by name prefix
+                related_vms = VirtualMachine.objects.filter(name__startswith=device_full_prefix)
+                related_devices = Device.objects.filter(name__startswith=device_full_prefix)
+
+                if deployment:
+                    # Query components associated with the deployment
+                    components = Component.objects.filter(component_deployment=deployment)
+                    
+                    # Get related VMs and Devices via components
+                    component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
+                    component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
+                    
+                    # Combine name-based and component-based queries
+                    related_vms = VirtualMachine.objects.filter(
+                        Q(id__in=component_vm_ids) | Q(name__startswith=device_full_prefix)
+                    ).distinct()
+                    related_devices = Device.objects.filter(
+                        Q(id__in=component_device_ids) | Q(name__startswith=device_full_prefix)
+                    ).distinct()
+
+                other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk if deployment else None)
+
+                field_groups = {
+                    'Ownership and Contacts': [
+                        'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact',
+                        'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
+                    ],
+                    'Compliance and Resilience': [
+                        'data_classification', 'compliance_requirements', 'fault_tolerence', 'slos',
+                        'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
+                    ],
+                }
+
+                for group_name, field_names in field_groups.items():
+                    grouped_fields[group_name] = [
+                        {
+                            'name': field.name,
+                            'verbose_name': field.verbose_name,
+                            'value': getattr(solution, field.name),
+                            'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
+                        }
+                        for field in solution._meta.fields
+                        if field.name in field_names
+                    ]
+
+        related_vms = VirtualMachineTable(related_vms)
+        related_devices = DeviceTable(related_devices)
+        other_deployments = DeploymentTable(other_deployments)
+
+        return {
+            'device': device,
+            'solution': solution,
+            'deployment': deployment,
+            'related_vms': related_vms,
+            'related_devices': related_devices,
             'other_deployments': other_deployments,
             'grouped_fields': grouped_fields,
         }

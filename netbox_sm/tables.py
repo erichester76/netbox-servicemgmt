@@ -89,7 +89,7 @@ class SolutionTable(NetBoxTable):
             'production_readiness_status', 'vendor_management_status', 'status', 'previous_version',
             'created', 'last_updated'
         )
-        default_columns = ('name', 'solution_number', 'solution_type', 'status', 'description')
+        default_columns = ('name', 'solution_number', 'solution_type', 'version', 'status', 'description')
 
 # Deployment Table
 class DeploymentTable(NetBoxTable):
@@ -112,7 +112,7 @@ class DeploymentTable(NetBoxTable):
             'deployment_solution', 'deployment_vlan', 'deployment_prefix', 'deployment_site',
             'previous_version', 'created', 'last_updated'
         )
-        default_columns = ('name', 'deployment_type', 'status', 'deployment_solution')
+        default_columns = ('name', 'deployment_type', 'version', 'status', 'deployment_solution')
 
 # Component Table
 class ComponentTable(NetBoxTable):

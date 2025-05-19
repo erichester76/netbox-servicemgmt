@@ -169,9 +169,14 @@ class ComponentBulkImportView(generic.BulkImportView):
 class ComponentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Component
 
+@register_model_view(Device, 'solution', path='solution')
+class DeviceSolutionView(base_views.BaseVMSolutionView):
+    template_name = 'netbox_sm/solution_tab.html'
+    queryset = VirtualMachine.objects.all()
+
 @register_model_view(VirtualMachine, 'solution', path='solution')
-class VMSolutionView(base_views.BaseSolutionView):
-    template_name = 'netbox_sm/vm_solution_tab.html'
+class VMSolutionView(base_views.BaseDeviceSolutionView):
+    template_name = 'netbox_sm/solution_tab.html'
     queryset = VirtualMachine.objects.all()
 
 # @register_model_view(models.Solution, 'diagram', path='diagram')
