@@ -1,44 +1,42 @@
-from netbox.search import SearchIndex, registry
+from netbox.search import SearchIndex, register_search
 from .models import Solution, Deployment, Component
 
+@register_search
 class SolutionIndex(SearchIndex):
     model = Solution
     fields = (
-        ('name', 'A'),
-        ('solution_number', 'A'),
-        ('project_id', 'A'),
-        ('data_classification', 'B'),
-        ('production_readiness_status', 'B'),
-        ('vendor_management_status', 'B'),
-        ('requester', 'C'),
-        ('architect', 'C'),
-        ('business_owner_group', 'C'),
-        ('business_owner_contact', 'C'),
-        ('incident_contact', 'C'),
-        ('os_technical_contact_group', 'C'),
-        ('os_technical_contact', 'C'),
-        ('app_technical_contact_group', 'C'),
-        ('app_technical_contact', 'C'),
+        ('name', 100),
+        ('solution_number', 100),
+        ('project_id', 100),
+        ('data_classification', 50),
+        ('production_readiness_status', 50),
+        ('vendor_management_status', 50),
+        ('requester', 50),
+        ('architect', 50),
+        ('business_owner_group', 50),
+        ('business_owner_contact', 50),
+        ('incident_contact', 50),
+        ('os_technical_contact_group', 50),
+        ('os_technical_contact', 50),
+        ('app_technical_contact_group', 50),
+        ('app_technical_contact', 50),
     )
 
+@register_search
 class DeploymentIndex(SearchIndex):
     model = Deployment
     fields = (
-        ('name', 'A'),
-        ('description', 'B'),
-        ('status', 'B'),
-        ('deployment_type', 'B'),
+        ('name', 100),
+        ('description', 50),
+        ('status', 50),
+        ('deployment_type', 50),
     )
 
+@register_search
 class ComponentIndex(SearchIndex):
     model = Component
     fields = (
-        ('name', 'A'),
-        ('description', 'B'),
-        ('status', 'B'),
+        ('name', 100),
+        ('description', 50),
+        ('status', 50),
     )
-
-# Register the indices
-registry['search'].register(SolutionIndex)
-registry['search'].register(DeploymentIndex)
-registry['search'].register(ComponentIndex)
