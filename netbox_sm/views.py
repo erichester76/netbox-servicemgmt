@@ -13,7 +13,7 @@ from . import models, tables, forms
 from . import base_views
 from .models import Deployment, Component
 from .tables import DeploymentTable
-
+from .filtersets import DeploymentFilterSet, SolutionFilterSet, ComponentFilterSet
 
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
@@ -87,7 +87,9 @@ class SLOChangeLogView(base_views.BaseChangeLogView):
 class SolutionListView(generic.ObjectListView):
     queryset = models.Solution.objects.all()
     table = tables.SolutionTable
-
+    filterset = SolutionFilterSet
+    
+    
 class SolutionDetailView(base_views.BaseObjectView):
     queryset = models.Solution.objects.all()    
         
@@ -132,7 +134,8 @@ class FaultTolerenceChangeLogView(base_views.BaseChangeLogView):
 class DeploymentListView(generic.ObjectListView):
     queryset = models.Deployment.objects.all()
     table = tables.DeploymentTable
-
+    filterset = DeploymentFilterSet
+    
 class DeploymentDetailView(generic.ObjectView):
     queryset = models.Deployment.objects.all()
     template_name = 'netbox_sm/deployment-detail.html'
@@ -234,8 +237,8 @@ class DeploymentChangeLogView(base_views.BaseChangeLogView):
 class ComponentListView(generic.ObjectListView):
     queryset = models.Component.objects.all()
     table = tables.ComponentTable
-
-#@register_model_view(models.Component)
+    filterset = ComponentFilterSet
+      
 class ComponentDetailView(base_views.BaseObjectView):
     queryset = models.Component.objects.all()
 
