@@ -85,10 +85,9 @@ class SLOChangeLogView(base_views.BaseChangeLogView):
 
 # Solution Views
 class SolutionListView(generic.ObjectListView):
-    queryset = models.Solution.objects.all()
-    table = tables.SolutionTable
+    queryset = Solution.objects.all()
     filterset = SolutionFilterSet
-    
+    table = SolutionTable
     
 class SolutionDetailView(base_views.BaseObjectView):
     queryset = models.Solution.objects.all()    
