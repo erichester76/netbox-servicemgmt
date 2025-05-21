@@ -4,6 +4,7 @@ from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.urls import reverse 
+
 from virtualization.models import VirtualMachine 
 from virtualization.tables import VirtualMachineTable  
 from dcim.models import Device
@@ -87,88 +88,8 @@ class SolutionListView(generic.ObjectListView):
     queryset = models.Solution.objects.all()
     table = tables.SolutionTable
 
-class SolutionDetailView(generic.ObjectView):
-    model = Solution
-    template_name = 'netbox_sm/solution_detail.html'
-
-    def get_extra_context(self, request, instance):
-        solution = instance
-        deployment = None
-        related_vms = VirtualMachine.objects.none()
-        related_devices = Device.objects.none()
-        other_deployments = Deployment.objects.none()
-        grouped_fields = {}
-
-        if solution and hasattr(solution, 'project_id') and solution.project_id:
-            project_id = solution.project_id
-            
-            # Get content types for Device and VirtualMachine
-            vm_content_type = ContentType.objects.get_for_model(VirtualMachine)
-            device_content_type = ContentType.objects.get_for_model(Device)
-
-            # Query related VMs and Devices by project_id prefix
-            related_vms = VirtualMachine.objects.filter(name__startswith=project_id)
-            related_devices = Device.objects.filter(name__startswith=project_id)
-
-            # Query deployments associated with the solution
-            deployments = Deployment.objects.filter(deployment_solution=solution)
-            deployment = deployments.first()  # Select the first deployment as primary
-
-            if deployment:
-                # Query components associated with the deployment
-                components = Component.objects.filter(component_deployment=deployment)
-                component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
-                component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
-                
-                # Combine name-based and component-based queries
-                related_vms = VirtualMachine.objects.filter(
-                    Q(id__in=component_vm_ids) | Q(name__startswith=project_id)
-                ).distinct()
-                related_devices = Device.objects.filter(
-                    Q(id__in=component_device_ids) | Q(name__startswith=project_id)
-                ).distinct()
-
-                other_deployments = deployments.exclude(pk=deployment.pk)
-
-            # Define field groups for Solution
-            field_groups = {
-                'Ownership and Contacts': [
-                    'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact',
-                    'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
-                ],
-                'Compliance and Resilience': [
-                    'data_classification', 'compliance_requirements', 'fault_tolerance', 'slos',
-                    'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
-                ],
-            }
-
-            for group_name, field_names in field_groups.items():
-                grouped_fields[group_name] = [
-                    {
-                        'name': field.name,
-                        'verbose_name': field.verbose_name,
-                        'value': getattr(solution, field.name),
-                        'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
-                    }
-                    for field in solution._meta.fields
-                    if field.name in field_names
-                ]
-
-        # Instantiate tables and debug columns
-        related_vms = VirtualMachineTable(related_vms)
-        print("SolutionDetailView VirtualMachineTable columns:", [col.name for col in related_vms.columns])  # Debug
-        related_devices = DeviceTable(related_devices)
-        print("SolutionDetailView DeviceTable columns:", [col.name for col in related_devices.columns])  # Debug
-        other_deployments = DeploymentTable(other_deployments)
-
-        return {
-            'solution': solution,
-            'deployment': deployment,
-            'related_vms': related_vms,
-            'related_devices': related_devices,
-            'other_deployments': other_deployments,
-            'grouped_fields': grouped_fields,
-        }
+class SolutionDetailView(base_views.BaseObjectView):
+    queryset = models.Solution.objects.all()    
         
 class SolutionEditView(generic.ObjectEditView):
     queryset = models.Solution.objects.all()
@@ -212,10 +133,89 @@ class DeploymentListView(generic.ObjectListView):
     queryset = models.Deployment.objects.all()
     table = tables.DeploymentTable
 
-#@register_model_view(models.Deployment)
-class DeploymentDetailView(base_views.BaseObjectView):
-    queryset = models.Deployment.objects.all()
+class DeploymentDetailView(generic.ObjectView):
+    model = Deployment
+    template_name = 'netbox_sm/deployment_detail.html'
 
+    def get_extra_context(self, request, instance):
+        deployment = instance
+        solution = deployment.deployment_solution if deployment else None
+        related_vms = VirtualMachine.objects.none()
+        related_devices = Device.objects.none()
+        other_deployments = Deployment.objects.none()
+        grouped_fields = {}
+
+        if deployment:
+            # Get content types for Device and VirtualMachine
+            vm_content_type = ContentType.objects.get_for_model(VirtualMachine)
+            device_content_type = ContentType.objects.get_for_model(Device)
+
+            # Query components associated with this deployment
+            components = Component.objects.filter(component_deployment=deployment)
+            component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
+            component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
+
+            # Query related VMs and Devices by component IDs
+            related_vms = VirtualMachine.objects.filter(id__in=component_vm_ids)
+            related_devices = Device.objects.filter(id__in=component_device_ids)
+
+            if solution and hasattr(solution, 'project_id') and solution.project_id:
+                project_id = solution.project_id
+                # Query VMs and Devices by project_id prefix for completeness
+                name_based_vms = VirtualMachine.objects.filter(name__startswith=project_id)
+                name_based_devices = Device.objects.filter(name__startswith=project_id)
+
+                # Combine component-based and name-based queries
+                related_vms = VirtualMachine.objects.filter(
+                    Q(id__in=component_vm_ids) | Q(name__startswith=project_id)
+                ).distinct()
+                related_devices = Device.objects.filter(
+                    Q(id__in=component_device_ids) | Q(name__startswith=project_id)
+                ).distinct()
+
+                # Query other deployments for the same solution
+                other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk)
+
+                # Define field groups for Solution
+                field_groups = {
+                    'Ownership and Contacts': [
+                        'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact',
+                        'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
+                    ],
+                    'Compliance and Resilience': [
+                        'data_classification', 'compliance_requirements', 'fault_tolerance', 'slos',
+                        'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
+                    ],
+                }
+
+                for group_name, field_names in field_groups.items():
+                    grouped_fields[group_name] = [
+                        {
+                            'name': field.name,
+                            'verbose_name': field.verbose_name,
+                            'value': getattr(solution, field.name),
+                            'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
+                        }
+                        for field in solution._meta.fields
+                        if field.name in field_names
+                    ]
+
+        # Instantiate tables and debug columns
+        related_vms = VirtualMachineTable(related_vms)
+        print("DeploymentDetailView VirtualMachineTable columns:", [col.name for col in related_vms.columns])  # Debug
+        related_devices = DeviceTable(related_devices)
+        print("DeploymentDetailView DeviceTable columns:", [col.name for col in related_devices.columns])  # Debug
+        other_deployments = DeploymentTable(other_deployments)
+
+        return {
+            'solution': solution,
+            'deployment': deployment,
+            'related_vms': related_vms,
+            'related_devices': related_devices,
+            'other_deployments': other_deployments,
+            'grouped_fields': grouped_fields,
+        }
+        
 class DeploymentEditView(generic.ObjectEditView):
     queryset = models.Deployment.objects.all()
     form = forms.DeploymentForm
@@ -253,14 +253,14 @@ class ComponentBulkImportView(generic.BulkImportView):
 class ComponentChangeLogView(base_views.BaseChangeLogView):
     base_model = models.Component
 
-@register_model_view(Device, 'solution', path='solution')
-class DeviceSolutionView(base_views.BaseDeviceSolutionView):
-    template_name = 'netbox_sm/solution_tab.html'
+@register_model_view(Device, 'deployment', path='deployment')
+class DeviceDeploymentView(base_views.BaseDeviceDeploymentView):
+    template_name = 'netbox_sm/deployment_tab.html'
     queryset = Device.objects.all()
 
-@register_model_view(VirtualMachine, 'solution', path='solution')
-class VMSolutionView(base_views.BaseVMSolutionView):
-    template_name = 'netbox_sm/solution_tab.html'
+@register_model_view(VirtualMachine, 'deployment', path='deployment')
+class VMDeploymentView(base_views.BaseVMDeploymentView):
+    template_name = 'netbox_sm/deployment_tab.html'
     queryset = VirtualMachine.objects.all()
 
 # @register_model_view(models.Solution, 'diagram', path='diagram')
