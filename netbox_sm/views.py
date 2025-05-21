@@ -163,7 +163,7 @@ class DeploymentDetailView(generic.ObjectView):
             related_devices = Device.objects.filter(id__in=component_device_ids)
 
             if solution and hasattr(solution, 'project_id') and solution.project_id:
-                project_id = solution.project_id + '-' + deployment.deplopyment_type.lower()
+                project_id = solution.project_id + '-' + deployment.deployment_type.lower()
              
                 # Query VMs and Devices by project_id prefix for completeness
                 name_based_vms = VirtualMachine.objects.filter(name__startswith=project_id)
