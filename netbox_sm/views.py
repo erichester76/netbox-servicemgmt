@@ -4,19 +4,15 @@ from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.urls import reverse 
+from django.db.models import Q
 
 from virtualization.models import VirtualMachine 
 from virtualization.tables import VirtualMachineTable  
 from dcim.models import Device
 from dcim.tables import DeviceTable
-from . import models, tables, forms
+from . import models, tables, forms, filtersets
 from . import base_views
-from .models import Deployment, Component
-from .tables import DeploymentTable
-from .filtersets import DeploymentFilterSet, SolutionFilterSet, ComponentFilterSet
 
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q
 
 def get_model_class(app_label, model_name):
     # Use ContentType to get the model class
@@ -85,9 +81,9 @@ class SLOChangeLogView(base_views.BaseChangeLogView):
 
 # Solution Views
 class SolutionListView(generic.ObjectListView):
-    queryset = Solution.objects.all()
-    filterset = SolutionFilterSet
-    table = SolutionTable
+    queryset = models.Solution.objects.all()
+    filterset = filtersets.SolutionFilterSet
+    table = tables.SolutionTable
     
 class SolutionDetailView(base_views.BaseObjectView):
     queryset = models.Solution.objects.all()    
@@ -133,7 +129,7 @@ class FaultTolerenceChangeLogView(base_views.BaseChangeLogView):
 class DeploymentListView(generic.ObjectListView):
     queryset = models.Deployment.objects.all()
     table = tables.DeploymentTable
-    filterset = DeploymentFilterSet
+    filterset = filtersets.DeploymentFilterSet
     
 class DeploymentDetailView(generic.ObjectView):
     queryset = models.Deployment.objects.all()
@@ -144,7 +140,7 @@ class DeploymentDetailView(generic.ObjectView):
         solution = deployment.deployment_solution if deployment else None
         related_vms = VirtualMachine.objects.none()
         related_devices = Device.objects.none()
-        other_deployments = Deployment.objects.none()
+        other_deployments = models.Deployment.objects.none()
         grouped_fields = {}
 
         if deployment:
@@ -153,7 +149,7 @@ class DeploymentDetailView(generic.ObjectView):
             device_content_type = ContentType.objects.get_for_model(Device)
 
             # Query components associated with this deployment
-            components = Component.objects.filter(component_deployment=deployment)
+            components = models.Component.objects.filter(component_deployment=deployment)
             component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
             component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
 
@@ -177,7 +173,7 @@ class DeploymentDetailView(generic.ObjectView):
                 ).distinct()
 
                 # Query other deployments for the same solution
-                other_deployments = Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk)
+                other_deployments = models.Deployment.objects.filter(deployment_solution=solution).exclude(pk=deployment.pk)
 
                 # Define field groups for Solution
                 field_groups = {
@@ -208,7 +204,7 @@ class DeploymentDetailView(generic.ObjectView):
         print("DeploymentDetailView VirtualMachineTable columns:", [col.name for col in related_vms.columns])  # Debug
         related_devices = DeviceTable(related_devices)
         print("DeploymentDetailView DeviceTable columns:", [col.name for col in related_devices.columns])  # Debug
-        other_deployments = DeploymentTable(other_deployments)
+        other_deployments = tables.DeploymentTable(other_deployments)
 
         return {
             'solution': solution,
@@ -237,7 +233,7 @@ class DeploymentChangeLogView(base_views.BaseChangeLogView):
 class ComponentListView(generic.ObjectListView):
     queryset = models.Component.objects.all()
     table = tables.ComponentTable
-    filterset = ComponentFilterSet
+    filterset = filtersets.ComponentFilterSet
       
 class ComponentDetailView(base_views.BaseObjectView):
     queryset = models.Component.objects.all()
