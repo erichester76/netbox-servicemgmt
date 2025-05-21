@@ -413,7 +413,7 @@ class BaseVMDeploymentView(generic.ObjectView):
             'grouped_fields': grouped_fields,
         }
 
-class BaseDeviceDeploymemntView(generic.ObjectView):
+class BaseDeviceDeploymentView(generic.ObjectView):
     model = Device
     tab = ViewTab(
         label='Solution',
