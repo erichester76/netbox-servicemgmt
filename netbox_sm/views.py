@@ -135,7 +135,7 @@ class DeploymentListView(generic.ObjectListView):
 
 class DeploymentDetailView(generic.ObjectView):
     model = Deployment
-    template_name = 'netbox_sm/deployment_detail.html'
+    template_name = 'netbox_sm/deployment-detail.html'
 
     def get_extra_context(self, request, instance):
         deployment = instance
@@ -255,12 +255,12 @@ class ComponentChangeLogView(base_views.BaseChangeLogView):
 
 @register_model_view(Device, 'deployment', path='deployment')
 class DeviceDeploymentView(base_views.BaseDeviceDeploymentView):
-    template_name = 'netbox_sm/deployment_tab.html'
+    template_name = 'netbox_sm/deployment-tab.html'
     queryset = Device.objects.all()
 
 @register_model_view(VirtualMachine, 'deployment', path='deployment')
 class VMDeploymentView(base_views.BaseVMDeploymentView):
-    template_name = 'netbox_sm/deployment_tab.html'
+    template_name = 'netbox_sm/deployment-tab.html'
     queryset = VirtualMachine.objects.all()
 
 # @register_model_view(models.Solution, 'diagram', path='diagram')
