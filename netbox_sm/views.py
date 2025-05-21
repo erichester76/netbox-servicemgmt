@@ -1,16 +1,21 @@
 from netbox.views import generic
-from . import base_views
 from utilities.views import register_model_view
 from django.views.generic import FormView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.urls import reverse 
-from dcim.models import Device, Region
-from virtualization.models import VirtualMachine, Cluster
+from virtualization.models import VirtualMachine 
+from virtualization.tables import VirtualMachineTable  
+from dcim.models import Device
+from dcim.tables import DeviceTable
 from . import models, tables, forms
-from django.urls import reverse
-from django.shortcuts import get_object_or_404
-from django.views.generic import FormView
+from . import base_views
+from .models import Solution, Deployment, Component
+from .tables import DeploymentTable
+
+
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 def get_model_class(app_label, model_name):
     # Use ContentType to get the model class
@@ -82,10 +87,89 @@ class SolutionListView(generic.ObjectListView):
     queryset = models.Solution.objects.all()
     table = tables.SolutionTable
 
-#@register_model_view(models.Solution)
-class SolutionDetailView(base_views.BaseObjectView):
-    queryset = models.Solution.objects.all()
+class SolutionDetailView(generic.ObjectView):
+    model = Solution
+    template_name = 'netbox_sm/solution_detail.html'
 
+    def get_extra_context(self, request, instance):
+        solution = instance
+        deployment = None
+        related_vms = VirtualMachine.objects.none()
+        related_devices = Device.objects.none()
+        other_deployments = Deployment.objects.none()
+        grouped_fields = {}
+
+        if solution and hasattr(solution, 'project_id') and solution.project_id:
+            project_id = solution.project_id
+            
+            # Get content types for Device and VirtualMachine
+            vm_content_type = ContentType.objects.get_for_model(VirtualMachine)
+            device_content_type = ContentType.objects.get_for_model(Device)
+
+            # Query related VMs and Devices by project_id prefix
+            related_vms = VirtualMachine.objects.filter(name__startswith=project_id)
+            related_devices = Device.objects.filter(name__startswith=project_id)
+
+            # Query deployments associated with the solution
+            deployments = Deployment.objects.filter(deployment_solution=solution)
+            deployment = deployments.first()  # Select the first deployment as primary
+
+            if deployment:
+                # Query components associated with the deployment
+                components = Component.objects.filter(component_deployment=deployment)
+                component_vm_ids = components.filter(object_type=vm_content_type).values_list('object_id', flat=True)
+                component_device_ids = components.filter(object_type=device_content_type).values_list('object_id', flat=True)
+                
+                # Combine name-based and component-based queries
+                related_vms = VirtualMachine.objects.filter(
+                    Q(id__in=component_vm_ids) | Q(name__startswith=project_id)
+                ).distinct()
+                related_devices = Device.objects.filter(
+                    Q(id__in=component_device_ids) | Q(name__startswith=project_id)
+                ).distinct()
+
+                other_deployments = deployments.exclude(pk=deployment.pk)
+
+            # Define field groups for Solution
+            field_groups = {
+                'Ownership and Contacts': [
+                    'requester', 'architect', 'business_owner_group', 'business_owner_contact', 'incident_contact',
+                    'os_technical_contact_group', 'os_technical_contact', 'app_technical_contact_group', 'app_technical_contact'
+                ],
+                'Compliance and Resilience': [
+                    'data_classification', 'compliance_requirements', 'fault_tolerance', 'slos',
+                    'last_bcdr_test', 'last_risk_assessment', 'last_review', 'production_readiness_status', 'vendor_management_status'
+                ],
+            }
+
+            for group_name, field_names in field_groups.items():
+                grouped_fields[group_name] = [
+                    {
+                        'name': field.name,
+                        'verbose_name': field.verbose_name,
+                        'value': getattr(solution, field.name),
+                        'has_url': hasattr(getattr(solution, field.name), 'get_absolute_url') if getattr(solution, field.name) else False,
+                    }
+                    for field in solution._meta.fields
+                    if field.name in field_names
+                ]
+
+        # Instantiate tables and debug columns
+        related_vms = VirtualMachineTable(related_vms)
+        print("SolutionDetailView VirtualMachineTable columns:", [col.name for col in related_vms.columns])  # Debug
+        related_devices = DeviceTable(related_devices)
+        print("SolutionDetailView DeviceTable columns:", [col.name for col in related_devices.columns])  # Debug
+        other_deployments = DeploymentTable(other_deployments)
+
+        return {
+            'solution': solution,
+            'deployment': deployment,
+            'related_vms': related_vms,
+            'related_devices': related_devices,
+            'other_deployments': other_deployments,
+            'grouped_fields': grouped_fields,
+        }
+        
 class SolutionEditView(generic.ObjectEditView):
     queryset = models.Solution.objects.all()
     form = forms.SolutionForm
