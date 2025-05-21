@@ -314,7 +314,7 @@ class BaseDiagramView(generic.ObjectView):
     }
 
 
-class BaseVMSolutionView(generic.ObjectView):
+class BaseVMDeploymentView(generic.ObjectView):
     model = VirtualMachine
     tab = ViewTab(
         label='Solution',
@@ -413,7 +413,7 @@ class BaseVMSolutionView(generic.ObjectView):
             'grouped_fields': grouped_fields,
         }
 
-class BaseDeviceSolutionView(generic.ObjectView):
+class BaseDeviceDeploymemntView(generic.ObjectView):
     model = Device
     tab = ViewTab(
         label='Solution',
