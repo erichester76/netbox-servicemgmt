@@ -1,4 +1,4 @@
-from netbox.search import SearchIndex, register
+from netbox.search import SearchIndex, registry
 from .models import Solution, Deployment, Component
 
 class SolutionIndex(SearchIndex):
@@ -39,6 +39,6 @@ class ComponentIndex(SearchIndex):
     )
 
 # Register the indices
-register(SolutionIndex)
-register(DeploymentIndex)
-register(ComponentIndex)
+registry['search'].register(SolutionIndex)
+registry['search'].register(DeploymentIndex)
+registry['search'].register(ComponentIndex)
