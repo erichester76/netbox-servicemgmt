@@ -1,9 +1,5 @@
 """Top-level package for Netbox Service Management Plugin."""
 
-__author__ = "Eric Hester"
-__email__ = "hester1@clemson.edu"
-__version__ = "0.2.0"
-
 from netbox.plugins import PluginConfig
 
 class smConfig(PluginConfig):
@@ -12,7 +8,11 @@ class smConfig(PluginConfig):
     author_email = "hester1@clemson.edu"
     verbose_name = "Netbox Service Management Plugin"
     description = "Netbox Plugin for Service Management"
-    version = "0.2.0"
+    version = "0.2.1"
     base_url = "netboxservicemgmt"
+
+def ready(self):
+    super().ready()
+    from . import search
 
 config = smConfig
