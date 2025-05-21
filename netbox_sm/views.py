@@ -11,7 +11,7 @@ from dcim.models import Device
 from dcim.tables import DeviceTable
 from . import models, tables, forms
 from . import base_views
-from .models import Solution, Deployment, Component
+from .models import Deployment, Component
 from .tables import DeploymentTable
 
 

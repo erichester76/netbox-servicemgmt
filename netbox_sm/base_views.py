@@ -317,7 +317,7 @@ class BaseDiagramView(generic.ObjectView):
 class BaseVMDeploymentView(generic.ObjectView):
     model = VirtualMachine
     tab = ViewTab(
-        label='Solution',
+        label='Deployment',
         badge=lambda obj: Solution.objects.filter(project_id='-'.join(obj.name.split('-')[:2])).count() if obj.name else 0,
     )
 
@@ -416,7 +416,7 @@ class BaseVMDeploymentView(generic.ObjectView):
 class BaseDeviceDeploymentView(generic.ObjectView):
     model = Device
     tab = ViewTab(
-        label='Solution',
+        label='Deployment',
         badge=lambda obj: Solution.objects.filter(project_id='-'.join(obj.name.split('-')[:2])).count() if obj.name else 0,
     )
 
