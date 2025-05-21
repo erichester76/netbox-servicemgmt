@@ -112,8 +112,8 @@ class DeploymentTable(NetBoxTable):
             'deployment_solution', 'deployment_vlan', 'deployment_prefix', 'deployment_site',
             'previous_version', 'created', 'last_updated'
         )
-        default_columns = ('name', 'deployment_type', 'version', 'status', 'deployment_solution')
-
+        default_columns = ('deployment_solution', 'name', 'deployment_type', 'version', 'status')
+        
 # Component Table
 class ComponentTable(NetBoxTable):
     name = tables.Column(linkify=True)

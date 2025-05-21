@@ -134,7 +134,7 @@ class DeploymentListView(generic.ObjectListView):
     table = tables.DeploymentTable
 
 class DeploymentDetailView(generic.ObjectView):
-    model = Deployment
+    queryset = models.Deployment.objects.all()
     template_name = 'netbox_sm/deployment-detail.html'
 
     def get_extra_context(self, request, instance):
