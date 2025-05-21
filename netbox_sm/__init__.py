@@ -11,8 +11,4 @@ class smConfig(PluginConfig):
     version = "0.2.1"
     base_url = "netboxservicemgmt"
 
-def ready(self):
-    super().ready()
-    from . import search
-
 config = smConfig
